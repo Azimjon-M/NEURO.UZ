@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/autoplay';
-import Image_1 from '../../assets/icons/it-park.jpg';
+import Image_1 from '@/assets/icons/it-park.jpg';
 
 import { User2Icon } from 'lucide-react';
 

@@ -1,41 +1,35 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaAngleRight } from 'react-icons/fa';
-import flag_uz from '../../assets/icons/flag-uz.png';
-import flag_ru from '../../assets/icons/flag-ru.png';
-import flag_en from '../../assets/icons/flag-en.png';
-import TextTranslate from '../../utils/TextTranslate';
-import { Languages } from '../../context/LanguageContext';
+import flag_uz from '@/assets/icons/flag-uz.png';
+import flag_ru from '@/assets/icons/flag-ru.png';
+import flag_en from '@/assets/icons/flag-en.png';
+import TextTranslate from '@/utils/TextTranslate';
+import { Languages } from '@/context/LanguageContext';
 
 const languages = [
-    { code: 'uz', id: '7', flag: flag_uz },
-    { code: 'ru', id: '8', flag: flag_ru },
-    { code: 'en', id: '9', flag: flag_en },
+    { code: 'uz', id: 'lang_uz', flag: flag_uz },
+    { code: 'ru', id: 'lang_ru', flag: flag_ru },
+    { code: 'en', id: 'lang_en', flag: flag_en },
 ];
+
+const thisComponent = 'navbar';
 
 const LanguageDropdown = () => {
     const { language, setLanguage } = Languages();
-    const [togglerLangDrop, setTogglerLangDrop] = useState(false);
+    const [open, setOpen] = useState(false);
     const dropdownRef = useRef(null);
 
     const activeLang =
-        languages.find((lang) => lang.code === language) || languages[0];
-    const availableLanguages = languages.filter(
-        (lang) => lang.code !== language
-    );
+        languages.find((l) => l.code === language) || languages[0];
+    const available = languages.filter((l) => l.code !== language);
 
-    const handleToggleLang = (code) => {
-        setLanguage(code);
-        setTogglerLangDrop(false);
-    };
-
-    // ⛔ tashqi joyga bosilsa yopilsin:
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (
                 dropdownRef.current &&
                 !dropdownRef.current.contains(e.target)
             ) {
-                setTogglerLangDrop(false);
+                setOpen(false);
             }
         };
         document.addEventListener('mousedown', handleClickOutside);
@@ -45,52 +39,52 @@ const LanguageDropdown = () => {
 
     return (
         <div ref={dropdownRef} className="relative font-medium">
-            {/* Dropdown tugmasi */}
-            <div className="p-2">
-                <button
-                    onClick={() => setTogglerLangDrop((prev) => !prev)}
-                    className="btn btn-sm btn-ghost flex items-center gap-x-2 px-2 cursor-pointer"
-                >
-                    <div className="w-[20px] h-[20px] overflow-hidden rounded-full">
-                        <img
-                            className="w-full h-full"
-                            src={activeLang.flag}
-                            alt="flag icon"
-                        />
-                    </div>
-                    <span className="text-[12px] font-thin">
-                        <TextTranslate data={['navbar', activeLang.id]} />
-                    </span>
-                    <FaAngleRight
-                        className={`transition-transform duration-200 ${
-                            togglerLangDrop
-                                ? 'rotate-[270deg]'
-                                : 'rotate-[90deg]'
-                        }`}
+            <button
+                onClick={() => setOpen((p) => !p)}
+                className="flex items-center gap-2 px-2 py-2"
+            >
+                <span className="w-5 h-5 overflow-hidden rounded-full">
+                    <img
+                        className="w-full h-full"
+                        src={activeLang.flag}
+                        alt="flag"
                     />
-                </button>
-            </div>
+                </span>
+                <span className="text-[12px]">
+                    <TextTranslate
+                        data={[thisComponent, activeLang.id]}
+                        fallback={activeLang.code.toUpperCase()}
+                    />
+                </span>
+                <FaAngleRight
+                    className={`transition-transform duration-200 ${
+                        open ? 'rotate-[270deg]' : 'rotate-[90deg]'
+                    }`}
+                />
+            </button>
 
-            {/* Dropdown menyusi */}
-            {togglerLangDrop && (
-                <ul className="flex flex-col z-50 font-medium absolute left-[50%] translate-x-[-50%] bg-gray-50 rounded-lg p-1 min-w-[160px] border border-gray-200 shadow-lg">
-                    {availableLanguages.map((lang) => (
-                        <li
-                            key={lang.code}
-                            className="flex items-center w-full gap-x-2 hover:bg-gray-100 transition-colors duration-200 rounded-sm p-2"
-                        >
+            {open && (
+                <ul className="absolute left-1/2 -translate-x-1/2 mt-2 min-w-[160px] rounded-lg border border-gray-200 bg-white shadow-lg z-50 py-1">
+                    {available.map((lang) => (
+                        <li key={lang.code}>
                             <button
-                                onClick={() => handleToggleLang(lang.code)}
-                                className="text-black btn btn-sm btn-ghost w-full flex justify-start items-center cursor-pointer gap-x-2"
+                                onClick={() => {
+                                    setLanguage(lang.code);
+                                    setOpen(false);
+                                }}
+                                className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-100"
                             >
-                                <div className="w-[20px] h-[20px] overflow-hidden rounded-full">
+                                <span className="w-5 h-5 overflow-hidden rounded-full">
                                     <img
                                         className="w-full h-full"
                                         src={lang.flag}
-                                        alt="flag icon"
+                                        alt="flag"
                                     />
-                                </div>
-                                <TextTranslate data={['navbar', lang.id]} />
+                                </span>
+                                <TextTranslate
+                                    data={[thisComponent, lang.id]}
+                                    fallback={lang.code.toUpperCase()}
+                                />
                             </button>
                         </li>
                     ))}

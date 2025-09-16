@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import bg from '../../../assets/fons/astro.png';
+import bg from '@/assets/fons/astro.png';
 
 const Error404 = () => {
     const message =

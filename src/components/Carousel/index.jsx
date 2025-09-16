@@ -4,11 +4,7 @@ import { Autoplay, Scrollbar, Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/scrollbar';
 import './style.css'; // Swiper stil fayli
-import { Link } from 'react-router';
-
-import Bus from '../../assets/fons/bus.png';
-import Children from '../../assets/fons/children.png';
-import London from '../../assets/fons/london.png';
+import { Link } from 'react-router-dom';
 
 const Carousel = () => {
     const slides = [

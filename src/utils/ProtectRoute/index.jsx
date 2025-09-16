@@ -1,5 +1,5 @@
-import { Navigate } from 'react-router';
-import Decryption from '../../utils/Decryption';
+import { Navigate } from 'react-router-dom';
+import Decryption from '@/utils/Decryption';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
     const secretKey = import.meta.env.VITE_USER_DATA_KEY;

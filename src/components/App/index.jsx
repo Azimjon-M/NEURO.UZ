@@ -1,55 +1,39 @@
 import React from 'react';
-import { Route, Routes } from 'react-router';
-import Error401 from '../../Pages/Errors/401';
-import Error404 from '../../Pages/Errors/404';
-import ProtectedRoute from '../../utils/ProtectRoute';
+import { Route, Routes } from 'react-router-dom';
+import Error401 from '@/pages/Errors/401';
+import Error404 from '@/pages/Errors/404';
+import ProtectedRoute from '@/utils/ProtectRoute';
 
-import Root from '../../root/Public';
-import RootUser from '../../root/User';
-import RootAdmin from '../../root/Superadmin';
-import RootSuperadmin from '../../root/Admin';
-
-import routes from '../../routes';
+import Root from '@/root/Public';
+import RootAdmin from '@/root/Superadmin';
+import Login from '@/pages/Login';
+import routes from '@/routes';
 
 function App() {
     return (
         <Routes>
             {/* Public routes */}
             <Route element={<Root />}>
-                {routes.map((route) => {
-                    if (route.role === null) {
-                        const ElementRoute = route.element;
-                        return (
+                {routes
+                    .filter((route) => route.role === null)
+                    
+                    .map((route) => {
+                        const parentRoute = route.element ? (
                             <Route
                                 key={route.id}
                                 path={route.path}
-                                element={<ElementRoute />}
+                                element={route.element} 
                             />
-                        );
-                    }
-                    return null;
-                })}
-            </Route>
-
-            {/* User routes */}
-            <Route element={<RootUser />}>
-                {routes.map((route) => {
-                    if (route.role?.includes('user')) {
-                        const ElementRoute = route.element;
-                        return (
+                        ) : null;
+                        const childRoutes = route.children?.map((child) => (
                             <Route
-                                key={route.id}
-                                path={route.path}
-                                element={
-                                    <ProtectedRoute allowedRoles={route.role}>
-                                        <ElementRoute />
-                                    </ProtectedRoute>
-                                }
+                                key={child.id}
+                                path={child.path}
+                                element={child.element} 
                             />
-                        );
-                    }
-                    return null;
-                })}
+                        ));
+                        return [parentRoute, childRoutes];
+                    })}
             </Route>
 
             {/* Admin routes */}
@@ -73,27 +57,7 @@ function App() {
                 })}
             </Route>
 
-            {/* Superadmin routes */}
-            <Route element={<RootSuperadmin />}>
-                {routes.map((route) => {
-                    if (route.role?.includes('superadmin')) {
-                        const ElementRoute = route.element;
-                        return (
-                            <Route
-                                key={route.id}
-                                path={route.path}
-                                element={
-                                    <ProtectedRoute allowedRoles={route.role}>
-                                        <ElementRoute />
-                                    </ProtectedRoute>
-                                }
-                            />
-                        );
-                    }
-                    return null;
-                })}
-            </Route>
-
+            <Route path="/login" element={<Login />} />
             <Route path="/not-authorized" element={<Error401 />} />
             <Route path="*" element={<Error404 />} />
         </Routes>

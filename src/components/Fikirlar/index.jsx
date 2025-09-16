@@ -1,6 +1,6 @@
 import React from 'react';
 import { MessageSquareQuoteIcon } from 'lucide-react';
-import Image_1 from '../../assets/icons/it-park.jpg';
+import Image_1 from '@/assets/icons/it-park.jpg';
 
 const testimonials = [
     {
