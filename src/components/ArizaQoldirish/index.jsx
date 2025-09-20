@@ -14,7 +14,7 @@ const RequestApplication = () => {
                             <BsFillMegaphoneFill />
                         </div>
                         <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
-                            Maktabimizga ariza qoldiring
+                            So'rovnomada ishtirok etish
                         </h2>
                     </div>
 

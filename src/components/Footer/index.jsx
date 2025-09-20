@@ -1,104 +1,189 @@
 import React from 'react';
-import { FaTelegram, FaFacebookF, FaInstagram } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import {
+    FaTelegram,
+    FaFacebookF,
+    FaInstagram,
+    FaPhoneAlt,
+    FaMapMarkerAlt,
+    FaEnvelope,
+} from 'react-icons/fa';
 import Logo from '@/assets/logo/newLogo.png';
 
 const Footer = () => {
     return (
-        <footer className="bg-gray-100 text-gray-700 pt-16 pb-6">
+        <footer className="bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-300 pt-12 pb-6 border-t border-slate-200 dark:border-slate-800">
             <div className="w-full md:max-w-3xl lg:max-w-5xl xl:max-w-[1150px] 2xl:max-w-[1400px] mx-auto px-4">
-                <div className="grid md:grid-cols-3 gap-8 pb-10">
-                    {/* 1. Logo + Tavsif */}
+                <div className="grid gap-8 md:grid-cols-4 pb-10">
+                    {/* 1) Brand */}
                     <div>
-                        <div className="flex items-center space-x-3 mb-3">
+                        <div className="flex items-center gap-3 mb-3">
                             <img
-                                className="w-8 h-8 object-contain"
                                 src={Logo}
-                                alt="Logo"
+                                alt="NEURO.UZ logo"
+                                className="w-9 h-9 object-contain"
                             />
-                            <h2 className="text-xl font-bold">NEURO</h2>
+                            <h2 className="text-xl font-bold text-[#2464AE] dark:text-blue-300">
+                                NEURO
+                            </h2>
                         </div>
-                        <p className="text-gray-600 text-sm">
-                            Bizning maktab — zamonaviy ta’lim, kuchli jamoa va
-                            yuksak maqsadlar sari intilish.
+                        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Neyroxirurgiya markazi: zamonaviy diagnostika,
+                            tajribali jarrohlar va bemor xavfsizligiga
+                            yo‘naltirilgan yondashuv.
                         </p>
                     </div>
 
-                    {/* 2. Sahifalar linklari */}
+                    {/* 2) Sahifalar */}
                     <div>
-                        <h3 className="text-lg font-semibold mb-3">
+                        <h3 className="text-lg font-semibold mb-3 text-slate-900 dark:text-slate-100">
                             Sahifalar
                         </h3>
                         <ul className="space-y-2 text-sm">
                             <li>
-                                <a href="#home" className="hover:text-blue-600">
+                                <Link
+                                    to="/"
+                                    className="hover:text-[#2464AE] dark:hover:text-blue-300"
+                                >
                                     Asosiy
-                                </a>
+                                </Link>
                             </li>
                             <li>
-                                <a
-                                    href="#courses"
-                                    className="hover:text-blue-600"
+                                <Link
+                                    to="/about"
+                                    className="hover:text-[#2464AE] dark:hover:text-blue-300"
                                 >
-                                    Kurslar
-                                </a>
+                                    Markaz haqida
+                                </Link>
                             </li>
                             <li>
-                                <a
-                                    href="#teachers"
-                                    className="hover:text-blue-600"
+                                <Link
+                                    to="/departments"
+                                    className="hover:text-[#2464AE] dark:hover:text-blue-300"
                                 >
-                                    Ustozlar
-                                </a>
+                                    Bo‘limlar
+                                </Link>
                             </li>
                             <li>
-                                <a
-                                    href="#contact"
-                                    className="hover:text-blue-600"
+                                <Link
+                                    to="/services"
+                                    className="hover:text-[#2464AE] dark:hover:text-blue-300"
                                 >
-                                    Bog‘lanish
-                                </a>
+                                    Xizmatlar
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    to="/patients"
+                                    className="hover:text-[#2464AE] dark:hover:text-blue-300"
+                                >
+                                    Bemorlar
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    to="/education"
+                                    className="hover:text-[#2464AE] dark:hover:text-blue-300"
+                                >
+                                    Fan va ta’lim
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    to="/news"
+                                    className="hover:text-[#2464AE] dark:hover:text-blue-300"
+                                >
+                                    Yangiliklar
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    to="/contact"
+                                    className="hover:text-[#2464AE] dark:hover:text-blue-300"
+                                >
+                                    Aloqa
+                                </Link>
                             </li>
                         </ul>
                     </div>
 
-                    {/* 3. Ijtimoiy tarmoqlar */}
+                    {/* 3) Aloqa */}
                     <div>
-                        <h3 className="text-lg font-semibold mb-3">
+                        <h3 className="text-lg font-semibold mb-3 text-slate-900 dark:text-slate-100">
+                            Aloqa
+                        </h3>
+                        <ul className="space-y-3 text-sm">
+                            <li className="flex items-start gap-2">
+                                <FaMapMarkerAlt className="mt-0.5 text-[#2464AE] dark:text-blue-300" />
+                                <span>
+                                    Toshkent shahri, (manzilni kiriting)
+                                </span>
+                            </li>
+                            <li className="flex items-center gap-2">
+                                <FaPhoneAlt className="text-[#2464AE] dark:text-blue-300" />
+                                <a
+                                    href="tel:+998000000000"
+                                    className="hover:text-[#2464AE] dark:hover:text-blue-300"
+                                >
+                                    +998 (00) 000-00-00
+                                </a>
+                            </li>
+                            <li className="flex items-center gap-2">
+                                <FaEnvelope className="text-[#2464AE] dark:text-blue-300" />
+                                <a
+                                    href="mailto:info@neuro.uz"
+                                    className="hover:text-[#2464AE] dark:hover:text-blue-300"
+                                >
+                                    info@neuro.uz
+                                </a>
+                            </li>
+                            <li className="text-xs text-slate-500 dark:text-slate-400">
+                                Ish vaqti: Dushanba–Juma, 09:00–18:00
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* 4) Ijtimoiy tarmoqlar */}
+                    <div>
+                        <h3 className="text-lg font-semibold mb-3 text-slate-900 dark:text-slate-100">
                             Bizni kuzating
                         </h3>
-                        <div className="flex space-x-4">
+                        <div className="flex items-center gap-3">
                             <a
                                 href="https://t.me/"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-xl hover:text-blue-600"
+                                className="w-10 h-10 rounded-full grid place-items-center ring-1 ring-slate-200 dark:ring-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                                aria-label="Telegram"
                             >
-                                <FaTelegram />
+                                <FaTelegram className="text-[20px] text-[#2464AE] dark:text-blue-300" />
                             </a>
                             <a
                                 href="https://facebook.com/"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-xl hover:text-blue-600"
+                                className="w-10 h-10 rounded-full grid place-items-center ring-1 ring-slate-200 dark:ring-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                                aria-label="Facebook"
                             >
-                                <FaFacebookF />
+                                <FaFacebookF className="text-[18px] text-[#2464AE] dark:text-blue-300" />
                             </a>
                             <a
                                 href="https://instagram.com/"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-xl hover:text-blue-600"
+                                className="w-10 h-10 rounded-full grid place-items-center ring-1 ring-slate-200 dark:ring-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                                aria-label="Instagram"
                             >
-                                <FaInstagram />
+                                <FaInstagram className="text-[20px] text-[#2464AE] dark:text-blue-300" />
                             </a>
                         </div>
                     </div>
                 </div>
 
-                {/* Pastgi chiziq va copyright */}
-                <hr className="border-gray-300 mb-4" />
-                <p className="text-center text-sm text-gray-500">
-                    © {new Date().getFullYear()} "NEURO.UZ". Barcha huquqlar
+                {/* Bottom line */}
+                <hr className="border-slate-200 dark:border-slate-800 mb-4" />
+                <p className="text-center text-sm text-slate-500 dark:text-slate-400">
+                    © {new Date().getFullYear()} NEURO.UZ — Barcha huquqlar
                     himoyalangan.
                 </p>
             </div>
