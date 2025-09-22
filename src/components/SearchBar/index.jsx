@@ -1,22 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useFormik } from 'formik';
 import { AiOutlineSearch, AiOutlineClose } from 'react-icons/ai';
+import { useNavigate } from 'react-router-dom';
 
 export default function SearchBar({ isSearch, setIsSearch }) {
-    const rootRef = useRef(null); // ✅ 1) root ref
-
-    // tashqariga bosilganda yopish
-    useEffect(() => {
-        const onPointerDown = (e) => {
-            if (!isSearch) return;
-            const el = rootRef.current;
-            if (el && !el.contains(e.target)) setIsSearch(false);
-        };
-        // capture=True — ichkarida stopPropagation bo‘lsa ham ushlaydi
-        document.addEventListener('pointerdown', onPointerDown, true);
-        return () =>
-            document.removeEventListener('pointerdown', onPointerDown, true);
-    }, [isSearch, setIsSearch]);
+    const rootRef = useRef(null);
+    const inputRef = useRef(null); // 🔹 fokus uchun
+    const navigate = useNavigate();
 
     // --- localStorage: so'nggi izlanganlar ---
     const LS_KEY = 'neuro_recent_searches';
@@ -40,10 +30,6 @@ export default function SearchBar({ isSearch, setIsSearch }) {
         }
     };
 
-    const handleAfterSearch = (query) => {
-        console.log('Searching for:', query);
-    };
-
     const formik = useFormik({
         initialValues: { q: '' },
         onSubmit: ({ q }) => {
@@ -60,6 +46,12 @@ export default function SearchBar({ isSearch, setIsSearch }) {
         },
     });
 
+    const handleAfterSearch = (query) => {
+        navigate('/search?q=' + encodeURIComponent(query));
+        setIsSearch(false);
+        formik.resetForm();
+    };
+
     const removeRecent = (id) => {
         const next = recents.filter((r) => r.id !== id);
         setRecents(next);
@@ -70,19 +62,76 @@ export default function SearchBar({ isSearch, setIsSearch }) {
         writeRecents([]);
     };
 
+    // 🔹 Tashqariga bosilganda yopish (triggerdan tashqari)
+    useEffect(() => {
+        const onDocClick = (e) => {
+            if (!isSearch) return;
+            const panel = rootRef.current;
+            if (!panel) return;
+
+            const clickedInsidePanel = panel.contains(e.target);
+            const clickedOnTrigger = e.target.closest('[data-search-trigger]');
+
+            if (!clickedInsidePanel && !clickedOnTrigger) {
+                setIsSearch(false);
+            }
+        };
+
+        document.addEventListener('click', onDocClick);
+        return () => document.removeEventListener('click', onDocClick);
+    }, [isSearch, setIsSearch]);
+
+    // 🔹 Panel ochilganda inputga fokus berish
+    useEffect(() => {
+        if (!isSearch) return;
+        const id = requestAnimationFrame(() => {
+            inputRef.current?.focus();
+            inputRef.current?.select?.();
+            inputRef.current?.click?.();
+        });
+        return () => cancelAnimationFrame(id);
+    }, [isSearch]);
+
+    // 🔹 Global hotkey: Ctrl/⌘ + K → panelni ochib, inputga fokus
+    useEffect(() => {
+        const onKey = (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                // matn kiritilayotgan joylarda ishlamasin
+                const t = e.target;
+                const tag = t?.tagName;
+                const typing =
+                    t?.isContentEditable ||
+                    tag === 'INPUT' ||
+                    tag === 'TEXTAREA' ||
+                    tag === 'SELECT';
+                if (typing) return;
+
+                e.preventDefault();
+                setIsSearch(true);
+                requestAnimationFrame(() => {
+                    inputRef.current?.focus();
+                    inputRef.current?.select?.();
+                    inputRef.current?.click?.();
+                });
+            }
+        };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+    }, [setIsSearch]);
+
     return (
         <div
             ref={rootRef}
             className={`
-                          w-full
-                          fixed inset-x-0 top-[60px] lg:top-[80px] z-30 py-4
-                          transition-[opacity, transform] duration-500
-                          ${
-                              isSearch
-                                  ? 'opacity-100 translate-y-0 pointer-events-auto'
-                                  : 'opacity-0 -translate-y-4 pointer-events-none'
-                          }
-                      `}
+                w-full
+                fixed inset-x-0 top-[60px] lg:top-[80px] z-30 py-4
+                transition-[opacity, transform] duration-500
+                ${
+                    isSearch
+                        ? 'opacity-100 translate-y-0 pointer-events-auto'
+                        : 'opacity-0 -translate-y-4 pointer-events-none'
+                }
+            `}
         >
             <div className="w-full mx-auto md:max-w-3xl lg:max-w-5xl xl:max-w-[1150px] 2xl:max-w-[1400px] px-4">
                 {/* Input + SEARCH button group */}
@@ -94,6 +143,7 @@ export default function SearchBar({ isSearch, setIsSearch }) {
                         <div className="flex items-center gap-2 flex-1 pl-3 pr-2 rounded-l-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
                             <AiOutlineSearch className="shrink-0 text-slate-500 dark:text-slate-400" />
                             <input
+                                ref={inputRef} // 🔹 fokus shu yerda
                                 name="q"
                                 value={formik.values.q}
                                 onChange={formik.handleChange}
@@ -112,14 +162,12 @@ export default function SearchBar({ isSearch, setIsSearch }) {
                         <button
                             type="submit"
                             className="
-                                          px-5 py-2 rounded-r-xl font-semibold
-                                          bg-[#2464AE] hover:bg-[#1f59a0] text-white
-                                          border border-l-0 border-slate-200 dark:border-slate-700
-                                          transition-colors
-                                      "
-                            style={{
-                                WebkitTapHighlightColor: 'transparent',
-                            }}
+                                px-5 py-2 rounded-r-xl font-semibold
+                                bg-[#2464AE] hover:bg-[#1f59a0] text-white
+                                border border-l-0 border-slate-200 dark:border-slate-700
+                                transition-colors
+                            "
+                            style={{ WebkitTapHighlightColor: 'transparent' }}
                         >
                             Qidirish
                         </button>
@@ -136,7 +184,7 @@ export default function SearchBar({ isSearch, setIsSearch }) {
                             <button
                                 type="button"
                                 onClick={clearAllRecents}
-                                className="text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+                                className="cursor-pointer text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
                             >
                                 Hammasini tozalash
                             </button>
@@ -158,7 +206,7 @@ export default function SearchBar({ isSearch, setIsSearch }) {
                                                 formik.setFieldValue('q', r.q);
                                                 formik.handleSubmit();
                                             }}
-                                            className="text-sm hover:underline"
+                                            className="text-sm hover:underline cursor-pointer hover:text-[blue]"
                                             title="Ushbu so'rovni qidirish"
                                             style={{
                                                 WebkitTapHighlightColor:
@@ -170,7 +218,7 @@ export default function SearchBar({ isSearch, setIsSearch }) {
                                         <button
                                             type="button"
                                             onClick={() => removeRecent(r.id)}
-                                            className="inline-flex items-center justify-center w-5 h-5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400"
+                                            className="cursor-pointer inline-flex items-center justify-center w-5 h-5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400"
                                             title="O‘chirish"
                                             aria-label="O‘chirish"
                                             style={{

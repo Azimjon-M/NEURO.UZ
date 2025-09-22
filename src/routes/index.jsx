@@ -52,6 +52,8 @@ import GalCentralAsiaCongress from '@/pages/gallery/CentralAsiaCongress';
 
 import Contact from '@/pages/Contact';
 
+import Search from '@/pages/Search';
+
 const routes = [
     // 1) Root (odatda menuda ko'rinmaydi)
     {
@@ -186,15 +188,15 @@ const routes = [
     },
 
     // 4) Xizmatlar (leaf)
-    {
-        id: 4,
-        titleID: 'nav.services',
-        title: 'Xizmatlar',
-        path: '/services',
-        element: <Services />,
-        role: null,
-        hidden: false,
-    },
+    // {
+    //     id: 4,
+    //     titleID: 'nav.services',
+    //     title: 'Xizmatlar',
+    //     path: '/services',
+    //     element: <Services />,
+    //     role: null,
+    //     hidden: false,
+    // },
 
     // 5) Bemorlar (dropdown + index)
     {
@@ -431,6 +433,15 @@ const routes = [
                 element: <GalCentralAsiaCongress />,
             },
         ],
+    },
+    {
+        id: 9,
+        titleID: 'nav.search',
+        title: 'Qidiruv',
+        path: '/search',
+        element: <Search />,
+        role: null,
+        hidden: true,
     },
 
     // 9) Aloqa (leaf)

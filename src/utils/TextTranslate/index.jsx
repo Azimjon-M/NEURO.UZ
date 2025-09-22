@@ -1,14 +1,25 @@
 import languageJSON from '@/language';
 import { Languages } from '@/context/LanguageContext';
 
-const TextTranslate = ({ data, fallback }) => {
+const DEFAULT_LANG = 'uz';
+
+const TextTranslate = ({ id, data, fallback }) => {
     const { language } = Languages();
-    if (!data || data.length !== 2) return fallback || '⚠️ Notranslate';
+    const key =
+        id ??
+        (Array.isArray(data) && data.length > 0
+            ? data[data.length - 1]
+            : undefined);
 
-    const [section, key] = data;
-    const res = languageJSON?.[language]?.[section]?.[key];
+    if (!key) return fallback || '⚠️ Notranslate';
 
-    return res ?? fallback ?? '❌ Missing';
+    const lang = language || DEFAULT_LANG;
+    const res =
+        languageJSON?.[lang]?.[key] ??
+        languageJSON?.[DEFAULT_LANG]?.[key] ??
+        languageJSON?.en?.[key];
+
+    return <>{res ?? fallback ?? '❌ Missing'}</>;
 };
 
 export default TextTranslate;

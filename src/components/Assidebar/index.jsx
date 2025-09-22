@@ -1,6 +1,6 @@
 // src/components/Navbar/styled.jsx
 import React, { useEffect, useRef, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { FaAngleRight } from 'react-icons/fa';
 import routes from '@/routes';
 import TextTranslate from '@/utils/TextTranslate';
@@ -14,7 +14,9 @@ const T = ({ id, fallback }) => (
     <TextTranslate data={[thisComponent, cleanKey(id)]} fallback={fallback} />
 );
 
-export default function Assidebar({ isOpen, toggleMenu }) {
+export default function Assidebar({ isOpen, toggleMenu, setIsSearch }) {
+    const navigate = useNavigate();
+
     const [shouldRender, setShouldRender] = useState(isOpen);
     const [openIds, setOpenIds] = useState(() => new Set());
     const [enter, setEnter] = useState(false); // 🔹 kirish animatsiyasi flag
@@ -44,10 +46,10 @@ export default function Assidebar({ isOpen, toggleMenu }) {
     const [recents, setRecents] = useState(() => readRecents());
 
     const handleAfterSearch = (query) => {
-        console.log('Searching for:', query);
-        // ❗️Bu yerda real qidiruv amalingizni bajaring (navigate, fetch, h.k.)
-        // masalan: navigate(`/search?q=${encodeURIComponent(query)}`)
-        // xohlasangiz: setIsSearch(false);
+        navigate('/search?q=' + encodeURIComponent(query));
+        setIsSearch(false);
+        toggleMenu();
+        formik.resetForm();
     };
 
     // --- Formik ---

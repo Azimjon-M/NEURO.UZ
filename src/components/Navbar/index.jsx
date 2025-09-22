@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { NavLink, Link, useLocation, matchPath } from 'react-router-dom';
 import { FaAngleRight } from 'react-icons/fa';
 import { GiHamburgerMenu } from 'react-icons/gi';
-import { AiOutlineClose, AiOutlineSearch } from 'react-icons/ai';
+import { AiOutlineClose } from 'react-icons/ai';
 import { BiSearch } from 'react-icons/bi';
 import Logo from '@/assets/logo/newLogo.png';
 import routes from '@/routes';
@@ -11,11 +11,10 @@ import ChangeLanguage from '../ChangeLang';
 import Assidebar from '@/components/Assidebar';
 import SearchBar from '@/components/SearchBar';
 
-const thisComponent = 'navbar';
 const cleanKey = (k) =>
     typeof k === 'string' && k.includes('.') ? k.split('.').pop() : k;
 const T = ({ id, fallback }) => (
-    <TextTranslate data={[thisComponent, cleanKey(id)]} fallback={fallback} />
+    <TextTranslate id={cleanKey(id)} fallback={fallback} />
 );
 
 const Navbar = () => {
@@ -50,7 +49,7 @@ const Navbar = () => {
 
     // Search
     const handleSearch = () => {
-        setIsSearch(!isSearch);
+        setIsSearch((v) => !v);
     };
 
     // 🔒 Mobil holatda body scroll lock/unlock (aniq tozalanadi)
@@ -83,6 +82,54 @@ const Navbar = () => {
         document.addEventListener('click', onDocClick, true);
         return () => document.removeEventListener('click', onDocClick, true);
     }, [menuOpen]);
+
+    useEffect(() => {
+        if (!menuOpen) return;
+
+        // 1) Menyu ochilganda URL'ga #mm qo‘shamiz (ko‘rinishda farq qilmaydi)
+        const needPush = window.location.hash !== '#mm';
+        if (needPush) {
+            history.pushState({ mm: true }, '', '#mm');
+        }
+
+        // 2) Orqaga bosilganda — menyuni yopamiz (navigatsiya o‘rniga)
+        const onPop = () => {
+            setMenuOpen(false);
+            setTimeout(() => setShouldRender(false), 300);
+        };
+        window.addEventListener('popstate', onPop);
+
+        // 3) Menyu kod orqali yopilganda, #mm ni ham tozalab qo‘yamiz
+        return () => {
+            window.removeEventListener('popstate', onPop);
+            if (window.location.hash === '#mm') {
+                history.back(); // hashni olib tashlaydi, sahifadan chiqarmaydi
+            }
+        };
+    }, [menuOpen]);
+
+    useEffect(() => {
+        const onKey = (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                // input/textarea/select yoki contenteditable ichida yozayotgan bo'lsa — e'tibor bermaymiz
+                const t = e.target;
+                const tag = t?.tagName;
+                const typing =
+                    t?.isContentEditable ||
+                    tag === 'INPUT' ||
+                    tag === 'TEXTAREA' ||
+                    tag === 'SELECT';
+                if (typing) return;
+
+                e.preventDefault();
+                setIsSearch(true);
+                // SearchBar'ga "fokus qil" signali
+                window.dispatchEvent(new Event('neuro:search-focus'));
+            }
+        };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+    }, []);
 
     return (
         <div
@@ -267,6 +314,7 @@ const Navbar = () => {
 
                     <button
                         onClick={handleSearch}
+                        data-search-trigger
                         className="inline-flex items-center gap-2 px-2 py-2 rounded-lg
                             bg-transparent cursor-pointer transition-colors duration-150
                             text-slate-800 dark:text-slate-100
@@ -276,6 +324,7 @@ const Navbar = () => {
                     >
                         <BiSearch
                             size={20}
+                            title="Ctrl + K"
                             className="text-[#2464AE] dark:text-blue-300"
                         />
                     </button>
@@ -297,7 +346,11 @@ const Navbar = () => {
 
             {/* Mobile aside menu */}
             {shouldRender && (
-                <Assidebar isOpen={menuOpen} toggleMenu={toggleMenu} />
+                <Assidebar
+                    isOpen={menuOpen}
+                    toggleMenu={toggleMenu}
+                    setIsSearch={setIsSearch}
+                />
             )}
         </div>
     );

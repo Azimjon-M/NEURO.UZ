@@ -1,5 +1,5 @@
 import React from 'react';
-import ArizaQoldirish from '@/components/ArizaQoldirish';
+import Sorovnoma from '@/components/Sorovnoma';
 import Carousel from '@/components/Carousel';
 import Footer from '@/components/Footer';
 import WhyChooseUs from '@/components/WhyChooseUs';
@@ -13,7 +13,7 @@ const Main = () => {
     return (
         <div>
             <Carousel />
-            <ArizaQoldirish />
+            <Sorovnoma />
             <WhyChooseUs />
             <Cources />
             <Teachers />

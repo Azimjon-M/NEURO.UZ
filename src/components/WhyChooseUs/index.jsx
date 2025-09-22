@@ -1,8 +1,8 @@
-import React from 'react';
 import { FaUserMd, FaUserFriends, FaHeartbeat } from 'react-icons/fa';
-import { Ri24HoursLine, RiMicroscopeLine } from 'react-icons/ri';
+import { RiMicroscopeLine } from 'react-icons/ri';
 import { TbCertificate, TbScan } from 'react-icons/tb';
 import { GiScalpel } from 'react-icons/gi';
+import { FaBed } from 'react-icons/fa6';
 
 const features = [
     {
@@ -20,12 +20,10 @@ const features = [
             'MRI, KT, angiografiya va keng qamrovli laborator tahlillar asosida aniq tashxis.',
     },
     {
-        icon: (
-            <Ri24HoursLine className="text-[#2464AE] dark:text-blue-300 text-3xl" />
-        ),
-        title: '24/7 shoshilinch yordam',
+        icon: <FaBed className="text-[#2464AE] dark:text-blue-300 text-3xl" />,
+        title: 'Qulay yotoqli xonalar',
         description:
-            'Favqulodda holatlar uchun uzluksiz qabul, reanimatsiya va intensiv terapiya.',
+            'Ortopedik matrass va toza choyshablar, shaxsiy yostiq/ko‘rpa hamda sokin muhitda bemalol dam olish.',
     },
     {
         icon: (
@@ -81,11 +79,7 @@ const WhyNeuro = () => {
                     id="why-neuro-title"
                     className="text-2xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-slate-900 dark:text-slate-100"
                 >
-                    Nega{' '}
-                    <span className="text-[#2464AE] dark:text-blue-300">
-                        Biz
-                    </span>
-                    ni tanlashadi?
+                    Nega bizni tanlashadi?
                 </h2>
 
                 <div className="grid gap-6 sm:gap-7 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
