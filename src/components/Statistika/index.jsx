@@ -55,7 +55,7 @@ const Statistics = () => {
     return (
         <section
             id="statistics"
-            className="py-12 md:py-16 bg-white dark:bg-slate-900 select-none"
+            className="py-12 md:py-16 bg-white dark:bg-slate-900 select-none bg-gradient-to-b from-white to-slate-50 dark:from-slate-900 dark:to-slate-900"
         >
             <div className="w-full md:max-w-3xl lg:max-w-5xl xl:max-w-[1150px] 2xl:max-w-[1400px] mx-auto px-4">
                 <h2 className="text-3xl md:text-4xl font-bold text-center mb-10 md:mb-12 text-slate-900 dark:text-slate-100">
@@ -67,8 +67,8 @@ const Statistics = () => {
                         <div
                             key={idx}
                             className="group rounded-2xl p-6 bg-white/90 dark:bg-slate-800/70 backdrop-blur
-                         shadow-sm ring-1 ring-slate-200/70 dark:ring-slate-700/60
-                         transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
+                                shadow-sm ring-1 ring-slate-200/70 dark:ring-slate-700/60
+                                transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
                         >
                             <div className="mb-3 flex justify-center">
                                 {item.icon}

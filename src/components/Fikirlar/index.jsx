@@ -1,25 +1,23 @@
-import React from 'react';
 import { MessageSquareQuote } from 'lucide-react';
-import Image_1 from '@/assets/icons/it-park.jpg';
 
 const testimonials = [
     {
         name: 'Dilnoza Karimova',
         message:
             'Onamga o‘tkazilgan operatsiya va keyingi parvarish juda yuqori darajada amalga oshirildi. Shifokorlar ham bemor, ham oilasi bilan tinimsiz aloqa qilib, tushuntirib turishdi.',
-        image: Image_1,
+        image: '',
     },
     {
         name: 'Jahongir Xolmatov',
         message:
             'O‘g‘limda murakkab neyroxirurgik tashxis qo‘yildi. Markaz jamoasi bosqichma-bosqich tashxis, operatsiya va reabilitatsiyani juda puxta tashkil qildi. Rahmat sizlarga!',
-        image: Image_1,
+        image: '',
     },
     {
         name: 'Nodira Bekmurodova',
         message:
             'MRI va KT natijalari bo‘yicha tezkor qaror qabul qilindi. Jarayonning har bir bosqichi aniq tushuntirildi, natijadan mamnunmiz.',
-        image: Image_1,
+        image: '',
     },
 ];
 
@@ -27,7 +25,7 @@ const Fikirlar = () => {
     return (
         <section
             id="testimonials"
-            className="py-12 md:py-16 bg-white dark:bg-slate-900"
+            className="py-12 md:py-16 bg-gradient-to-b from-white to-slate-50 dark:from-slate-900 dark:to-slate-900"
         >
             <div className="w-full md:max-w-3xl lg:max-w-5xl xl:max-w-[1150px] 2xl:max-w-[1400px] mx-auto px-4">
                 <h2 className="text-3xl md:text-4xl font-bold text-center mb-3 text-slate-900 dark:text-slate-100">

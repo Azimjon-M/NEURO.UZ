@@ -1,4 +1,4 @@
-// components (placeholder nomlar; sizda real komponentlar bo‘ladi)
+// components (placeholder nomlar; sizda real komponentlar bo'ladi)
 import Main from '@/pages/Main';
 import AboutCenter from '@/pages/AboutCenter';
 
@@ -55,7 +55,7 @@ import Contact from '@/pages/Contact';
 import Search from '@/pages/Search';
 
 const routes = [
-    // 1) Root (odatda menuda ko'rinmaydi)
+    // 1) Root (odatda menuda ko"rinmaydi)
     {
         id: 1,
         titleID: 'nav.home',
@@ -77,11 +77,11 @@ const routes = [
         hidden: false,
     },
 
-    // 3) Bo'limlar (dropdown + index sahifa)
+    // 3) Bo"limlar (dropdown + index sahifa)
     {
         id: 3,
         titleID: 'nav.departments',
-        title: 'Bo‘limlar',
+        title: "Bo'limlar",
         path: '/departments',
         role: null,
         hidden: false,
@@ -96,56 +96,56 @@ const routes = [
             {
                 id: '3.2',
                 titleID: 'dep_spinal',
-                title: 'Orqa miyya neyroxirurgiyasi bo‘limi',
+                title: "Orqa miyya neyroxirurgiyasi bo'limi",
                 path: '/departments/orqa-miyya-neyroxirurgiyasi',
                 element: <DeptSpinal />,
             },
             {
                 id: '3.3',
                 titleID: 'dep_skullbase',
-                title: 'Bosh miyya asosi neyroxirurgiyasi bo‘limi',
+                title: "Bosh miyya asosi neyroxirurgiyasi bo'limi",
                 path: '/departments/bosh-miyya-asosi',
                 element: <DeptSkullBase />,
             },
             {
                 id: '3.4',
                 titleID: 'dep_neurooncology',
-                title: 'Neyro-onkologiya bo‘limi',
+                title: "Neyro-onkologiya bo'limi",
                 path: '/departments/neyro-onkologiya',
                 element: <DeptNeuroOncology />,
             },
             {
                 id: '3.5',
                 titleID: 'dep_pediatric',
-                title: 'Bolalar neyroxirurgiyasi bo‘limi',
+                title: "Bolalar neyroxirurgiyasi bo'limi",
                 path: '/departments/bolalar-neyroxirurgiyasi',
                 element: <DeptPediatric />,
             },
             {
                 id: '3.6',
                 titleID: 'dep_emergency',
-                title: 'Favqulotda neyroxirurgiya va KKT oqibatlari bo‘limi',
+                title: "Favqulotda neyroxirurgiya va KKT oqibatlari bo'limi",
                 path: '/departments/favqulotda-neyroxirurgiya-va-kkt',
                 element: <DeptEmergencyTrauma />,
             },
             {
                 id: '3.7',
                 titleID: 'dep_icu',
-                title: 'Reanimatsiya va intensiv terapiya bo‘limi',
+                title: "Reanimatsiya va intensiv terapiya bo'limi",
                 path: '/departments/reanimatsiya-icu',
                 element: <DeptICU />,
             },
             {
                 id: '3.8',
                 titleID: 'dep_polyclinic',
-                title: 'Konsultativ va poliklinika bo‘limi',
+                title: "Konsultativ va poliklinika bo'limi",
                 path: '/departments/poliklinika',
                 element: <DeptPolyclinic />,
             },
             {
                 id: '3.9',
                 titleID: 'dep_admission',
-                title: 'Qabul bo‘limi',
+                title: "Qabul bo'limi",
                 path: '/departments/qabul-bolimi',
                 element: <DeptAdmission />,
             },
@@ -159,7 +159,7 @@ const routes = [
             {
                 id: '3.11',
                 titleID: 'dep_radiology',
-                title: 'Rentgen bo‘limi',
+                title: "Rentgen bo'limi",
                 path: '/departments/radiologiya',
                 element: <DeptRadiology />,
             },
@@ -173,14 +173,14 @@ const routes = [
             {
                 id: '3.13',
                 titleID: 'dep_vascular',
-                title: 'Qon tomir neyroxirurgiyasi bo‘limi',
+                title: "Qon tomir neyroxirurgiyasi bo'limi",
                 path: '/departments/qon-tomir',
                 element: <DeptVascular />,
             },
             {
                 id: '3.14',
                 titleID: 'dep_peripheral',
-                title: 'Periferik asab jarrohligi va reabilitatsiya bo‘limi',
+                title: "Periferik asab jarrohligi va reabilitatsiya bo'limi",
                 path: '/departments/periferik-asab-va-reabilitatsiya',
                 element: <DeptPeripheralNerve />,
             },
@@ -190,9 +190,9 @@ const routes = [
     // 4) Xizmatlar (leaf)
     // {
     //     id: 4,
-    //     titleID: 'nav.services',
-    //     title: 'Xizmatlar',
-    //     path: '/services',
+    //     titleID: "nav.services",
+    //     title: "Xizmatlar",
+    //     path: "/services",
     //     element: <Services />,
     //     role: null,
     //     hidden: false,
@@ -252,7 +252,7 @@ const routes = [
             {
                 id: '5.7',
                 titleID: 'pat_postdischarge',
-                title: 'Bo‘shatilgandan keyin',
+                title: "Bo'shatilgandan keyin",
                 path: '/patients/boshatilgandan-keyin',
                 element: <PatPostDischarge />,
             },
@@ -266,7 +266,7 @@ const routes = [
             {
                 id: '5.9',
                 titleID: 'pat_faq',
-                title: 'Ko‘p so‘ralgan savollar',
+                title: "Ko'p so'ralgan savollar",
                 path: '/patients/faq',
                 element: <PatFAQ />,
             },
@@ -367,7 +367,7 @@ const routes = [
             {
                 id: '7.2',
                 titleID: 'news_uz',
-                title: 'O‘zbekiston yangiliklari',
+                title: "O'zbekiston yangiliklari",
                 path: '/news/uzbekistan',
                 element: <NewsUz />,
             },
@@ -447,9 +447,9 @@ const routes = [
     // 9) Aloqa (leaf)
     // {
     //     id: 9,
-    //     titleID: 'nav.contact',
-    //     title: 'Aloqa',
-    //     path: '/contact',
+    //     titleID: "nav.contact",
+    //     title: "Aloqa",
+    //     path: "/contact",
     //     element: <Contact />,
     //     role: null,
     //     hidden: false,

@@ -136,7 +136,7 @@ const Navbar = () => {
             className="
                     w-full h-[60px] lg:h-[80px] flex items-center
                     sticky top-0 z-50
-                    bg-white/90 dark:bg-slate-900/80 backdrop-blur
+                    bg-white/90 dark:bg-slate-900/80 backdrop-blur shadow-md
                 "
         >
             {/* SEARCH PANEL — nav (z-40) orqasidan sirg‘alib tushadi */}

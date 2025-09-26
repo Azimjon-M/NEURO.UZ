@@ -1,10 +1,9 @@
 import React from 'react';
 import Sorovnoma from '@/components/Sorovnoma';
 import Carousel from '@/components/Carousel';
-import Footer from '@/components/Footer';
 import WhyChooseUs from '@/components/WhyChooseUs';
-import Cources from '@/components/Cources';
-import Teachers from '@/components/Teachers';
+import Services from '@/components/Services';
+import Experts from '@/components/Experts';
 import Statistika from '@/components/Statistika';
 import Fikirlar from '@/components/Fikirlar';
 import Contact from '@/components/Contact';
@@ -15,12 +14,11 @@ const Main = () => {
             <Carousel />
             <Sorovnoma />
             <WhyChooseUs />
-            <Cources />
-            <Teachers />
+            <Services />
+            <Experts />
             <Statistika />
             <Fikirlar />
             <Contact />
-            <Footer />
         </div>
     );
 };
