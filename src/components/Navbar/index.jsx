@@ -231,7 +231,6 @@ const Navbar = () => {
                                                 `}
                                             />
                                         </button>
-
                                         {/* Dropdown */}
                                         <div
                                             className="
@@ -239,7 +238,6 @@ const Navbar = () => {
                                                 opacity-0 translate-y-5 pointer-events-none
                                                 transition-all duration-300
                                                 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto
-                                                group-focus-within:opacity-100 group-focus-within:translate-y-0 group-focus-within:pointer-events-auto
                                             "
                                         >
                                             <ul
@@ -248,7 +246,7 @@ const Navbar = () => {
                                                     min-w-[240px] p-2 space-y-1 rounded-md
                                                     bg-white dark:bg-slate-800
                                                     text-slate-800 dark:text-slate-100
-                                                    shadow-2xl  ring-slate-200 dark:ring-slate-700
+                                                    shadow-2xl ring-slate-200 dark:ring-slate-700
                                                     border-l-4 border-[#2464AE]
                                                 "
                                             >

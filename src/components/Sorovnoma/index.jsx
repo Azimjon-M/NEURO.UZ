@@ -1,5 +1,6 @@
 import { BsFillMegaphoneFill } from 'react-icons/bs';
 import { FaArrowRight } from 'react-icons/fa6';
+import { Link } from 'react-router';
 
 const Sorovnoma = () => {
     return (
@@ -20,15 +21,13 @@ const Sorovnoma = () => {
                             <BsFillMegaphoneFill />
                         </div>
                         <h2 className="text-base sm:text-xl mt-1 sm:mt-0 font-semibold text-gray-800 dark:text-slate-100 leading-snug">
-                            So'rovnomada ishtirok etish
+                            So'rovnomada ishtirok eting
                         </h2>
                     </div>
 
                     {/* Right: Button */}
-                    <a
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        href="https://neurouzb.pythonanywhere.com/polls/uz/"
+                    <Link
+                        to="/sorovnoma"
                         className="
                             inline-flex items-center justify-center gap-2
                             w-full sm:w-auto
@@ -43,9 +42,9 @@ const Sorovnoma = () => {
                         "
                         aria-label="So'rovnoma uchun ariza qoldirish"
                     >
-                        Ariza qoldirish
+                        So'rovnoma
                         <FaArrowRight />
-                    </a>
+                    </Link>
                 </div>
             </div>
         </section>

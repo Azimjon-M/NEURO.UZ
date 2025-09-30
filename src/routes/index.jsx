@@ -17,7 +17,7 @@ import DeptRegional from '@/pages/departments/Regional';
 import DeptVascular from '@/pages/departments/Vascular';
 import DeptPeripheralNerve from '@/pages/departments/PeripheralNerve';
 
-import Services from '@/pages/Services';
+import Questionnaire from '@/pages/Questionnaire';
 
 import PatPediatric from '@/pages/patients/Pediatric';
 import PatNeuroOncology from '@/pages/patients/NeuroOncology';
@@ -443,7 +443,15 @@ const routes = [
         role: null,
         hidden: true,
     },
-
+    {
+        id: 10,
+        titleID: ' ',
+        title: "So'rovnoma",
+        path: '/sorovnoma',
+        element: <Questionnaire />,
+        role: null,
+        hidden: true,
+    },
     // 9) Aloqa (leaf)
     // {
     //     id: 9,

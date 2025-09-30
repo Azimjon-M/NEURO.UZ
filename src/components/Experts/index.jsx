@@ -1,68 +1,93 @@
-import React from 'react';
+// src/components/Experts.jsx
+import React, { useEffect, useMemo, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
-import Image_1 from '@/assets/icons/it-park.jpg';
 import { User2 } from 'lucide-react';
-
-const experts = [
-    {
-        id: 1,
-        name: 'Abdulloh Qodirov asdasdas asdasd siaukhdaiujksdh aiushdiuashdiu',
-        subject: 'Matematika va qo‘shimcha nazariy fizika',
-        image: '',
-        schedule: 'Dush–Jum, 9:00–17:00',
-        phone: '+998 90 123-45-67',
-        email: 'abdulloh@example.com',
-    },
-    {
-        id: 2,
-        name: 'Ziyoda Karimova',
-        subject: 'Ingliz tili',
-        image: '',
-        schedule: 'Dush–Jum, 9:00–17:00',
-        phone: '+998 93 555-12-34',
-        email: 'ziyoda.karimova@example.com',
-    },
-    {
-        id: 3,
-        name: 'Shavkat Tursunov',
-        subject: 'Biologiya',
-        image: '',
-        schedule: 'Dush–Jum, 9:00–17:00',
-        phone: '+998 95 700-11-22',
-        email: 'shavkat.tursunov@example.com',
-    },
-    {
-        id: 4,
-        name: 'Dilorom Mamatova',
-        subject: 'Kimyo – organik/ noorganik',
-        image: '',
-        schedule: 'Dush–Jum, 9:00–17:00',
-        phone: '+998 97 321-00-77',
-        email: 'dilorom@example.com',
-    },
-    {
-        id: 5,
-        name: 'Javlonbek Karimov',
-        subject: 'Fizika',
-        image: '',
-        schedule: 'Dush–Jum, 9:00–17:00',
-        phone: '+998 99 240-33-66',
-        email: 'javlonbek.karimov@example.com',
-    },
-    {
-        id: 6,
-        name: 'Gulrux Toshpulatova',
-        subject: 'Tarix',
-        image: '',
-        schedule: 'Dush–Jum, 9:00–17:00',
-        phone: '+998 90 888-44-55',
-        email: 'gulrux.toshpulatova@example.com',
-    },
-];
+import ApiResult from '@/services/main';
+import BolimDetailModal from '@/components/BolimDetailModal';
 
 const Experts = () => {
+    const [data, setData] = useState(null);
+    const [detail, setDetail] = useState({ open: false, leader: null });
+
+    const lang = useMemo(() => {
+        const ls =
+            typeof window !== 'undefined' ? localStorage.getItem('lang') : null;
+        const raw = (
+            ls || (typeof navigator !== 'undefined' ? navigator.language : 'uz')
+        ).toLowerCase();
+        if (raw.startsWith('ru')) return 'ru';
+        if (raw.startsWith('en')) return 'en';
+        return 'uz';
+    }, []);
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const res = await (ApiResult.getStaff
+                    ? ApiResult.getStaff()
+                    : ApiResult.getExperts());
+                setData(res); // res.data emas bo‘lishi mumkin
+                console.log(res);
+            } catch (e) {
+                console.error(e);
+                setData([]);
+            }
+        })();
+    }, []);
+
+    const raw = Array.isArray(data)
+        ? data
+        : Array.isArray(data?.data)
+        ? data.data
+        : Array.isArray(data?.results)
+        ? data.results
+        : [];
+
+    // DTO -> UI
+    const experts = raw
+        .sort((a, b) => (a?.order ?? 0) - (b?.order ?? 0))
+        .map((dto) => ({
+            id: dto.id,
+            name: dto.full_name,
+            subject: dto?.i18n?.[lang]?.position || dto?.position || '',
+            image: dto.photo_url || '',
+            schedule: dto?.i18n?.[lang]?.reception || dto?.reception || '',
+            phone: dto?.phone || '',
+            email: dto?.email || '',
+            _dto: dto, // kerak bo'lsa qo'shimcha maydonlar uchun
+        }));
+
+    // Modalga mos obyekt (Leaders modali bilan mos kelishi uchun)
+    const mapToLeaderShape = (t) => ({
+        id: t.id,
+        name: t.name,
+        role: t.subject, // Leaders modalidagi "role"ga mos
+        department: 'Mutaxassis', // bo‘lmasa default
+        photo: t.image,
+        reception: t.schedule,
+        phone: t.phone,
+        email: t.email,
+    });
+
+    const openDetail = (t) => {
+        setDetail({ open: true, leader: mapToLeaderShape(t) });
+    };
+
+    const handleBook = (leader) => {
+        // BU YERGA bron jarayonini ulang (masalan, router yoki form)
+        // masalan: navigate(`/appointments/new?expert_id=${leader.id}`)
+        console.log('Book clicked:', leader);
+    };
+
+    const bookLabel =
+        lang === 'ru'
+            ? 'Записаться на приём'
+            : lang === 'en'
+            ? 'Book appointment'
+            : 'Qabulga yozilish';
+
     return (
         <section
             id="teachers"
@@ -73,14 +98,14 @@ const Experts = () => {
                     Mutaxassislar jamoasi
                 </h2>
                 <p className="text-slate-600 dark:text-slate-300 text-center max-w-2xl mx-auto mb-10">
-                    Tajribali va fidoyi ustozlar/ shifokorlar jamoamiz kelajakni
+                    Tajribali va fidoyi ustozlar/shifokorlar jamoamiz kelajakni
                     birga quradi.
                 </p>
 
                 <Swiper
                     modules={[Autoplay]}
                     autoplay={{ delay: 2600, disableOnInteraction: false }}
-                    loop
+                    loop={experts.length > 1}
                     spaceBetween={20}
                     breakpoints={{
                         0: { slidesPerView: 1 },
@@ -92,116 +117,160 @@ const Experts = () => {
                     }}
                     className="!pb-2 bg-transparent"
                 >
-                    {experts.map((t) => {
-                        const role = t.role || t.subject;
-                        return (
-                            <SwiperSlide
-                                key={t.id}
-                                className="!h-auto cursor-pointer active:cursor-grabbing !bg-transparent"
-                            >
-                                <article
-                                    className="h-full w-full overflow-hidden rounded-2xl shadow-sm
-                                        ring-1 ring-slate-200/70 dark:ring-slate-700/60
-                                    bg-white dark:bg-slate-800/70 backdrop-blur
-                                        transition-shadow duration-200 hover:shadow-lg
-                                        md:min-h-[520px]"
+                    {experts.length ? (
+                        experts.map((t) => {
+                            const role = t.subject;
+                            return (
+                                <SwiperSlide
+                                    key={t.id}
+                                    className="!h-auto cursor-pointer active:cursor-grabbing !bg-transparent"
                                 >
-                                    {/* TOP IMAGE */}
-                                    <div className="w-full h-56 md:h-64">
-                                        {t.image ? (
-                                            <img
-                                                src={t.image}
-                                                alt={t.name}
-                                                loading="lazy"
-                                                className="w-full h-full object-cover"
-                                            />
-                                        ) : (
-                                            <div className="w-full h-full grid place-items-center bg-slate-100 dark:bg-slate-700">
-                                                <User2 className="w-12 h-12 text-slate-400 dark:text-slate-300" />
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {/* CONTENT */}
-                                    <div className="p-5">
-                                        {/* Name */}
-                                        <h3
-                                            className="text-lg md:text-xl font-extrabold text-slate-900 dark:text-slate-100 text-center leading-snug uppercase tracking-wide"
-                                            style={{
-                                                display: '-webkit-box',
-                                                WebkitLineClamp: 2,
-                                                WebkitBoxOrient: 'vertical',
-                                                overflow: 'hidden',
-                                            }}
-                                            title={t.name}
-                                        >
-                                            {t.name}
-                                        </h3>
-
-                                        {/* Details */}
-                                        <div className="mt-3 space-y-2">
-                                            {role && (
-                                                <p className="text-sm leading-relaxed">
-                                                    <span className="font-semibold text-slate-900 dark:text-slate-100">
-                                                        Lavozim:{' '}
-                                                    </span>
-                                                    <span className="text-slate-700 dark:text-slate-300">
-                                                        {role}
-                                                    </span>
-                                                </p>
-                                            )}
-
-                                            {t.schedule && (
-                                                <p className="text-sm leading-relaxed">
-                                                    <span className="font-semibold text-slate-900 dark:text-slate-100">
-                                                        Qabul vaqti:{' '}
-                                                    </span>
-                                                    <span className="text-slate-700 dark:text-slate-300">
-                                                        {t.schedule}
-                                                    </span>
-                                                </p>
-                                            )}
-
-                                            {t.phone && (
-                                                <p className="text-sm leading-relaxed">
-                                                    <span className="font-semibold text-slate-900 dark:text-slate-100">
-                                                        Telefon:{' '}
-                                                    </span>
-                                                    <a
-                                                        href={`tel:${t.phone.replace(
-                                                            /\s+/g,
-                                                            ''
-                                                        )}`}
-                                                        className="text-[#2464AE] dark:text-blue-300 hover:underline"
-                                                        aria-label={`Telefon raqami ${t.phone}`}
-                                                    >
-                                                        {t.phone}
-                                                    </a>
-                                                </p>
-                                            )}
-
-                                            {t.email && (
-                                                <p className="text-sm leading-relaxed">
-                                                    <span className="font-semibold text-slate-900 dark:text-slate-100">
-                                                        Email:{' '}
-                                                    </span>
-                                                    <a
-                                                        href={`mailto:${t.email}`}
-                                                        className="text-[#2464AE] dark:text-blue-300 hover:underline break-all"
-                                                        aria-label={`Email manzili ${t.email}`}
-                                                    >
-                                                        {t.email}
-                                                    </a>
-                                                </p>
+                                    <article
+                                        onClick={() => openDetail(t)}
+                                        role="button"
+                                        tabIndex={0}
+                                        onKeyDown={(e) =>
+                                            e.key === 'Enter'
+                                                ? openDetail(t)
+                                                : null
+                                        }
+                                        className="h-full w-full overflow-hidden rounded-2xl shadow-sm
+                      ring-1 ring-slate-200/70 dark:ring-slate-700/60
+                      bg-white dark:bg-slate-800/70 backdrop-blur
+                      transition-shadow duration-200 hover:shadow-lg
+                      md:min-h-[560px]" /* biroz balandroq joy qoldiramiz btn uchun */
+                                    >
+                                        {/* TOP IMAGE */}
+                                        <div className="w-full h-56 md:h-64">
+                                            {t.image ? (
+                                                <img
+                                                    src={t.image}
+                                                    alt={t.name}
+                                                    loading="lazy"
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full grid place-items-center bg-slate-100 dark:bg-slate-700">
+                                                    <User2 className="w-12 h-12 text-slate-400 dark:text-slate-300" />
+                                                </div>
                                             )}
                                         </div>
-                                    </div>
-                                </article>
-                            </SwiperSlide>
-                        );
-                    })}
+
+                                        {/* CONTENT */}
+                                        <div className="p-5 flex flex-col h-[calc(100%-theme(space.56))] md:h-[calc(100%-theme(space.64))]">
+                                            {/* Name */}
+                                            <h3
+                                                className="text-lg md:text-xl font-extrabold text-slate-900 dark:text-slate-100 text-center leading-snug uppercase tracking-wide"
+                                                style={{
+                                                    display: '-webkit-box',
+                                                    WebkitLineClamp: 2,
+                                                    WebkitBoxOrient: 'vertical',
+                                                    overflow: 'hidden',
+                                                }}
+                                                title={t.name}
+                                            >
+                                                {t.name}
+                                            </h3>
+
+                                            {/* Details */}
+                                            <div className="mt-3 space-y-2 text-sm leading-relaxed grow">
+                                                {role && (
+                                                    <p>
+                                                        <span className="font-semibold text-slate-900 dark:text-slate-100">
+                                                            Lavozim:{' '}
+                                                        </span>
+                                                        <span className="text-slate-700 dark:text-slate-300">
+                                                            {role}
+                                                        </span>
+                                                    </p>
+                                                )}
+
+                                                {t.schedule && (
+                                                    <p>
+                                                        <span className="font-semibold text-slate-900 dark:text-slate-100">
+                                                            Qabul vaqti:{' '}
+                                                        </span>
+                                                        <span className="text-slate-700 dark:text-slate-300">
+                                                            {t.schedule}
+                                                        </span>
+                                                    </p>
+                                                )}
+
+                                                {t.phone && (
+                                                    <p>
+                                                        <span className="font-semibold text-slate-900 dark:text-slate-100">
+                                                            Telefon:{' '}
+                                                        </span>
+                                                        <a
+                                                            href={`tel:${t.phone.replace(
+                                                                /\s+/g,
+                                                                ''
+                                                            )}`}
+                                                            className="text-[#2464AE] dark:text-blue-300 hover:underline"
+                                                            aria-label={`Telefon raqami ${t.phone}`}
+                                                            onClick={(e) =>
+                                                                e.stopPropagation()
+                                                            }
+                                                        >
+                                                            {t.phone}
+                                                        </a>
+                                                    </p>
+                                                )}
+
+                                                {t.email && (
+                                                    <p className="break-all">
+                                                        <span className="font-semibold text-slate-900 dark:text-slate-100">
+                                                            Email:{' '}
+                                                        </span>
+                                                        <a
+                                                            href={`mailto:${t.email}`}
+                                                            className="text-[#2464AE] dark:text-blue-300 hover:underline"
+                                                            aria-label={`Email manzili ${t.email}`}
+                                                            onClick={(e) =>
+                                                                e.stopPropagation()
+                                                            }
+                                                        >
+                                                            {t.email}
+                                                        </a>
+                                                    </p>
+                                                )}
+                                            </div>
+
+                                            {/* Qabulga yozilish */}
+                                            <button
+                                                type="button"
+                                                className="mt-4 inline-flex items-center justify-center rounded-xl px-4 py-2 font-semibold
+                                                    bg-[#2464AE] text-white hover:opacity-95 active:opacity-90 transition
+                                                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2464AE]"
+                                                onClick={(e) => {
+                                                    e.stopPropagation(); // Swiper slide siljimasin
+                                                    openDetail(t);
+                                                }}
+                                            >
+                                                {bookLabel}
+                                            </button>
+                                        </div>
+                                    </article>
+                                </SwiperSlide>
+                            );
+                        })
+                    ) : (
+                        <SwiperSlide>
+                            <div className="w-full h-[260px] md:h-[320px] grid place-items-center text-slate-500 dark:text-slate-300">
+                                Ma’lumot topilmadi
+                            </div>
+                        </SwiperSlide>
+                    )}
                 </Swiper>
             </div>
+
+            {/* Reusable modal (Leaders bilan bir xil) */}
+            <BolimDetailModal
+                open={detail.open}
+                data={data}
+                onClose={() => setDetail({ open: false, leader: null })}
+                onBook={handleBook}
+            />
         </section>
     );
 };

@@ -8,11 +8,14 @@ import {
     FaMapMarkerAlt,
     FaEnvelope,
 } from 'react-icons/fa';
+import { HiOutlineMail } from 'react-icons/hi';
+import { IoLogoYoutube } from 'react-icons/io5';
 import Logo from '@/assets/logo/newLogo.png';
+import { BsYoutube } from 'react-icons/bs';
 
 const Footer = () => {
     return (
-        <footer className="bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-300 pt-12 pb-6 border-t border-slate-200 dark:border-slate-800">
+        <footer className="bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 pt-12 pb-6 border-t border-slate-200 dark:border-slate-800">
             <div className="w-full md:max-w-3xl lg:max-w-5xl xl:max-w-[1150px] 2xl:max-w-[1400px] mx-auto px-4">
                 <div className="grid gap-8 md:grid-cols-4 pb-10">
                     {/* 1) Brand */}
@@ -150,7 +153,8 @@ const Footer = () => {
                         </h3>
                         <div className="flex items-center gap-3">
                             <a
-                                href="https://t.me/"
+                                aria-disabled
+                                href=""
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="w-10 h-10 rounded-full grid place-items-center ring-1 ring-slate-200 dark:ring-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
@@ -159,7 +163,7 @@ const Footer = () => {
                                 <FaTelegram className="text-[20px] text-[#2464AE] dark:text-blue-300" />
                             </a>
                             <a
-                                href="https://facebook.com/"
+                                href="https://www.facebook.com/neurosurgerycenter"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="w-10 h-10 rounded-full grid place-items-center ring-1 ring-slate-200 dark:ring-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
@@ -175,6 +179,24 @@ const Footer = () => {
                                 aria-label="Instagram"
                             >
                                 <FaInstagram className="text-[20px] text-[#2464AE] dark:text-blue-300" />
+                            </a>
+                            <a
+                                href="https://www.youtube.com/@neyrosentrtashkent"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-10 h-10 rounded-full grid place-items-center ring-1 ring-slate-200 dark:ring-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                                aria-label="Instagram"
+                            >
+                                <IoLogoYoutube className="text-[20px] text-[#2464AE] dark:text-blue-300" />
+                            </a>
+                            <a
+                                href="https://@neuro.uz"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-10 h-10 rounded-full grid place-items-center ring-1 ring-slate-200 dark:ring-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                                aria-label="Instagram"
+                            >
+                                <HiOutlineMail className="text-[20px] text-[#2464AE] dark:text-blue-300" />
                             </a>
                         </div>
                     </div>
