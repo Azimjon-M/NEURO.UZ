@@ -4,12 +4,31 @@ import { getSupportChatHistory, startSupportChat } from '@/services/support';
 
 const CHAT_PATH = import.meta.env.VITE_WS_CHAT_PATH || '/ws/chat';
 
+// Storage kalitlari
+const K_SID = 'support_session_id';
+const K_TKN = 'support_client_token';
+const K_URL = 'support_websocket_url';
+
+// localStorage / sessionStorage safe getterlari
+const getLS = () => {
+    try {
+        return window.localStorage;
+    } catch {
+        return null;
+    }
+};
+const getSS = () => {
+    try {
+        return window.sessionStorage;
+    } catch {
+        return null;
+    }
+};
+
+// WS bazasini topish (VITE_WS_BASE > VITE_SUPPORT_API host > window.location)
 function wsBaseSmart() {
-    // 1) Agar VITE_WS_BASE bo‘lsa, o‘shani oling
     const env = import.meta.env.VITE_WS_BASE;
     if (env) return env.replace(/\/$/, '');
-
-    // 2) Aks holda VITE_SUPPORT_API’dan hostni ajratib oling va ws/wss ga o‘giring
     const sup = import.meta.env.VITE_SUPPORT_API;
     if (sup) {
         try {
@@ -20,8 +39,6 @@ function wsBaseSmart() {
             /* pass */
         }
     }
-
-    // 3) Fallback: sahifa hosti
     const scheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
     return `${scheme}://${window.location.host}`;
 }
@@ -46,23 +63,26 @@ export default function useSupportChat({
     const closedByUserRef = useRef(false);
     const connIdRef = useRef(0);
     const wsBase = wsBaseSmart();
-    const wsUrlRef = useRef(null); // backend start() qaytargan websocket_url (agar bo‘lsa)
+    const wsUrlRef = useRef(null); // backend start() qaytargan websocket_url (optional)
 
-    const clearTimer = () => {
+    // --- helpers ---
+    const clearTimer = useCallback(() => {
         if (timerRef.current) {
             clearTimeout(timerRef.current);
             timerRef.current = null;
         }
-    };
-    const safeClose = () => {
+    }, []);
+
+    const safeClose = useCallback(() => {
         try {
             wsRef.current?.close();
         } catch (err) {
-            console.log(err);
+            if (debug) console.log(err);
         }
         wsRef.current = null;
-    };
-    const flushQueue = () => {
+    }, [debug]);
+
+    const flushQueue = useCallback(() => {
         const ws = wsRef.current;
         if (!ws || ws.readyState !== WebSocket.OPEN) return;
         if (!queueRef.current.length) return;
@@ -72,7 +92,7 @@ export default function useSupportChat({
             if (debug) console.log('[WS] flush error:', e);
         }
         queueRef.current = [];
-    };
+    }, [debug]);
 
     const connect = useCallback(
         (sid, tkn) => {
@@ -80,33 +100,29 @@ export default function useSupportChat({
             clearTimer();
             safeClose();
 
-            // 1) start() javobida websocket_url kelsa – ana shu bo‘yicha ulanamiz
             let url = wsUrlRef.current;
             if (url) {
-                // to‘liq emas ("/ws/chat/...") bo‘lsa, wsBase bilan to‘ldiramiz
                 if (!/^wss?:\/\//i.test(url)) {
                     url = `${wsBase}${url.startsWith('/') ? '' : '/'}${url}`;
                 }
             } else {
-                // 2) Aks holda o‘zimiz yasaymiz
                 url = `${wsBase}${CHAT_PATH}/${sid}/?token=${encodeURIComponent(
                     tkn
                 )}`;
             }
 
-            if (debug) console.log('[WS] connecting:', url);
             const ws = new WebSocket(url);
             wsRef.current = ws;
             const myConnId = ++connIdRef.current;
 
             ws.onopen = () => {
                 if (connIdRef.current !== myConnId) return;
-                if (debug) console.log('[WS] open');
                 setConnected(true);
                 setStatus('open');
                 retryRef.current = 0;
                 flushQueue();
             };
+
             ws.onmessage = (ev) => {
                 if (connIdRef.current !== myConnId) return;
                 try {
@@ -118,11 +134,13 @@ export default function useSupportChat({
                     if (debug) console.log('[WS] parse error:', e);
                 }
             };
+
             ws.onerror = (e) => {
                 if (connIdRef.current !== myConnId) return;
                 if (debug) console.log('[WS] error:', e);
                 setStatus((s) => (s === 'idle' ? 'error' : s));
             };
+
             ws.onclose = (e) => {
                 if (connIdRef.current !== myConnId) return;
                 if (debug) console.log('[WS] close:', e.code, e.reason);
@@ -149,7 +167,17 @@ export default function useSupportChat({
                 }
             };
         },
-        [wsBase, reconnect, maxRetries, debug, sessionId, token]
+        [
+            wsBase,
+            reconnect,
+            maxRetries,
+            debug,
+            sessionId,
+            token,
+            clearTimer,
+            safeClose,
+            flushQueue,
+        ]
     );
 
     const fetchHistory = useCallback(
@@ -168,14 +196,97 @@ export default function useSupportChat({
         [debug]
     );
 
-    useEffect(() => {
-        if (!autoResume) return;
+    // === CHANGES: mark ===
+    // LS -> hook state sync helper (bir xil kodni qayta yozmaslik uchun)
+    const syncFromStorage = useCallback(() => {
         try {
-            const sid = sessionStorage.getItem('support_session_id');
-            const tkn = sessionStorage.getItem('support_client_token');
+            const L = getLS();
+            const sid = L?.getItem(K_SID) || null;
+            const tkn = L?.getItem(K_TKN) || null;
+            const wsu = L?.getItem(K_URL) || null;
+
+            // Hech narsa o‘zgarmagan bo‘lsa qaytamiz
+            if (sid === sessionId && tkn === token) return false;
+
+            // Sessiya bor — statega qo‘yamiz
             if (sid && tkn) {
                 setSessionId(sid);
                 setToken(tkn);
+                if (wsu) wsUrlRef.current = wsu;
+                setStatus((s) => (s === 'idle' ? 'queued' : s));
+                return true;
+            }
+
+            // LS tozalangan bo‘lsa — state ham tozalansin
+            if (!sid || !tkn) {
+                closedByUserRef.current = true;
+                clearTimer();
+                safeClose();
+                queueRef.current = [];
+                wsUrlRef.current = null;
+                setSessionId(null);
+                setToken(null);
+                setAssignedAgent(null);
+                setMessages([]);
+                setConnected(false);
+                setStatus('idle');
+                retryRef.current = 0;
+                return true;
+            }
+        } catch (e) {
+            if (debug) console.log('[syncFromStorage] error:', e);
+        }
+        return false;
+    }, [sessionId, token, clearTimer, safeClose, debug]);
+
+    // === CHANGES: public resume() — komponent xohlasa o‘zi chaqira oladi
+    const resume = useCallback(
+        (payload) => {
+            if (payload?.id && payload?.token) {
+                // Parametr bilan majburan tiklash
+                setSessionId(payload.id);
+                setToken(payload.token);
+                if (payload.websocket_url)
+                    wsUrlRef.current = payload.websocket_url;
+                setStatus((s) => (s === 'idle' ? 'queued' : s));
+                return true;
+            }
+            return syncFromStorage();
+        },
+        [syncFromStorage]
+    );
+
+    // --- AUTO RESUME + sessionStorage -> localStorage migratsiyasi ---
+    useEffect(() => {
+        if (!autoResume) return;
+        try {
+            const L = getLS();
+            let sid = L?.getItem(K_SID);
+            let tkn = L?.getItem(K_TKN);
+            let wsu = L?.getItem(K_URL);
+
+            if (!sid || !tkn) {
+                const S = getSS();
+                const ssSid = S?.getItem(K_SID);
+                const ssTkn = S?.getItem(K_TKN);
+                const ssUrl = S?.getItem(K_URL);
+                if (ssSid && ssTkn) {
+                    L?.setItem(K_SID, ssSid);
+                    L?.setItem(K_TKN, ssTkn);
+                    if (ssUrl) L?.setItem(K_URL, ssUrl);
+                    S?.removeItem(K_SID);
+                    S?.removeItem(K_TKN);
+                    S?.removeItem(K_URL);
+                    sid = ssSid;
+                    tkn = ssTkn;
+                    wsu = ssUrl || null;
+                }
+            }
+
+            if (sid && tkn) {
+                setSessionId(sid);
+                setToken(tkn);
+                if (wsu) wsUrlRef.current = wsu;
                 setStatus('queued');
             }
         } catch (e) {
@@ -183,6 +294,7 @@ export default function useSupportChat({
         }
     }, [autoResume, debug]);
 
+    // Sessiya paydo bo'lganda — tarix + WS
     useEffect(() => {
         if (!sessionId || !token) return;
         closedByUserRef.current = false;
@@ -192,8 +304,33 @@ export default function useSupportChat({
             clearTimer();
             safeClose();
         };
-    }, [sessionId, token, fetchHistory, connect]);
+    }, [sessionId, token, fetchHistory, connect, clearTimer, safeClose]);
 
+    // === CHANGES: storage + custom event tinglovchilari
+    useEffect(() => {
+        const onStorage = (e) => {
+            if (!e) return;
+            if (e.key === K_SID || e.key === K_TKN || e.key === K_URL) {
+                // if (debug) console.log('[storage] change:', e.key);
+                // const changed = syncFromStorage();
+                // changed true bo‘lsa connect/history effektlari o‘zlari ishlaydi
+                void syncFromStorage();
+            }
+        };
+        const onCustom = () => {
+            if (debug) console.log('[event] support:session_changed');
+            syncFromStorage();
+        };
+        window.addEventListener('storage', onStorage);
+        window.addEventListener('support:session_changed', onCustom);
+
+        return () => {
+            window.removeEventListener('storage', onStorage);
+            window.removeEventListener('support:session_changed', onCustom);
+        };
+    }, [syncFromStorage, debug]);
+
+    // Start chat (HTTP) — natijani localStorage'ga yozamiz
     const startChat = useCallback(
         async ({ full_name, age, gender, phone }) => {
             setStatus('starting');
@@ -204,6 +341,7 @@ export default function useSupportChat({
                     gender,
                     phone,
                 });
+
                 const sid = data?.session_id || null;
                 const tkn = data?.client_token || null;
 
@@ -212,14 +350,22 @@ export default function useSupportChat({
                 setStatus(data?.status || 'queued');
                 setAssignedAgent(data?.assigned_agent || null);
 
-                // backenddan kelsa — keyingi connect uchun saqlab qo‘yamiz
                 wsUrlRef.current = data?.websocket_url || null;
 
                 try {
-                    sessionStorage.setItem('support_session_id', sid || '');
-                    sessionStorage.setItem('support_client_token', tkn || '');
+                    const L = getLS();
+                    L?.setItem(K_SID, sid || '');
+                    L?.setItem(K_TKN, tkn || '');
+                    if (wsUrlRef.current) L?.setItem(K_URL, wsUrlRef.current);
                 } catch (e) {
                     if (debug) console.log('[start] storage error:', e);
+                }
+
+                // === CHANGES: shu tabda ham sinxron bo‘lishi uchun custom event
+                try {
+                    window.dispatchEvent(new Event('support:session_changed'));
+                } catch (err) {
+                    console.log(err);
                 }
 
                 return data;
@@ -232,6 +378,7 @@ export default function useSupportChat({
         [debug]
     );
 
+    // Xabar yuborish
     const sendMessage = useCallback(
         (text) => {
             const s = (text ?? '').trim();
@@ -260,6 +407,7 @@ export default function useSupportChat({
         [connect, debug, sessionId, token]
     );
 
+    // Tozalash (faqat siz chaqirsangiz)
     const clearSession = useCallback(() => {
         closedByUserRef.current = true;
         clearTimer();
@@ -267,8 +415,10 @@ export default function useSupportChat({
         queueRef.current = [];
         wsUrlRef.current = null;
         try {
-            sessionStorage.removeItem('support_session_id');
-            sessionStorage.removeItem('support_client_token');
+            const L = getLS();
+            L?.removeItem(K_SID);
+            L?.removeItem(K_TKN);
+            L?.removeItem(K_URL);
         } catch (e) {
             if (debug) console.log('[clear] storage error:', e);
         }
@@ -279,7 +429,14 @@ export default function useSupportChat({
         setConnected(false);
         setStatus('idle');
         retryRef.current = 0;
-    }, [debug]);
+
+        // === CHANGES: shu tabga ham signal
+        try {
+            window.dispatchEvent(new Event('support:session_changed'));
+        } catch (err) {
+            console.log(err);
+        }
+    }, [debug, clearTimer, safeClose]);
 
     return {
         sessionId,
@@ -291,5 +448,7 @@ export default function useSupportChat({
         startChat,
         sendMessage,
         clearSession,
+        // === CHANGES: tashqariga beramiz
+        resume,
     };
 }

@@ -3,11 +3,8 @@ import { X } from 'lucide-react';
 import useSupportChat from '@/hooks/useSupportChat';
 import SupportChatAuthModal from '@/components/SupportChatAuthModal';
 
-export default function BolimDetailModal({ open, leader, onClose, onBook }) {
-    const src = useMemo(
-        () => leader?._raw || leader?._dto || leader || null,
-        [leader]
-    );
+export default function BolimDetailModal({ open, data, onClose, onBook }) {
+    const src = useMemo(() => data?._raw || data?._dto || data || null, [data]);
     const L = useMemo(() => src?.i18n?.uz || {}, [src]);
 
     const person = useMemo(() => {
@@ -25,34 +22,14 @@ export default function BolimDetailModal({ open, leader, onClose, onBook }) {
         };
     }, [src, L]);
 
-    // YANGI HOOK: nomlar o'zgargan
-    const {
-        sessionId,
-        token, // oldingi clientToken -> token
-        status,
-        messages,
-        startChat, // oldingi start -> startChat
-        sendMessage, // oldingi send  -> sendMessage
-        clearSession,
-    } = useSupportChat({ autoResume: false, debug: true });
+    // MUHIM: autoResume ni OCHIQ qoldiramiz (default true), shunda localStorage’dan tiklaydi
+    const { sessionId, token, status, messages, startChat, sendMessage } =
+        useSupportChat({ debug: true }); // autoResume ni bermadik -> default true
 
     const [text, setText] = useState('');
     const [loginOpen, setLoginOpen] = useState(false);
     const listRef = useRef(null);
 
-    // Modal ochilganda eski sessiyani tozalash
-    useEffect(() => {
-        if (open) {
-            try {
-                clearSession();
-            } catch (err) {
-                console.log(err);
-            }
-            setText('');
-        }
-    }, [open, clearSession]);
-
-    // Scrollni pastga tushirish
     useEffect(() => {
         try {
             if (open && listRef.current) {
@@ -118,10 +95,10 @@ export default function BolimDetailModal({ open, leader, onClose, onBook }) {
                     </h3>
                     <button
                         onClick={onClose}
-                        className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                        className="p-2 rounded-xl hover:bg-red-100 dark:hover:bg-slate-800 transition cursor-pointer"
                         aria-label="Yopish"
                     >
-                        <X className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+                        <X className="w-5 h-5 text-red-600 dark:text-slate-300" />
                     </button>
                 </div>
 
@@ -219,7 +196,7 @@ export default function BolimDetailModal({ open, leader, onClose, onBook }) {
                             )}
                         </ul>
 
-                        <div className="mt-4 flex justify-end">
+                        <div className="mt-4 flex justify-end gap-2">
                             <button
                                 type="button"
                                 onClick={() => onBook?.(person)}
@@ -236,7 +213,7 @@ export default function BolimDetailModal({ open, leader, onClose, onBook }) {
                     <div className="rounded-2xl border border-slate-200/70 dark:border-slate-700/60 overflow-hidden">
                         <div className="px-4 py-2 bg-slate-100/70 dark:bg-slate-800/60 flex items-center justify-between">
                             <div className="text-sm font-semibold">
-                                Yordam chat
+                                Sizning yozishmalaringiz
                             </div>
                             <div className="text-xs text-slate-500">
                                 {status === 'open'
@@ -340,19 +317,9 @@ export default function BolimDetailModal({ open, leader, onClose, onBook }) {
                         </form>
                     </div>
                 </div>
-
-                <div className="px-5 py-4 flex items-center justify-end gap-3 border-t border-slate-200/60 dark:border-slate-700/60">
-                    <button
-                        type="button"
-                        onClick={onClose}
-                        className="px-4 py-2 rounded-xl font-semibold bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 hover:opacity-95 transition"
-                    >
-                        Yopish
-                    </button>
-                </div>
             </div>
 
-            {/* Alohida modal */}
+            {/* Kirish modal */}
             <SupportChatAuthModal
                 open={loginOpen}
                 onClose={() => setLoginOpen(false)}

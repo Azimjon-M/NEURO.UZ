@@ -29,7 +29,6 @@ const Experts = () => {
                     ? ApiResult.getStaff()
                     : ApiResult.getExperts());
                 setData(res); // res.data emas bo‘lishi mumkin
-                console.log(res);
             } catch (e) {
                 console.error(e);
                 setData([]);
