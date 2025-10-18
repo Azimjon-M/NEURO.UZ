@@ -55,12 +55,202 @@
         "news_uz": "O‘zbekiston yangiliklari",
         "news_intl": "Xalqaro yangiliklar",
         "news_medicaltourism": "Tibbiy turizm",
-        "news_ecostaff": "Ekofaol xodim",
+        "news_ecostaff": "Ekofaol hodim",
 
         "gal_general": "Umumiy rasmlar",
         "gal_operations": "Operatsiyalar rasmlari",
         "gal_congress3": "3-kongressdan lavhalar",
-        "gal_ca_congress": "Markaziy Osiyo xalqaro kongressi va 7-jahon mini-invaziv neyroxirurglar kongressi"
+        "gal_ca_congress": "Markaziy Osiyo xalqaro kongressi va 7-jahon mini-invaziv neyroxirurglar kongressi",
+        "pageTitle": "Bolalar Neyroxirurgiyasi",
+        "pageSubtitle": "Kontent tipografiyasi bir xil va ixcham — boshqa accordionlarga ham klonlash oson.",
+        "lipo": {
+            "title": "Lipomiyelomeningocele",
+            "h2": "Lipomiyelomeningocele",
+            "whatH3": "Lipomiyelomeningocele nima?",
+            "whatP1": "Tetering-sindrom (yoki “fiksatsiyalangan orqa miya sindromi”) — orqa miya atrof to‘qimalarga g‘ayrioddiy birikib qolishi va umurtqa kanali ichida erkin harakatlanolmasligi holati. Bola o‘sishi bilan tortilish kuchayib, nervlar shikastlanishi va yurish hamda siydik pufagi nazoratining yo‘qolishiga olib kelishi mumkin. Holat homiladorlikning erta bosqichlarida shakllanadi va ko‘pincha tug‘ma anomaliyalar (spina bifida, lipoma, fibroz to‘qima) bilan bog‘liq.",
+            "whyH3": "Nega aynan bizning markaz?",
+            "whyP1": "Biz tug‘ma asab tizimi kasalliklari, jumladan, tetering-sindromni tashxislash va jarrohlik davolashda ixtisoslashganmiz. Zamonaviy texnologiyalar, intraoperatsion neyromonitoring va xalqaro hamkorlik (Germaniya, AQSH, Yaponiya, Koreya, Turkiya) — ustunligimiz.",
+            "whyL": [
+                "Murakkab umurtqa va asab tizimi kasalliklarida tajribali bolalar neyroxirurglari jamoasi.",
+                "Operatsiya vaqtida xavflarni kamaytirish uchun intraoperatsion neyromonitoring.",
+                "Har bir bemorga individual yondashuv."
+            ],
+            "symptomsH3": "Tetering-sindrom alomatlari qanday?",
+            "symptomsP1": "Ko‘pincha bel sohasida teri ostida shish ko‘rinadi, ammo ayrim bolalarda tashqi belgi bo‘lmasligi mumkin.",
+            "symptomsH4": "Umumiy alomatlar",
+            "sL": [
+                "Oyoqlarda kuchsizlik, pastki qo‘llarda jismoniy rivojlanishdan ortda qolish.",
+                "Siydik pufagi va ichakni nazorat qilish buzilishi (tutilish yoki tutolmaslik).",
+                "Oyoq panjalarining ortopedik deformatsiyalari."
+            ],
+            "diagH3": "Tetering-sindrom qanday aniqlanadi?",
+            "diagP1": "Homiladorlik davrida skrining va MRTda gumon qilish mumkin. Tug‘ilgach, tashqi belgilar baholanadi (shish, chuqurcha, tug‘ma dog‘, tukchalar). Aniqlashtirish uchun MRT — bola uchun xavfsiz tekshiruv — o‘tkaziladi. Ba’zan tashqi belgi bo‘lmasligi mumkin; alomatlar paydo bo‘lganda yoki tasodifan MRTda aniqlanadi.",
+            "treatH3": "Tetering-sindrom qanday davolanadi?",
+            "treatP1": "Asosiy davolash — jarrohlik. Ko‘pincha hayotning ilk oylarida o‘tkaziladi.",
+            "stepsH4": "Operatsiya bosqichlari",
+            "steps": [
+                "Noyon kirish: orqa miyaga yo‘l ochish uchun ba’zi suyak qismlarini olib tashlash.",
+                "Nerv tuzilmalarini nazorat qilish uchun intraoperatsion neyromonitoring.",
+                "Mikroxirurgik texnika va mikroskop yordamida yog‘ to‘qimasini ehtiyotkorlik bilan ajratish.",
+                "Orqa miya va ildizchalarni defiksatsiya qilish.",
+                "Orqa miya pardalarini plastikasi."
+            ],
+            "treatP2": "Operatsiyadan so‘ng mutaxassislar kuzatuvi davom etadi. Qayta fiksatsiya xavfi mavjud, shuning uchun neyromonitoring ostida maksimal samarali defiksatsiya qilinadi.",
+            "contactH3": "Biz bilan bog‘laning",
+            "contactP1": "Agar farzandingizga maslahat yoki davolash kerak bo‘lsa, qo‘ng‘iroq qiling:",
+            "phoneBtn": "📞 +998 99 074 96 30",
+            "contactP2": "Yoki sayt orqali ariza qoldiring — batafsil ma’lumot va qabulga yozish uchun siz bilan bog‘lanamiz."
+        },
+        "cranio": {
+            "title": "Kraniosinostoz",
+            "h2": "Kraniosinostoz",
+            "pIntro": "Kraniosinostoz — tug‘ma holat bo‘lib, unda chaqaloq bosh suyagi choklari erta yopilib qoladi. Bu bosh shaklining o‘zgarishiga va ba’zan intrakranial bosimning oshishiga olib kelishi mumkin.",
+            "imgsAlt1": "Skafotsefaliya (uzun tor bosh)",
+            "imgsAlt2": "Trigonocefaliya (uchburchak peshona)",
+            "sympH3": "Asosiy alomatlar:",
+            "symp": [
+                {
+                    "strong": "Bosh shaklining anomaliyasi:",
+                    "items": [
+                        "Noproporsional yoki asimmetrik shakl.",
+                        "Uzun, tor bosh (skafotsefaliya).",
+                        "Bir tomonlama tekis peshona (plagiosefaliya).",
+                        "Uchburchak peshona (trigonocefaliya)."
+                    ]
+                },
+                {
+                    "strong": "Boshning sekin o‘sishi:",
+                    "tail": "yosh bilan mos ravishda kattarmasligi."
+                },
+                {
+                    "strong": "Intrakranial bosim belgilari:",
+                    "tail": "asabiylashish, bosh og‘rig‘i, qusish, rivojlanishning sekinlashuvi, tutqanoq."
+                },
+                {
+                    "strong": "Ko‘z joylashuvi o‘zgarishlari:",
+                    "tail": "gipertelorizm, qiyshiq qarash."
+                },
+                {
+                    "strong": "Rivojlanish susayishi:",
+                    "tail": "vaqtida davolanmasa yuz berishi mumkin."
+                }
+            ],
+            "diagH3": "Kraniosinostoz diagnostikasi",
+            "diagP": "Tashxisda anamnez, bosh shakli va choklarni baholash hamda tasvirlash usullari qo‘llanadi.",
+            "diagL": [
+                "Anamnez va ko‘rik.",
+                "Vizuallashtirish: bosh, yuz va kallaning ko‘rinishi; bosh aylanasini o‘lchash.",
+                "Tasdiqlovchi usullar: Rentgen, KT, MRT."
+            ],
+            "treatH3": "Kraniosinostoz davolash",
+            "treatP": "Maqsad — bosh shaklini tuzatish, bosimning oshishining oldini olish. Asosiy usul — jarrohlik, yondashuv tur va og‘irlikka bog‘liq.",
+            "treatH4a": "1. Konservativ (kuzatuv)",
+            "treatPa": "Agar miya rivojlanishiga ta’sir qilmasa va bosim oshmasa, o‘sish va rivojlanish kuzatiladi.",
+            "treatH4b": "2. Jarrohlik",
+            "treatPb": "Asosiy yo‘nalish: bosh suyagida miya o‘sishi uchun joy yaratish va shaklni tuzatish.",
+            "treatL": [
+                "Endoskopik jarrohlik: minimal invaziv, odatda 4 oylikkacha; reabilitatsiya qisqa.",
+                "Kranial rekonstruktiv jarrohlik: 4–12 oydan keyin; suyaklarni qayta shakllantirish."
+            ],
+            "afterP": "Operatsiyadan so‘ng shlem-terapiya, fizioterapiya va muntazam kuzatuv talab qilinishi mumkin.",
+            "whyH3": "Nega bizni tanlashadi?",
+            "whyL": [
+                "Murakkab holatlarda tajribali neyroxirurglar.",
+                "Zamonaviy kraniotomiya va kranioplastika usullari.",
+                "Har bir bemorga individual yondashuv."
+            ],
+            "contactH3": "Biz bilan bog‘laning",
+            "contactLead": "Maslahat yoki davolash kerak bo‘lsa, qo‘ng‘iroq qiling:",
+            "phoneBtn": "📞 +998 99 074 96 30",
+            "contactP2": "Yoki onlayn ariza qoldiring — bog‘lanamiz va qabulga yozib qo‘yamiz."
+        },
+        "hydro": {
+            "title": "Gidrotsefaliya",
+            "h2": "Gidrotsefaliya",
+            "whatH3": "Gidrotsefaliya nima?",
+            "whatP": "Bosh miya qorinchalari, sisternalari va subaraxnoidal bo‘shliqlarda likvor ortiqcha to‘planib, bosim oshishi holati. Sabab — ishlab chiqilish, so‘rilish yoki aylanish buzilishi.",
+            "causesH3": "Sabab bo‘luvchi kasalliklar",
+            "causes": [
+                "Likvor yo‘llari/tirikning tug‘ma yopiq bo‘lishi.",
+                "Hajmli hosilalar (o‘smalar va b.) bilan berkilish.",
+                "Yallig‘lanish/jarrohatlar sabab so‘rilish buzilishi."
+            ],
+            "appearH3": "Qanday namoyon bo‘ladi?",
+            "appearP": "Yoshga ko‘ra klinika farq qiladi. Kichik yoshda quyidagilar kuzatiladi:",
+            "appearL": [
+                "Liqildoqlarning kengayishi va bo‘rtishi.",
+                "Choklarning ajralishi.",
+                "Kalla teri venalarining kengayishi.",
+                "Ko‘z olmalari pastga qarab qolishi (Grefe simptomi).",
+                "Psixomotor rivojlanishning sekinlashuvi, befarqlik/bezovtalik.",
+                "Ko‘rishning pasayishi, nerv atrofiyasi."
+            ],
+            "diagH3": "Gidrotsefaliya diagnostikasi",
+            "diagP": "Neyroxirurgga murojaat zarur. Bosh shakli va o‘lchamlari baholanadi.",
+            "diagL": [
+                "Klinik ko‘rik va anamnez.",
+                "Bosh aylanasini standartlar bilan solishtirish.",
+                "KT va MRT asosiy usullar."
+            ],
+            "treatH3": "Qanday davolanadi?",
+            "treatLead": "Hozirgi asosiy yo‘l — jarrohlik.",
+            "treatL": [
+                "Agar sabab hosila bo‘lsa — uni bartaraf etish.",
+                "Yallig‘lanishda shunt/rezervuar tizimlari (masalan, Omayya).",
+                "Likvor diversiyasi uchun ichki/tashqi naychalar.",
+                "Zaruratda endoskopik usullar."
+            ],
+            "note": "Ba’zan jarayon stabillashadi; bunday holatda maxsus davo talab qilinmasligi mumkin, ammo doimiy kuzatuv shart.",
+            "whyH3": "Nega biz?",
+            "whyL": [
+                "Yuqori malakali neyroxirurglar.",
+                "Operatsiya vaqtida neyromonitoring.",
+                "Individual yondashuv."
+            ],
+            "contactH3": "Biz bilan bog‘laning",
+            "contactLead": "Maslahat yoki davolash kerak bo‘lsa, qo‘ng‘iroq qiling:",
+            "phoneBtn": "📞 +998 99 074 96 30",
+            "contactP2": "Yoki sayt orqali ariza qoldiring — tez orada bog‘lanamiz."
+        },
+        "ceph": {
+            "title": "Kefalogematoma",
+            "h2": "Kefalogematoma",
+            "qH3": "Kefalogematoma qanday xastalik?",
+            "qP1": "Kefalogematoma — suyak usti pardasi (periost) bilan bosh suyagi tashqi yuzasi o‘rtasiga qon quyilishi. Ko‘pincha tepa yoki ensada uchraydi, ko‘pchilik bolalarda 3–8 haftada o‘zi so‘riladi.",
+            "qP2": "Odatda davolash talab qilinmaydi. Yiringlasa — antibiotik va jarrohlik kerak bo‘lishi mumkin. Ba’zida suyaklanish (ossifikatsiya) kuzatilib, operatsiya talab etadi.",
+            "qP3": "Tashqaridan shish ko‘rinishida; 1000 tug‘ilishda taxminan 3–5 holat. Qon yo‘qligi 5–50 ml. Chaqaloqlarda ivish omillari yetishmasligi bois qon suyuq qoladi.",
+            "whyH3": "Nega biz?",
+            "whyP": "Tug‘ma va neonatal nevrojarrohlik holatlarini tashxis va davolashda ixtisoslashganmiz. Germaniya, AQSH, Yaponiya, Koreya, Turkiya bilan hamkorlik mavjud.",
+            "whyL": [
+                "Yuqori malakali neyroxirurglar va suyak kasalliklari bo‘yicha tajriba.",
+                "Individual yondashuv."
+            ],
+            "signsH3": "Belgilar",
+            "signsP": "Odatan, tug‘ruq shishi pasaygach 2–3 kunda yaqqol ko‘rinadi:",
+            "signsL": [
+                "Paypaslaganda tarang, bosganda suyuqlik harakati seziladi.",
+                "Kichik bo‘lsa, 7–8 kunda kamayib yo‘qoladi.",
+                "Katta bo‘lsa, so‘rilish oylar davom etishi mumkin.",
+                "Ko‘p hollarda joyda suyaklanish kuzatiladi."
+            ],
+            "diagH3": "Diagnostika",
+            "diagP": "Differensial diagnoz boshqa holatlar bilan farqlanadi.",
+            "diagL": [
+                "Kraniogramma (rentgen) — suyak shikastini baholash.",
+                "Neyrosonografiya — miya zararlanish o‘choqlarini aniqlash.",
+                "UZI — o‘lcham va miya churrasini inkor qilish.",
+                "KT — miya to‘qima shubhasida."
+            ],
+            "treatH3": "Davolash",
+            "treatP1": "Neonatolog va bolalar neyrojarrohi ishtirokida. 5 sm yoki kattaroq bo‘lsa — punksiya va aspiratsiya.",
+            "treatP2": "Bolani silkish/tebratish taqiqlanadi. Yiringlasa — ochish, quyuqlarni olib tashlash, drenaj va antibiotik/antiseptik bog‘lamlar.",
+            "treatP3": "Asoratsiz — 3–5 kun, asoratli — ≥7 kun statsionar. Keyin 1 yil kuzatuv.",
+            "causeNote": "Sabab ivish pasayishi bo‘lsa, avval asosiy kasallik davolanadi.",
+            "contactH3": "Biz bilan bog‘laning",
+            "contactLead": "Maslahat yoki davolash zarur bo‘lsa, qo‘ng‘iroq qiling:",
+            "phoneBtn": "📞 +998 99 074 96 30",
+            "contactP2": "Yoki sayt orqali ariza qoldiring — bog‘lanamiz."
+        }
     },
     "ru": {
         "home": "Главная",
@@ -123,7 +313,194 @@
         "gal_general": "Общие фотографии",
         "gal_operations": "Фотографии операций",
         "gal_congress3": "Кадры с 3-го конгресса",
-        "gal_ca_congress": "Международный конгресс нейрохирургов ЦА и 7-й мировой конгресс мини-инвазивной нейрохирургии"
+        "gal_ca_congress": "Международный конгресс нейрохирургов ЦА и 7-й мировой конгресс мини-инвазивной нейрохирургии",
+        "pageTitle": "Детская нейрохирургия",
+        "pageSubtitle": "Единая и компактная типографика — удобно тиражировать на другие аккордеоны.",
+        "lipo": {
+            "title": "Липомиеломенингоцеле",
+            "h2": "Липомиеломенингоцеле",
+            "whatH3": "Что такое липомиеломенингоцеле?",
+            "whatP1": "Тетеринг-синдром — аномальное прикрепление спинного мозга к окружающим тканям с ограничением подвижности. По мере роста ребёнка натяжение повреждает нервы, страдают ходьба и контроль мочеиспускания. Формируется рано, связан с врождёнными аномалиями (spina bifida, липома, фиброзные ткани).",
+            "whyH3": "Почему наш центр?",
+            "whyP1": "Специализируемся на диагностике и хирургии детских нейрохирургических состояний с рождения. Современные технологии, интраоперационный нейромониторинг, международное сотрудничество (Германия, США, Япония, Корея, Турция).",
+            "whyL": [
+                "Опытная команда детских нейрохирургов для сложной патологии.",
+                "Интраоперационный нейромониторинг снижает риски.",
+                "Индивидуальный подход."
+            ],
+            "symptomsH3": "Каковы симптомы?",
+            "symptomsP1": "Чаще — припухлость под кожей в области спины; у части детей внешних признаков нет.",
+            "symptomsH4": "Общие симптомы",
+            "sL": [
+                "Слабость в ногах, задержка развития нижних конечностей.",
+                "Нарушение контроля мочевого пузыря и кишечника.",
+                "Ортопедические деформации стоп."
+            ],
+            "diagH3": "Как диагностируется?",
+            "diagP1": "Возможна пренатальная настороженность на скрининге/МРТ. После рождения оценивают внешние признаки; МРТ подтверждает диагноз. Иногда проявлений нет и диагноз ставится позже.",
+            "treatH3": "Как лечится?",
+            "treatP1": "Основной метод — хирургия, нередко в первые месяцы жизни.",
+            "stepsH4": "Этапы операции",
+            "steps": [
+                "Щадящий доступ с ограниченной костной резекцией.",
+                "Интраоперационный нейромониторинг.",
+                "Микрохирургическая техника и микроскоп для удаления липомы.",
+                "Дефиксация спинного мозга и корешков.",
+                "Пластика оболочек."
+            ],
+            "treatP2": "После операции — наблюдение. Возможен рететеринг; стремимся к максимально эффективной дефиксации под нейромониторингом.",
+            "contactH3": "Свяжитесь с нами",
+            "contactP1": "Если вашему ребёнку нужна консультация или лечение, позвоните:",
+            "phoneBtn": "📞 +998 99 074 96 30",
+            "contactP2": "Либо оставьте заявку на сайте — мы свяжемся и запишем на приём."
+        },
+        "cranio": {
+            "title": "Краниосиностоз",
+            "h2": "Краниосиностоз",
+            "pIntro": "Врождённое преждевременное закрытие швов черепа приводит к аномальной форме головы, повышенному ВЧД и рискам для развития.",
+            "imgsAlt1": "Скафоцефалия",
+            "imgsAlt2": "Тригоноцефалия",
+            "sympH3": "Основные симптомы:",
+            "symp": [
+                {
+                    "strong": "Аномальная форма головы:",
+                    "items": [
+                        "Непропорциональность или асимметрия.",
+                        "Удлинённая узкая голова (скафоцефалия).",
+                        "Плоский лоб с одной стороны (плагиоцефалия).",
+                        "Треугольная форма лба (тригоноцефалия)."
+                    ]
+                },
+                {
+                    "strong": "Медленный рост головы:",
+                    "tail": "перестаёт увеличиваться."
+                },
+                {
+                    "strong": "Признаки повышенного ВЧД:",
+                    "tail": "раздражительность, головные боли, рвота, задержка развития, эпилепсия."
+                },
+                {
+                    "strong": "Аномалия глаз:",
+                    "tail": "гипертелоризм, косоглазие."
+                },
+                {
+                    "strong": "Задержка развития:",
+                    "tail": "без своевременного лечения."
+                }
+            ],
+            "diagH3": "Диагностика",
+            "diagP": "Анамнез, осмотр формы головы и визуализация черепа.",
+            "diagL": [
+                "Анамнез и осмотр",
+                "Оценка формы и окружности головы",
+                "Рентген, КТ, МРТ"
+            ],
+            "treatH3": "Лечение",
+            "treatP": "Цель — корректировать форму, предотвратить повышение давления. Основной метод — хирургия.",
+            "treatH4a": "1. Консервативно (наблюдение)",
+            "treatPa": "При отсутствии влияния на мозг и ВЧД врач наблюдает рост и развитие.",
+            "treatH4b": "2. Хирургия",
+            "treatPb": "Создание места для роста мозга и коррекция формы.",
+            "treatL": [
+                "Эндоскопическая хирургия (обычно до 4 мес).",
+                "Краниальная реконструкция (после 4–12 мес)."
+            ],
+            "afterP": "После операции — шлем-терапия/ЛФК и регулярный контроль.",
+            "whyH3": "Почему мы?",
+            "whyL": [
+                "Квалифицированная команда для сложных случаев.",
+                "Современные методы краниотомии и краниопластики.",
+                "Индивидуальный подход."
+            ],
+            "contactH3": "Свяжитесь с нами",
+            "contactLead": "Для консультации или лечения позвоните:",
+            "phoneBtn": "📞 +998 99 074 96 30",
+            "contactP2": "Либо оставьте заявку — мы свяжемся."
+        },
+        "hydro": {
+            "title": "Гидроцефалия",
+            "h2": "Гидроцефалия",
+            "whatH3": "Что такое гидроцефалия?",
+            "whatP": "Избыточное накопление ликвора в желудочках и субарахноидальных пространствах с повышением давления вследствие нарушения продукции/резорбции/циркуляции.",
+            "causesH3": "Причины",
+            "causes": [
+                "Врожденная окклюзия ликворных путей.",
+                "Обтурация объёмными образованиями.",
+                "Нарушение резорбции при воспалениях/травмах."
+            ],
+            "appearH3": "Как проявляется?",
+            "appearP": "У малышей чаще наблюдаются:",
+            "appearL": [
+                "Выбухание и расширение родничков.",
+                "Расхождение швов.",
+                "Расширение вен головы.",
+                "Симптом «заходящего солнца» (Грефе).",
+                "Задержка психомоторного развития, вялость/возбудимость.",
+                "Снижение зрения, атрофия зрительных нервов."
+            ],
+            "diagH3": "Диагностика",
+            "diagP": "Осмотр, измерение окружности головы, визуализация.",
+            "diagL": [
+                "Клинический осмотр и анамнез",
+                "Сопоставление с нормами",
+                "КТ/МРТ"
+            ],
+            "treatH3": "Лечение",
+            "treatLead": "Основной путь — хирургический.",
+            "treatL": [
+                "Удаление причинного образования.",
+                "Шунтирующие/резервуарные системы (напр., Оммайя).",
+                "Внутр./внешняя ликворная диверсия.",
+                "Эндоскопические методики при показаниях."
+            ],
+            "note": "Иногда процесс стабилизируется — тогда возможно наблюдение, но под регулярным контролем.",
+            "whyH3": "Почему мы?",
+            "whyL": [
+                "Опытные нейрохирурги",
+                "Интраоперационный нейромониторинг",
+                "Индивидуальный подход"
+            ],
+            "contactH3": "Связь",
+            "contactLead": "Позвоните для консультации:",
+            "phoneBtn": "📞 +998 99 074 96 30",
+            "contactP2": "Либо оставьте заявку на сайте."
+        },
+        "ceph": {
+            "title": "Кефалогематома",
+            "h2": "Кефалогематома",
+            "qH3": "Что это за состояние?",
+            "qP1": "Кровоизлияние между костью и надкостницей. Чаще в теменной/затылочной области, обычно рассасывается за 3–8 недель.",
+            "qP2": "Часто лечения не требует. При нагноении — антибиотики и хирургия. Возможна оссификация, тогда требуется операция.",
+            "qP3": "Видна как припухлость. Встречается в 3–5 случаях на 1000 родов. Объем 5–50 мл; у новорождённых кровь хуже свертывается.",
+            "whyH3": "Почему мы?",
+            "whyP": "Специализация в неонатальной и детской нейрохирургии, современные технологии, международное сотрудничество.",
+            "whyL": ["Квалифицированные нейрохирурги", "Индивидуальный подход"],
+            "signsH3": "Признаки",
+            "signsP": "Чётче видны на 2–3 день после спадения родовой опухоли:",
+            "signsL": [
+                "Плотная припухлость, флюктуация.",
+                "Малые — исчезают за 7–8 дней.",
+                "Крупные — рассасываются месяцами.",
+                "Часто — оссификация на месте."
+            ],
+            "diagH3": "Диагностика",
+            "diagP": "Дифференцируют с другими состояниями.",
+            "diagL": [
+                "Краниограмма (рентген).",
+                "Нейросонография.",
+                "УЗИ области кефалогематомы.",
+                "КТ при подозрении на повреждение тканей."
+            ],
+            "treatH3": "Лечение",
+            "treatP1": "Неонатолог + детский нейрохирург. Если >5 см — пункция и аспирация.",
+            "treatP2": "Нельзя трясти ребёнка. При нагноении — вскрытие, удаление сгустков, дренаж, антибиотики.",
+            "treatP3": "Неосложнённо: стационар 3–5 дней; осложнённо: ≥7 дней. Далее — наблюдение 1 год.",
+            "causeNote": "Если снижена коагуляция — лечить основное заболевание.",
+            "contactH3": "Свяжитесь с нами",
+            "contactLead": "Для консультации позвоните:",
+            "phoneBtn": "📞 +998 99 074 96 30",
+            "contactP2": "Или оставьте заявку на сайте."
+        }
     },
     "en": {
         "home": "Home",
@@ -186,6 +563,189 @@
         "gal_general": "General Photos",
         "gal_operations": "Operation Photos",
         "gal_congress3": "Highlights from the 3rd Congress",
-        "gal_ca_congress": "Central Asia International Congress & 7th World Congress of Minimally Invasive Neurosurgery"
+        "gal_ca_congress": "Central Asia International Congress & 7th World Congress of Minimally Invasive Neurosurgery",
+        "pageTitle": "Pediatric Neurosurgery",
+        "pageSubtitle": "Consistent, compact typography — easy to reuse across accordions.",
+        "lipo": {
+            "title": "Lipomyelomeningocele",
+            "h2": "Lipomyelomeningocele",
+            "whatH3": "What is lipomyelomeningocele?",
+            "whatP1": "Tethered cord syndrome is abnormal fixation of the spinal cord to surrounding tissues, limiting mobility. As the child grows, traction may damage nerves, affecting gait and bladder control. It forms early in fetal life and is associated with congenital anomalies (spina bifida, lipoma, fibrous tissue).",
+            "whyH3": "Why our center?",
+            "whyP1": "We specialize in pediatric neurosurgical conditions from birth. We use modern technologies and intraoperative neuromonitoring, with international collaboration (Germany, USA, Japan, Korea, Türkiye).",
+            "whyL": [
+                "Experienced pediatric neurosurgeons for complex spine/nerve disorders.",
+                "Intraoperative neuromonitoring to reduce risk.",
+                "Individualized care."
+            ],
+            "symptomsH3": "Symptoms",
+            "symptomsP1": "Often a subcutaneous swelling on the back; some children lack external signs.",
+            "symptomsH4": "Common signs",
+            "sL": [
+                "Leg weakness and delayed lower-limb development.",
+                "Bladder/bowel dysfunction (incontinence or retention).",
+                "Orthopedic foot deformities."
+            ],
+            "diagH3": "Diagnosis",
+            "diagP1": "Possible prenatal suspicion on screening/MRI. Postnatally, visible signs are assessed; MRI confirms. Sometimes no external signs until later.",
+            "treatH3": "Treatment",
+            "treatP1": "Surgery is the mainstay, often in the first months of life.",
+            "stepsH4": "Surgical steps",
+            "steps": [
+                "Limited bony exposure to access the cord.",
+                "Intraoperative neuromonitoring.",
+                "Microsurgical removal of fatty tissue.",
+                "Detethering of cord and roots.",
+                "Dural reconstruction."
+            ],
+            "treatP2": "Postoperative follow-up is required. Retethering is possible; we aim for maximal effective detethering with neuromonitoring.",
+            "contactH3": "Contact us",
+            "contactP1": "If your child needs consultation or treatment, call:",
+            "phoneBtn": "📞 +998 99 074 96 30",
+            "contactP2": "Or leave a request online — we will contact you and schedule."
+        },
+        "cranio": {
+            "title": "Craniosynostosis",
+            "h2": "Craniosynostosis",
+            "pIntro": "Premature fusion of cranial sutures leads to abnormal head shape, possible intracranial hypertension, and developmental risks.",
+            "imgsAlt1": "Scaphocephaly",
+            "imgsAlt2": "Trigonocephaly",
+            "sympH3": "Key symptoms:",
+            "symp": [
+                {
+                    "strong": "Abnormal head shape:",
+                    "items": [
+                        "Disproportion or asymmetry.",
+                        "Long, narrow head (scaphocephaly).",
+                        "Unilateral flat forehead (plagiocephaly).",
+                        "Triangular forehead (trigonocephaly)."
+                    ]
+                },
+                {
+                    "strong": "Slow head growth:",
+                    "tail": "head size stops increasing."
+                },
+                {
+                    "strong": "Raised intracranial pressure:",
+                    "tail": "irritability, headaches, vomiting, delay, seizures."
+                },
+                {
+                    "strong": "Ocular anomalies:",
+                    "tail": "hypertelorism, strabismus."
+                },
+                {
+                    "strong": "Developmental delay:",
+                    "tail": "without timely care."
+                }
+            ],
+            "diagH3": "Diagnosis",
+            "diagP": "History, head shape assessment, and imaging studies.",
+            "diagL": [
+                "History & exam",
+                "Head/face evaluation and OFC",
+                "X-ray, CT, MRI"
+            ],
+            "treatH3": "Treatment",
+            "treatP": "Goal: correct shape and prevent high pressure. Surgery is the main method.",
+            "treatH4a": "1) Conservative (observation)",
+            "treatPa": "If no effect on brain/pressure, monitor growth and development.",
+            "treatH4b": "2) Surgery",
+            "treatPb": "Create space for brain growth and correct skull shape.",
+            "treatL": [
+                "Endoscopic surgery (usually <4 months).",
+                "Cranial reconstruction (after 4–12 months)."
+            ],
+            "afterP": "Post-op helmet therapy/physiotherapy and regular follow-up may be needed.",
+            "whyH3": "Why us?",
+            "whyL": [
+                "Experienced team for complex cases.",
+                "Modern craniotomy/cranioplasty techniques.",
+                "Individualized approach."
+            ],
+            "contactH3": "Contact us",
+            "contactLead": "For consultation or treatment, call:",
+            "phoneBtn": "📞 +998 99 074 96 30",
+            "contactP2": "Or leave a request online."
+        },
+        "hydro": {
+            "title": "Hydrocephalus",
+            "h2": "Hydrocephalus",
+            "whatH3": "What is hydrocephalus?",
+            "whatP": "Excess cerebrospinal fluid in ventricles/subarachnoid spaces with raised pressure due to impaired production, absorption, or flow.",
+            "causesH3": "Causes",
+            "causes": [
+                "Congenital occlusion of CSF pathways.",
+                "Obstruction by mass lesions.",
+                "Impaired absorption after infections/trauma."
+            ],
+            "appearH3": "Presentation",
+            "appearP": "In infants, common findings:",
+            "appearL": [
+                "Bulging/widened fontanelles.",
+                "Suture diastasis.",
+                "Prominent scalp veins.",
+                "“Sunset” eyes (Graefe sign).",
+                "Developmental delay, lethargy/irritability.",
+                "Visual decline, optic atrophy."
+            ],
+            "diagH3": "Diagnosis",
+            "diagP": "Clinical exam, OFC tracking, and imaging.",
+            "diagL": ["History & exam", "Compare OFC with norms", "CT/MRI"],
+            "treatH3": "Treatment",
+            "treatLead": "Surgery is the mainstay.",
+            "treatL": [
+                "Remove the causative mass if present.",
+                "Shunt/reservoir systems (e.g., Ommaya).",
+                "Internal/external CSF diversion.",
+                "Endoscopic approaches as indicated."
+            ],
+            "note": "Sometimes it stabilizes; watchful follow-up is essential.",
+            "whyH3": "Why us?",
+            "whyL": [
+                "Skilled neurosurgeons",
+                "Intraoperative neuromonitoring",
+                "Individualized care"
+            ],
+            "contactH3": "Contact",
+            "contactLead": "Call for consultation:",
+            "phoneBtn": "📞 +998 99 074 96 30",
+            "contactP2": "Or leave a request online."
+        },
+        "ceph": {
+            "title": "Cephalohematoma",
+            "h2": "Cephalohematoma",
+            "qH3": "What is it?",
+            "qP1": "Blood collection between skull bone and periosteum. Common in parietal/occipital bones; often resolves spontaneously within 3–8 weeks.",
+            "qP2": "Usually no treatment is required. If infected — antibiotics and surgery. Ossification may occur and require operation.",
+            "qP3": "Seen as a scalp swelling. ~3–5 per 1000 births. Volume 5–50 ml; neonatal hypocoagulation keeps it fluid.",
+            "whyH3": "Why us?",
+            "whyP": "Neonatal/pediatric neurosurgery expertise, modern equipment, international collaboration.",
+            "whyL": ["Qualified neurosurgeons", "Individualized care"],
+            "signsH3": "Signs",
+            "signsP": "Often clearer on day 2–3 after birth swelling subsides:",
+            "signsL": [
+                "Tense mass with fluid fluctuation.",
+                "Small ones resolve by day 7–8.",
+                "Large ones may take months.",
+                "Often local ossification."
+            ],
+            "diagH3": "Diagnosis",
+            "diagP": "Differentiation from other conditions is needed.",
+            "diagL": [
+                "Skull X-ray (craniogram).",
+                "Neurosonography.",
+                "Ultrasound of the lesion.",
+                "CT if intracranial injury suspected."
+            ],
+            "treatH3": "Treatment",
+            "treatP1": "Neonatologist + pediatric neurosurgeon. If ≥5 cm — puncture and aspiration.",
+            "treatP2": "Do not shake the infant. If infected — open, remove clots, drain, antibiotics.",
+            "treatP3": "Uncomplicated: 3–5 days inpatient; complicated: ≥7 days; then 1-year follow-up.",
+            "causeNote": "If due to coagulopathy — treat the underlying cause.",
+            "contactH3": "Contact us",
+            "contactLead": "Call if consultation is needed:",
+            "phoneBtn": "📞 +998 99 074 96 30",
+            "contactP2": "Or leave a request online."
+        }
     }
 }

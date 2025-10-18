@@ -16,7 +16,6 @@ function App() {
             <Route element={<Root />}>
                 {routes
                     .filter((route) => route.role === null)
-                    
                     .map((route) => {
                         const parentRoute = route.element ? (
                             <Route

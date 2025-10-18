@@ -186,18 +186,6 @@ const routes = [
             },
         ],
     },
-
-    // 4) Xizmatlar (leaf)
-    // {
-    //     id: 4,
-    //     titleID: "nav.services",
-    //     title: "Xizmatlar",
-    //     path: "/services",
-    //     element: <Services />,
-    //     role: null,
-    //     hidden: false,
-    // },
-
     // 5) Bemorlar (dropdown + index)
     {
         id: 5,

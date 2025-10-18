@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 const cls = (...arr) => arr.filter(Boolean).join(' ');
@@ -7,16 +6,25 @@ function PageButton({ active, disabled, onClick, children, ariaLabel }) {
     return (
         <button
             aria-label={ariaLabel}
+            aria-current={active ? 'page' : undefined}
             disabled={disabled}
             onClick={onClick}
             className={cls(
-                'h-9 min-w-9 px-3 rounded-xl text-sm',
+                'h-9 min-w-9 px-3 rounded-xl text-sm select-none transition-colors outline-none',
+                // cursor holatlari
                 disabled
                     ? 'opacity-50 cursor-not-allowed'
-                    : 'hover:bg-slate-100 dark:hover:bg-slate-800',
+                    : active
+                    ? 'cursor-default'
+                    : 'cursor-pointer',
+                // focus ring (brand)
+                'focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#2464AE]/50 ' +
+                    'focus-visible:ring-offset-transparent dark:focus-visible:ring-offset-slate-900',
+                // rang va hover
                 active
-                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
-                    : 'bg-transparent text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-600'
+                    ? 'bg-[#2464AE] text-white border border-transparent hover:bg-[#1f59a0]'
+                    : 'bg-transparent text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-600 ' +
+                          'hover:bg-[#2464AE]/10 hover:text-[#2464AE] hover:border-[#2464AE]/30'
             )}
         >
             {children}
@@ -40,12 +48,6 @@ function getPageList(current, total) {
 }
 
 const Pagination = ({ page, setPage, totalPages, totalItems, start, end }) => {
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    }, [page]);
-
     return (
         <div className="mt-8 flex flex-col items-center gap-3">
             <div className="text-sm text-slate-600 dark:text-slate-300">

@@ -1,4 +1,5 @@
-import React from 'react';
+// src/components/Footer.jsx
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
     FaTelegram,
@@ -8,12 +9,153 @@ import {
     FaMapMarkerAlt,
     FaEnvelope,
 } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
 import { HiOutlineMail } from 'react-icons/hi';
 import { IoLogoYoutube } from 'react-icons/io5';
 import Logo from '@/assets/logo/newLogo.png';
-import { BsYoutube } from 'react-icons/bs';
+import { Languages } from '@/context/LanguageContext';
+import ApiResult from '@/services/main';
+
+/* ---------------- I18N ---------------- */
+const I18N = {
+    uz: {
+        brandTitle: 'NEURO',
+        brandDesc:
+            'Neyroxirurgiya markazi: zamonaviy diagnostika, tajribali jarrohlar va bemor xavfsizligiga yo‘naltirilgan yondashuv.',
+        pagesHeading: 'Sahifalar',
+        pages: [
+            'Asosiy',
+            'Markaz haqida',
+            'Bo‘limlar',
+            'Xizmatlar',
+            'Bemorlar',
+            'Fan va ta’lim',
+            'Yangiliklar',
+            'Aloqa',
+        ],
+        contactHeading: 'Aloqa',
+        address: 'Toshkent shahri, (manzilni kiriting)',
+        phoneLabel: 'Telefon',
+        phone: '+998 (00) 000-00-00',
+        emailLabel: 'Email',
+        email: 'info@neuro.uz',
+        worktime: 'Ish vaqti: Dushanba–Juma, 09:00–18:00',
+        followHeading: 'Bizni kuzating',
+        social: {
+            telegram: 'Telegram',
+            facebook: 'Facebook',
+            instagram: 'Instagram',
+            social_x: 'X (Twitter)',
+            youtube: 'YouTube',
+            email: 'Email',
+        },
+        logoAlt: 'NEURO.UZ logotip',
+        copyright: 'Barcha huquqlar himoyalangan.',
+    },
+    ru: {
+        brandTitle: 'NEURO',
+        brandDesc:
+            'Нейрохирургический центр: современная диагностика, опытные хирурги и ориентированный на безопасность пациентов подход.',
+        pagesHeading: 'Страницы',
+        pages: [
+            'Главная',
+            'О центре',
+            'Отделения',
+            'Услуги',
+            'Пациентам',
+            'Наука и образование',
+            'Новости',
+            'Контакты',
+        ],
+        contactHeading: 'Связь',
+        address: 'Город Ташкент, (укажите адрес)',
+        phoneLabel: 'Телефон',
+        phone: '+998 (00) 000-00-00',
+        emailLabel: 'Эл. почта',
+        email: 'info@neuro.uz',
+        worktime: 'Время работы: Пн–Пт, 09:00–18:00',
+        followHeading: 'Мы в соцсетях',
+        social: {
+            telegram: 'Telegram',
+            facebook: 'Facebook',
+            instagram: 'Instagram',
+            social_x: 'X (Twitter)',
+            youtube: 'YouTube',
+            email: 'Email',
+        },
+        logoAlt: 'Логотип NEURO.UZ',
+        copyright: 'Все права защищены.',
+    },
+    en: {
+        brandTitle: 'NEURO',
+        brandDesc:
+            'Neurosurgery center: modern diagnostics, experienced surgeons, and a patient-safety-first approach.',
+        pagesHeading: 'Pages',
+        pages: [
+            'Home',
+            'About',
+            'Departments',
+            'Services',
+            'Patients',
+            'Science & Education',
+            'News',
+            'Contact',
+        ],
+        contactHeading: 'Contact',
+        address: 'Tashkent city (add address)',
+        phoneLabel: 'Phone',
+        phone: '+998 (00) 000-00-00',
+        emailLabel: 'Email',
+        email: 'info@neuro.uz',
+        worktime: 'Working hours: Mon–Fri, 09:00–18:00',
+        followHeading: 'Follow us',
+        social: {
+            telegram: 'Telegram',
+            facebook: 'Facebook',
+            instagram: 'Instagram',
+            social_x: 'X (Twitter)',
+            youtube: 'YouTube',
+            email: 'Email',
+        },
+        logoAlt: 'NEURO.UZ logo',
+        copyright: 'All rights reserved.',
+    },
+};
+
+/* Barqaror marshrutlar — tartib I18N.pages bilan mos */
+const PAGES = [
+    '/',
+    '/about',
+    '/departments',
+    '/services',
+    '/patients',
+    '/education',
+    '/news',
+    '/contact',
+];
 
 const Footer = () => {
+    const [data, setData] = useState([]);
+
+    const { language } = Languages();
+    const t = I18N[language] ?? I18N.uz;
+
+    const telHref = `tel:${t.phone.replace(/[^\d+]/g, '')}`;
+    const mailHref = `mailto:${t.email}`;
+
+    const getData = async () => {
+        try {
+            const res = await ApiResult.getContact();
+            setData(res);
+        } catch (error) {
+            console.error('Error fetching contact data:', error);
+        }
+    };
+
+    useEffect(() => {
+        getData();
+    }, []);
+
     return (
         <footer className="bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 pt-12 pb-6 border-t border-slate-200 dark:border-slate-800">
             <div className="w-full md:max-w-3xl lg:max-w-5xl xl:max-w-[1150px] 2xl:max-w-[1400px] mx-auto px-4">
@@ -23,125 +165,67 @@ const Footer = () => {
                         <div className="flex items-center gap-3 mb-3">
                             <img
                                 src={Logo}
-                                alt="NEURO.UZ logo"
+                                alt={t.logoAlt}
                                 className="w-9 h-9 object-contain"
                             />
                             <h2 className="text-xl font-bold text-[#2464AE] dark:text-blue-300">
-                                NEURO
+                                {t.brandTitle}
                             </h2>
                         </div>
                         <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                            Neyroxirurgiya markazi: zamonaviy diagnostika,
-                            tajribali jarrohlar va bemor xavfsizligiga
-                            yo‘naltirilgan yondashuv.
+                            {data[language]?.about}
                         </p>
                     </div>
 
                     {/* 2) Sahifalar */}
                     <div>
                         <h3 className="text-lg font-semibold mb-3 text-slate-900 dark:text-slate-100">
-                            Sahifalar
+                            {t.pagesHeading}
                         </h3>
                         <ul className="space-y-2 text-sm">
-                            <li>
-                                <Link
-                                    to="/"
-                                    className="hover:text-[#2464AE] dark:hover:text-blue-300"
-                                >
-                                    Asosiy
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    to="/about"
-                                    className="hover:text-[#2464AE] dark:hover:text-blue-300"
-                                >
-                                    Markaz haqida
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    to="/departments"
-                                    className="hover:text-[#2464AE] dark:hover:text-blue-300"
-                                >
-                                    Bo‘limlar
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    to="/services"
-                                    className="hover:text-[#2464AE] dark:hover:text-blue-300"
-                                >
-                                    Xizmatlar
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    to="/patients"
-                                    className="hover:text-[#2464AE] dark:hover:text-blue-300"
-                                >
-                                    Bemorlar
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    to="/education"
-                                    className="hover:text-[#2464AE] dark:hover:text-blue-300"
-                                >
-                                    Fan va ta’lim
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    to="/news"
-                                    className="hover:text-[#2464AE] dark:hover:text-blue-300"
-                                >
-                                    Yangiliklar
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    to="/contact"
-                                    className="hover:text-[#2464AE] dark:hover:text-blue-300"
-                                >
-                                    Aloqa
-                                </Link>
-                            </li>
+                            {PAGES.map((to, i) => (
+                                <li key={to}>
+                                    <Link
+                                        to={to}
+                                        className="hover:text-[#2464AE] dark:hover:text-blue-300"
+                                    >
+                                        {t.pages[i]}
+                                    </Link>
+                                </li>
+                            ))}
                         </ul>
                     </div>
 
                     {/* 3) Aloqa */}
                     <div>
                         <h3 className="text-lg font-semibold mb-3 text-slate-900 dark:text-slate-100">
-                            Aloqa
+                            {t.contactHeading}
                         </h3>
                         <ul className="space-y-3 text-sm">
                             <li className="flex items-start gap-2">
                                 <FaMapMarkerAlt className="mt-0.5 text-[#2464AE] dark:text-blue-300" />
-                                <span>
-                                    Toshkent shahri, (manzilni kiriting)
-                                </span>
+                                <span>{data[language]?.address}</span>
                             </li>
                             <li className="flex items-center gap-2">
                                 <FaPhoneAlt className="text-[#2464AE] dark:text-blue-300" />
                                 <a
-                                    href="tel:+998000000000"
+                                    href={telHref}
                                     className="hover:text-[#2464AE] dark:hover:text-blue-300"
                                 >
-                                    +998 (00) 000-00-00
+                                    {data?.clinic_phone}
                                 </a>
                             </li>
                             <li className="flex items-center gap-2">
                                 <FaEnvelope className="text-[#2464AE] dark:text-blue-300" />
                                 <a
-                                    href="mailto:info@neuro.uz"
-                                    className="hover:text-[#2464AE] dark:hover:text-blue-300"
+                                    href={mailHref}
+                                    className="hover:text-[#2464AE] dark:hover:text-blue-300 break-all"
                                 >
-                                    info@neuro.uz
+                                    {data?.clinic_email}
                                 </a>
                             </li>
                             <li className="text-xs text-slate-500 dark:text-slate-400">
-                                Ish vaqti: Dushanba–Juma, 09:00–18:00
+                                {t.worktime}
                             </li>
                         </ul>
                     </div>
@@ -149,54 +233,61 @@ const Footer = () => {
                     {/* 4) Ijtimoiy tarmoqlar */}
                     <div>
                         <h3 className="text-lg font-semibold mb-3 text-slate-900 dark:text-slate-100">
-                            Bizni kuzating
+                            {t.followHeading}
                         </h3>
                         <div className="flex items-center gap-3">
+                            {/* Telegram (hozircha yo‘q — disabled) */}
                             <a
-                                aria-disabled
-                                href=""
-                                target="_blank"
-                                rel="noopener noreferrer"
+                                href={data?.social_telegram}
                                 className="w-10 h-10 rounded-full grid place-items-center ring-1 ring-slate-200 dark:ring-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-                                aria-label="Telegram"
+                                aria-label={t.social.telegram}
+                                title={t.social.telegram}
                             >
                                 <FaTelegram className="text-[20px] text-[#2464AE] dark:text-blue-300" />
                             </a>
+
                             <a
-                                href="https://www.facebook.com/neurosurgerycenter"
+                                href={data?.social_facebook}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="w-10 h-10 rounded-full grid place-items-center ring-1 ring-slate-200 dark:ring-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-                                aria-label="Facebook"
+                                aria-label={t.social.facebook}
+                                title={t.social.facebook}
                             >
                                 <FaFacebookF className="text-[18px] text-[#2464AE] dark:text-blue-300" />
                             </a>
+
                             <a
-                                href="https://instagram.com/"
+                                href={data?.social_instagram}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="w-10 h-10 rounded-full grid place-items-center ring-1 ring-slate-200 dark:ring-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-                                aria-label="Instagram"
+                                aria-label={t.social.instagram}
+                                title={t.social.instagram}
                             >
                                 <FaInstagram className="text-[20px] text-[#2464AE] dark:text-blue-300" />
                             </a>
+
                             <a
-                                href="https://www.youtube.com/@neyrosentrtashkent"
+                                href={data?.social_youtube}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="w-10 h-10 rounded-full grid place-items-center ring-1 ring-slate-200 dark:ring-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-                                aria-label="Instagram"
+                                aria-label={t.social.youtube}
+                                title={t.social.youtube}
                             >
                                 <IoLogoYoutube className="text-[20px] text-[#2464AE] dark:text-blue-300" />
                             </a>
+
                             <a
-                                href="https://@neuro.uz"
+                                href={data?.social_x}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="w-10 h-10 rounded-full grid place-items-center ring-1 ring-slate-200 dark:ring-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-                                aria-label="Instagram"
+                                aria-label={t.social.social_x}
+                                title={t.social.social_x}
                             >
-                                <HiOutlineMail className="text-[20px] text-[#2464AE] dark:text-blue-300" />
+                                <FaXTwitter className="text-[20px] text-[#2464AE] dark:text-blue-300" />
                             </a>
                         </div>
                     </div>
@@ -205,8 +296,7 @@ const Footer = () => {
                 {/* Bottom line */}
                 <hr className="border-slate-200 dark:border-slate-800 mb-4" />
                 <p className="text-center text-sm text-slate-500 dark:text-slate-400">
-                    © {new Date().getFullYear()} NEURO.UZ — Barcha huquqlar
-                    himoyalangan.
+                    © {new Date().getFullYear()} NEURO.UZ — {t.copyright}
                 </p>
             </div>
         </footer>

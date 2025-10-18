@@ -51,7 +51,7 @@ export default function useSupportChat({
 } = {}) {
     const [sessionId, setSessionId] = useState(null);
     const [token, setToken] = useState(null);
-    const [status, setStatus] = useState('idle'); // idle|starting|queued|open|closed|error
+    const [status, setStatus] = useState("bo'sh");
     const [assignedAgent, setAssignedAgent] = useState(null);
     const [connected, setConnected] = useState(false);
     const [messages, setMessages] = useState([]);

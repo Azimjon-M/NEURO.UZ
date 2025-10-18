@@ -2,17 +2,8 @@ import { FaUserTie } from 'react-icons/fa';
 
 const cls = (...arr) => arr.filter(Boolean).join(' ');
 
-export default function BolimCard({ leader, onOpen, onBook }) {
+export default function BolimCard({ leader, onOpen }) {
     const openDetail = () => onOpen && onOpen(leader);
-    const handleBook = (e) => {
-        e.stopPropagation();
-        if (onBook) return onBook(leader);
-        const q = new URLSearchParams({
-            leaderId: leader.id,
-            name: leader.name,
-        }).toString();
-        window.location.href = `/qabul?${q}`;
-    };
 
     return (
         <div
@@ -96,7 +87,7 @@ export default function BolimCard({ leader, onOpen, onBook }) {
 
                 {/* CTA pastda bir qatorda */}
                 <button
-                    onClick={handleBook}
+                    onClick={openDetail}
                     className="mt-auto inline-flex w-full items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold
                       text-white dark:text-slate-900 cursor-pointer
                       bg-[#2464AE] hover:bg-[#1f59a0] dark:bg-blue-600 dark:hover:bg-blue-500

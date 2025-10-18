@@ -1,49 +1,138 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+// src/components/BolimDetailModal.jsx
+import React, {
+    useEffect,
+    useRef,
+    useState,
+    useCallback,
+    useMemo,
+} from 'react';
 import { X } from 'lucide-react';
 import useSupportChat from '@/hooks/useSupportChat';
 import SupportChatAuthModal from '@/components/SupportChatAuthModal';
+import { Languages } from '@/context/LanguageContext';
 
-export default function BolimDetailModal({ open, data, onClose, onBook }) {
-    const src = useMemo(() => data?._raw || data?._dto || data || null, [data]);
-    const L = useMemo(() => src?.i18n?.uz || {}, [src]);
+const T = {
+    uz: {
+        close: 'Yopish',
+        fio: 'F.I.O',
+        position: 'Lavozim',
+        receptionTime: 'Qabul vaqti',
+        enroll: 'Qabulga yozilish',
+        chats: 'Sizning yozishmalaringiz',
+        status: 'Holat',
+        online: '● online',
+        queued: 'navbatda…',
+        notStarted: 'Chat boshlanmagan.',
+        noMessages: 'Hozircha xabar yo‘q',
+        inputPh: 'Xabar yozing...',
+        send: 'Yuborish',
+        signInLead: 'Chatda yozish uchun:',
+        signIn: 'Kirish',
+        reqAdmission: "Qabulga so'rov",
+        iPronoun: 'Men',
+        age: 'Yoshim',
+        gender: 'Jinsim',
+        phone: 'Raqamim',
+        male: 'Erkak',
+        female: 'Ayol',
+        imgAlt: 'Detail rasm',
+    },
+    ru: {
+        close: 'Закрыть',
+        fio: 'Ф.И.О',
+        position: 'Должность',
+        receptionTime: 'Время приёма',
+        enroll: 'Записаться на приём',
+        chats: 'Ваши переписки',
+        status: 'Статус',
+        online: '● онлайн',
+        queued: 'в очереди…',
+        notStarted: 'Чат не начат.',
+        noMessages: 'Пока нет сообщений',
+        inputPh: 'Напишите сообщение...',
+        send: 'Отправить',
+        signInLead: 'Чтобы написать в чат:',
+        signIn: 'Войти',
+        reqAdmission: 'Запрос на прием',
+        iPronoun: 'Я',
+        age: 'Возраст',
+        gender: 'Пол',
+        phone: 'Мой номер',
+        male: 'Мужчина',
+        female: 'Женщина',
+        imgAlt: 'Изображение',
+    },
+    en: {
+        close: 'Close',
+        fio: 'Full name',
+        position: 'Position',
+        receptionTime: 'Reception time',
+        enroll: 'Request appointment',
+        chats: 'Your conversations',
+        status: 'Status',
+        online: '● online',
+        queued: 'queued…',
+        notStarted: 'Chat not started.',
+        noMessages: 'No messages yet',
+        inputPh: 'Type a message...',
+        send: 'Send',
+        signInLead: 'To write in chat:',
+        signIn: 'Sign in',
+        reqAdmission: 'Request for admission',
+        iPronoun: 'I',
+        age: 'Age',
+        gender: 'Gender',
+        phone: 'Phone',
+        male: 'Male',
+        female: 'Female',
+        imgAlt: 'Detail image',
+    },
+};
 
-    const person = useMemo(() => {
-        if (!src) return null;
-        return {
-            id: src.id,
-            full_name: src.full_name || src.name || L.full_name || L.name || '',
-            position: L.position ?? src.position ?? src.role ?? '',
-            department: src.department || src.dept || '',
-            reception: L.reception ?? src.reception ?? src.schedule ?? '',
-            phone: src.phone || '',
-            email: src.email || '',
-            photo: src.photo_url || src.photo || src.image || '',
-            _raw: src,
-        };
-    }, [src, L]);
+const LOCALE = { uz: 'uz-UZ', ru: 'ru-RU', en: 'en-US' };
 
-    // MUHIM: autoResume ni OCHIQ qoldiramiz (default true), shunda localStorage’dan tiklaydi
+export default function BolimDetailModal({
+    open,
+    onClose,
+    data,
+    isQabul = false,
+}) {
+    const { language } = Languages();
+    const t = T[language] ?? T.uz;
+
+    // autoResume default: true — localStorage’dan tiklaydi
     const { sessionId, token, status, messages, startChat, sendMessage } =
-        useSupportChat({ debug: true }); // autoResume ni bermadik -> default true
+        useSupportChat({ debug: true });
 
     const [text, setText] = useState('');
     const [loginOpen, setLoginOpen] = useState(false);
     const listRef = useRef(null);
+    const autoSentRef = useRef(false);
 
-    useEffect(() => {
-        try {
-            if (open && listRef.current) {
-                listRef.current.scrollTop = listRef.current.scrollHeight;
-            }
-        } catch (err) {
-            console.log(err);
-        }
-    }, [open, messages.length]);
+    const onlineText = useMemo(() => {
+        if (status === 'open') return t.online;
+        if (status === 'queued') return t.queued;
+        return status || '—';
+    }, [status, t]);
+
+    const locFullName = useMemo(
+        () => data?.[language]?.full_name ?? data?.uz?.full_name ?? '',
+        [data, language]
+    );
+    const locPosition = useMemo(
+        () => data?.[language]?.position ?? data?.uz?.position ?? '',
+        [data, language]
+    );
+    const locReception = useMemo(
+        () => data?.[language]?.reception ?? data?.uz?.reception ?? '',
+        [data, language]
+    );
 
     const handleSend = (e) => {
-        e.preventDefault();
+        e?.preventDefault?.();
         const txt = text.trim();
         if (!txt) return;
+
         if (!(sessionId && token)) {
             setLoginOpen(true);
             return;
@@ -63,7 +152,6 @@ export default function BolimDetailModal({ open, data, onClose, onBook }) {
                 age: form.age ? Number(form.age) : null,
                 gender: form.gender,
                 phone: form.phone,
-                // meta: { expert_id: person?.id, expert_name: person?.full_name }
             });
             setLoginOpen(false);
             setTimeout(
@@ -75,11 +163,59 @@ export default function BolimDetailModal({ open, data, onClose, onBook }) {
         }
     };
 
+    const onReception = useCallback(() => {
+        const user_full_name = localStorage.getItem('user_full_name');
+        const user_age = localStorage.getItem('user_age');
+        const user_gender = localStorage.getItem('user_gender');
+        const user_phone = localStorage.getItem('user_phone');
+
+        if (user_full_name && user_age && user_gender && user_phone) {
+            const genderLabel = user_gender === 'male' ? t.male : t.female;
+            const msg =
+                `${t.iPronoun}: ${user_full_name},\n` +
+                `${t.age}: ${user_age},\n` +
+                `${t.gender}: ${genderLabel},\n` +
+                `${t.phone}: ${user_phone}.`;
+
+            if (!(sessionId && token)) {
+                setLoginOpen(true);
+                return;
+            }
+            try {
+                sendMessage(msg);
+                setText('');
+            } catch (err) {
+                console.log(err);
+            }
+        } else {
+            setLoginOpen(true);
+        }
+    }, [sessionId, token, sendMessage, t]);
+
+    // Scroll to bottom when messages or open changes
+    useEffect(() => {
+        try {
+            if (open && listRef.current) {
+                listRef.current.scrollTop = listRef.current.scrollHeight;
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }, [open, messages.length]);
+
+    // 🔁 Avtomatik qabul so‘rovi: faqat bir marta
+    useEffect(() => {
+        if (open && isQabul && !autoSentRef.current) {
+            autoSentRef.current = true;
+            onReception();
+        }
+    }, [open, isQabul, onReception]);
+
     if (!open) return null;
 
     return (
         <div
-            className="fixed inset-0 z-[999] flex items-end sm:items-center justify-center bg-black/50 p-0 sm:p-4"
+            className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center bg-black/50 p-0 sm:p-4"
             role="dialog"
             aria-modal="true"
             onClick={onClose}
@@ -91,12 +227,12 @@ export default function BolimDetailModal({ open, data, onClose, onBook }) {
                 {/* Header */}
                 <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200/60 dark:border-slate-700/60">
                     <h3 className="text-lg md:text-xl font-bold text-slate-900 dark:text-slate-100">
-                        {person?.full_name || ''}
+                        {locFullName}
                     </h3>
                     <button
                         onClick={onClose}
                         className="p-2 rounded-xl hover:bg-red-100 dark:hover:bg-slate-800 transition cursor-pointer"
-                        aria-label="Yopish"
+                        aria-label={t.close}
                     >
                         <X className="w-5 h-5 text-red-600 dark:text-slate-300" />
                     </button>
@@ -106,10 +242,10 @@ export default function BolimDetailModal({ open, data, onClose, onBook }) {
                 <div className="p-5 grid grid-cols-1 md:grid-cols-3 gap-5">
                     <div className="md:col-span-1">
                         <div className="w-full aspect-[4/3] rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800">
-                            {person?.photo ? (
+                            {data?.photo_url ? (
                                 <img
-                                    src={person.photo}
-                                    alt={person.full_name}
+                                    src={data.photo_url}
+                                    alt={t.imgAlt}
                                     className="w-full h-full object-cover"
                                     loading="lazy"
                                 />
@@ -131,67 +267,28 @@ export default function BolimDetailModal({ open, data, onClose, onBook }) {
 
                     <div className="md:col-span-2 flex flex-col">
                         <ul className="space-y-2 text-sm leading-relaxed">
-                            {person?.full_name && (
+                            {locFullName && (
                                 <li>
                                     <span className="font-semibold">
-                                        F.I.O:{' '}
+                                        {t.fio}:{' '}
                                     </span>
-                                    <span>{person.full_name}</span>
+                                    <span>{locFullName}</span>
                                 </li>
                             )}
-                            {person?.position && (
+                            {locPosition && (
                                 <li>
                                     <span className="font-semibold">
-                                        Lavozim:{' '}
+                                        {t.position}:{' '}
                                     </span>
-                                    <span>{person.position}</span>
+                                    <span>{locPosition}</span>
                                 </li>
                             )}
-                            {person?.department && (
+                            {locReception && (
                                 <li>
                                     <span className="font-semibold">
-                                        Bo‘lim:{' '}
+                                        {t.receptionTime}:{' '}
                                     </span>
-                                    <span>{person.department}</span>
-                                </li>
-                            )}
-                            {person?.reception && (
-                                <li>
-                                    <span className="font-semibold">
-                                        Qabul vaqti:{' '}
-                                    </span>
-                                    <span>{person.reception}</span>
-                                </li>
-                            )}
-                            {person?.phone && (
-                                <li>
-                                    <span className="font-semibold">
-                                        Telefon:{' '}
-                                    </span>
-                                    <a
-                                        href={`tel:${person.phone.replace(
-                                            /\s+/g,
-                                            ''
-                                        )}`}
-                                        className="text-[#2464AE] dark:text-blue-300 hover:underline break-all"
-                                        onClick={(e) => e.stopPropagation()}
-                                    >
-                                        {person.phone}
-                                    </a>
-                                </li>
-                            )}
-                            {person?.email && (
-                                <li>
-                                    <span className="font-semibold">
-                                        Email:{' '}
-                                    </span>
-                                    <a
-                                        href={`mailto:${person.email}`}
-                                        className="text-[#2464AE] dark:text-blue-300 hover:underline break-all"
-                                        onClick={(e) => e.stopPropagation()}
-                                    >
-                                        {person.email}
-                                    </a>
+                                    <span>{locReception}</span>
                                 </li>
                             )}
                         </ul>
@@ -199,28 +296,24 @@ export default function BolimDetailModal({ open, data, onClose, onBook }) {
                         <div className="mt-4 flex justify-end gap-2">
                             <button
                                 type="button"
-                                onClick={() => onBook?.(person)}
-                                className="px-4 py-2 rounded-xl font-semibold bg-[#2464AE] text-white hover:opacity-95 active:opacity-90 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2464AE]"
+                                onClick={onReception}
+                                className="cursor-pointer px-4 py-2 rounded-xl font-semibold bg-[#2464AE] text-white hover:opacity-95 active:opacity-90 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2464AE]"
                             >
-                                Qabulga yozilish
+                                {t.enroll}
                             </button>
                         </div>
                     </div>
                 </div>
 
                 {/* Chat */}
-                <div className="px-5 pb-5">
+                <div className="px-5 pb-10">
                     <div className="rounded-2xl border border-slate-200/70 dark:border-slate-700/60 overflow-hidden">
                         <div className="px-4 py-2 bg-slate-100/70 dark:bg-slate-800/60 flex items-center justify-between">
                             <div className="text-sm font-semibold">
-                                Sizning yozishmalaringiz
+                                {t.chats}
                             </div>
                             <div className="text-xs text-slate-500">
-                                {status === 'open'
-                                    ? '● online'
-                                    : status === 'queued'
-                                    ? 'navbatda…'
-                                    : status}
+                                <b>{t.status}:</b> {onlineText}
                             </div>
                         </div>
 
@@ -232,6 +325,15 @@ export default function BolimDetailModal({ open, data, onClose, onBook }) {
                                 messages.length ? (
                                     messages.map((m) => {
                                         const mine = m.sender === 'client';
+                                        const ts = new Date(
+                                            m.created_at
+                                        ).toLocaleString(
+                                            LOCALE[language] || 'uz-UZ',
+                                            {
+                                                dateStyle: 'short',
+                                                timeStyle: 'short',
+                                            }
+                                        );
                                         return (
                                             <div
                                                 key={
@@ -259,9 +361,7 @@ export default function BolimDetailModal({ open, data, onClose, onBook }) {
                                                                 : 'text-slate-500 dark:text-slate-400'
                                                         }`}
                                                     >
-                                                        {new Date(
-                                                            m.created_at
-                                                        ).toLocaleString()}
+                                                        {ts}
                                                     </div>
                                                 </div>
                                             </div>
@@ -269,12 +369,12 @@ export default function BolimDetailModal({ open, data, onClose, onBook }) {
                                     })
                                 ) : (
                                     <div className="text-center text-sm text-slate-500 dark:text-slate-400">
-                                        Hozircha xabar yo‘q
+                                        {t.noMessages}
                                     </div>
                                 )
                             ) : (
                                 <div className="text-center text-sm text-slate-500 dark:text-slate-400">
-                                    Chat sessiyasi hali boshlanmagan.
+                                    {t.notStarted}
                                 </div>
                             )}
                         </div>
@@ -288,29 +388,28 @@ export default function BolimDetailModal({ open, data, onClose, onBook }) {
                                 value={text}
                                 onChange={(e) => setText(e.target.value)}
                                 className="flex-1 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm"
-                                placeholder="Xabar yozing..."
+                                placeholder={t.inputPh}
                                 disabled={!(sessionId && token)}
                             />
                             <button
                                 type="submit"
-                                className="inline-flex items-center gap-2 rounded-xl px-3 py-2 bg-[#2464AE] text-white font-semibold hover:opacity-95 active:opacity-90 transition"
+                                className="cursor-pointer inline-flex items-center gap-2 rounded-xl px-3 py-2 bg-[#2464AE] text-white font-semibold hover:opacity-95 active:opacity-90 transition"
                                 disabled={!(sessionId && token)}
                             >
-                                Yuborish
+                                {t.send}
                             </button>
 
                             {!(sessionId && token) && (
                                 <div className="absolute inset-0 flex items-center justify-center bg-white/75 dark:bg-slate-900/75 backdrop-blur-sm">
                                     <div className="text-sm text-slate-700 dark:text-slate-200">
-                                        Chatda yozish uchun{' '}
+                                        {t.signInLead}{' '}
                                         <button
                                             type="button"
-                                            className="text-[#2464AE] dark:text-blue-300 underline font-semibold"
+                                            className="cursor-pointer text-[#2464AE] dark:text-blue-300 underline font-semibold"
                                             onClick={() => setLoginOpen(true)}
                                         >
-                                            Chatni boshlang
+                                            {t.signIn}
                                         </button>
-                                        .
                                     </div>
                                 </div>
                             )}

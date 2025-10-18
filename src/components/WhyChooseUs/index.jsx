@@ -3,71 +3,170 @@ import { RiMicroscopeLine } from 'react-icons/ri';
 import { TbCertificate, TbScan } from 'react-icons/tb';
 import { GiScalpel } from 'react-icons/gi';
 import { FaBed } from 'react-icons/fa6';
+import { Languages } from '@/context/LanguageContext';
 
-const features = [
-    {
-        icon: (
-            <FaUserMd className="text-[#2464AE] dark:text-blue-300 text-3xl" />
-        ),
-        title: 'Tajribali neyroxirurglar',
-        description:
-            '20+ yo‘nalishda tajribaga ega, murakkab operatsiyalarni muntazam bajaruvchi shifokorlar.',
-    },
-    {
-        icon: <TbScan className="text-[#2464AE] dark:text-blue-300 text-3xl" />,
-        title: 'Zamonaviy diagnostika',
-        description:
-            'MRI, KT, angiografiya va keng qamrovli laborator tahlillar asosida aniq tashxis.',
-    },
-    {
-        icon: <FaBed className="text-[#2464AE] dark:text-blue-300 text-3xl" />,
-        title: 'Qulay yotoqli xonalar',
-        description:
-            'Ortopedik matrass va toza choyshablar, shaxsiy yostiq/ko‘rpa hamda sokin muhitda bemalol dam olish.',
-    },
-    {
-        icon: (
-            <GiScalpel className="text-[#2464AE] dark:text-blue-300 text-3xl" />
-        ),
-        title: 'Minimal invaziv jarrohlik',
-        description:
-            'Mikroxirurgiya va endoskopik usullar bilan tezroq tiklanish va kamroq asoratlar.',
-    },
-    {
-        icon: (
-            <FaUserFriends className="text-[#2464AE] dark:text-blue-300 text-3xl" />
-        ),
-        title: 'Ko‘p tarmoqli yondashuv',
-        description:
-            'Neyroxirurg, nevrolog, radiolog va reabilitologlardan iborat konsilium.',
-    },
-    {
-        icon: (
-            <RiMicroscopeLine className="text-[#2464AE] dark:text-blue-300 text-3xl" />
-        ),
-        title: 'Ilm-fan va ta’lim',
-        description:
-            'Rezidentura, CME va ilmiy loyihalar orqali doimiy bilim yangilanishi.',
-    },
-    {
-        icon: (
-            <TbCertificate className="text-[#2464AE] dark:text-blue-300 text-3xl" />
-        ),
-        title: 'Xalqaro standartlar',
-        description:
-            'Protokollar va sifat nazorati — davolashda xavfsizlik va izchillik.',
-    },
-    {
-        icon: (
-            <FaHeartbeat className="text-[#2464AE] dark:text-blue-300 text-3xl" />
-        ),
-        title: 'Bemor markazida',
-        description:
-            'Ochiq muloqot, individual reja va kuzatuv: har bir bemorga alohida e’tibor.',
-    },
+/* ---------------- Icons (bir xil qoladi) ---------------- */
+const ICONS = [
+    <FaUserMd className="text-[#2464AE] dark:text-blue-300 text-3xl" />,
+    <TbScan className="text-[#2464AE] dark:text-blue-300 text-3xl" />,
+    <FaBed className="text-[#2464AE] dark:text-blue-300 text-3xl" />,
+    <GiScalpel className="text-[#2464AE] dark:text-blue-300 text-3xl" />,
+    <FaUserFriends className="text-[#2464AE] dark:text-blue-300 text-3xl" />,
+    <RiMicroscopeLine className="text-[#2464AE] dark:text-blue-300 text-3xl" />,
+    <TbCertificate className="text-[#2464AE] dark:text-blue-300 text-3xl" />,
+    <FaHeartbeat className="text-[#2464AE] dark:text-blue-300 text-3xl" />,
 ];
 
+/* ---------------- I18N matnlar ---------------- */
+const I18N = {
+    uz: {
+        heading: 'Nega bizni tanlashadi?',
+        features: [
+            {
+                title: 'Tajribali neyroxirurglar',
+                description:
+                    '20+ yo‘nalishda tajribaga ega, murakkab operatsiyalarni muntazam bajaruvchi shifokorlar.',
+            },
+            {
+                title: 'Zamonaviy diagnostika',
+                description:
+                    'MRI, KT, angiografiya va keng qamrovli laborator tahlillar asosida aniq tashxis.',
+            },
+            {
+                title: 'Qulay yotoqli xonalar',
+                description:
+                    'Ortopedik matrass va toza choyshablar, shaxsiy yostiq/ko‘rpa hamda sokin muhitda bemalol dam olish.',
+            },
+            {
+                title: 'Minimal invaziv jarrohlik',
+                description:
+                    'Mikroxirurgiya va endoskopik usullar bilan tezroq tiklanish va kamroq asoratlar.',
+            },
+            {
+                title: 'Ko‘p tarmoqli yondashuv',
+                description:
+                    'Neyroxirurg, nevrolog, radiolog va reabilitologlardan iborat konsilium.',
+            },
+            {
+                title: 'Ilm-fan va ta’lim',
+                description:
+                    'Rezidentura, CME va ilmiy loyihalar orqali doimiy bilim yangilanishi.',
+            },
+            {
+                title: 'Xalqaro standartlar',
+                description:
+                    'Protokollar va sifat nazorati — davolashda xavfsizlik va izchillik.',
+            },
+            {
+                title: 'Bemor markazida',
+                description:
+                    'Ochiq muloqot, individual reja va kuzatuv: har bir bemorga alohida e’tibor.',
+            },
+        ],
+    },
+    ru: {
+        heading: 'Почему выбирают нас?',
+        features: [
+            {
+                title: 'Опытные нейрохирурги',
+                description:
+                    'Врачи с опытом в 20+ направлениях, регулярно выполняющие сложные операции.',
+            },
+            {
+                title: 'Современная диагностика',
+                description:
+                    'Точный диагноз на основе МРТ, КТ, ангиографии и расширенных лабораторных анализов.',
+            },
+            {
+                title: 'Удобные палатные комнаты',
+                description:
+                    'Ортопедические матрасы и чистое бельё, личные подушки/одеяла и спокойная атмосфера для отдыха.',
+            },
+            {
+                title: 'Минимально инвазивная хирургия',
+                description:
+                    'Микрохирургические и эндоскопические методы для более быстрого восстановления и меньшего риска осложнений.',
+            },
+            {
+                title: 'Мультидисциплинарный подход',
+                description:
+                    'Консилиум из нейрохирурга, невролога, радиолога и реабилитолога.',
+            },
+            {
+                title: 'Наука и обучение',
+                description:
+                    'Резидентура, CME и научные проекты для постоянного обновления знаний.',
+            },
+            {
+                title: 'Международные стандарты',
+                description:
+                    'Протоколы и контроль качества — безопасность и последовательность лечения.',
+            },
+            {
+                title: 'Пациент в центре внимания',
+                description:
+                    'Открытая коммуникация, индивидуальный план и наблюдение — внимание каждому пациенту.',
+            },
+        ],
+    },
+    en: {
+        heading: 'Why choose us?',
+        features: [
+            {
+                title: 'Experienced neurosurgeons',
+                description:
+                    'Doctors with expertise across 20+ subspecialties, routinely performing complex surgeries.',
+            },
+            {
+                title: 'Modern diagnostics',
+                description:
+                    'Accurate diagnosis using MRI, CT, angiography, and comprehensive lab testing.',
+            },
+            {
+                title: 'Comfortable inpatient rooms',
+                description:
+                    'Orthopedic mattresses and fresh linens, personal pillow/blanket, and a quiet environment for rest.',
+            },
+            {
+                title: 'Minimally invasive surgery',
+                description:
+                    'Microsurgical and endoscopic techniques for faster recovery with fewer complications.',
+            },
+            {
+                title: 'Multidisciplinary approach',
+                description:
+                    'A team consult including neurosurgeon, neurologist, radiologist, and rehabilitation specialist.',
+            },
+            {
+                title: 'Science & education',
+                description:
+                    'Residency, CME, and research projects ensure continuous knowledge updates.',
+            },
+            {
+                title: 'International standards',
+                description:
+                    'Protocols and quality control for safe, consistent care.',
+            },
+            {
+                title: 'Patient-centered care',
+                description:
+                    'Open communication, individualized plan, and follow-up — focused attention to every patient.',
+            },
+        ],
+    },
+};
+
 const WhyNeuro = () => {
+    const { language } = Languages();
+    const lang = I18N[language] ? language : 'uz';
+    const t = I18N[lang];
+
+    // Iconlarni matnlar bilan bog‘lash
+    const features = t.features.map((feat, i) => ({
+        ...feat,
+        icon: ICONS[i],
+    }));
+
     return (
         <section
             id="why-neuro"
@@ -79,7 +178,7 @@ const WhyNeuro = () => {
                     id="why-neuro-title"
                     className="text-2xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-slate-900 dark:text-slate-100"
                 >
-                    Nega bizni tanlashadi?
+                    {t.heading}
                 </h2>
 
                 <div className="grid gap-6 sm:gap-7 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">

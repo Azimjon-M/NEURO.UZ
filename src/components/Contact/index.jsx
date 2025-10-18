@@ -1,18 +1,94 @@
-import React from 'react';
+// src/components/Contact.jsx
+import React, { useEffect, useState } from 'react';
+import { Languages } from '@/context/LanguageContext';
+import ApiResult from '@/services/main';
+
+const I18N = {
+    uz: {
+        heading: 'Bog‘lanish',
+        sub: 'Quyidagi forma orqali biz bilan bog‘lanishingiz yoki joylashuvimizni xaritada ko‘rishingiz mumkin.',
+        addressLabel: 'Manzil',
+        address: 'Toshkent shahri, Chilonzor tumani, 7-mavze, 23-uy',
+        phoneLabel: 'Telefon',
+        phone: '+998 (90) 123-45-67',
+        emailLabel: 'Email',
+        email: 'EXEMPLE@GMAIL.uz',
+        namePh: 'Ismingiz',
+        phonePh: 'Telefon raqamingiz',
+        msgPh: 'Xabaringiz',
+        submit: 'Yuborish',
+        mapTitle: 'Xarita: Chilonzor',
+    },
+    ru: {
+        heading: 'Связаться с нами',
+        sub: 'Вы можете связаться с нами через форму ниже или посмотреть наше местоположение на карте.',
+        addressLabel: 'Адрес',
+        address: 'Город Ташкент, Чиланзарский район, 7-й квартал, дом 23',
+        phoneLabel: 'Телефон',
+        phone: '+998 (90) 123-45-67',
+        emailLabel: 'Эл. почта',
+        email: 'EXEMPLE@GMAIL.uz',
+        namePh: 'Ваше имя',
+        phonePh: 'Ваш номер телефона',
+        msgPh: 'Ваше сообщение',
+        submit: 'Отправить',
+        mapTitle: 'Карта: Чиланзар',
+    },
+    en: {
+        heading: 'Contact',
+        sub: 'Use the form below to contact us or view our location on the map.',
+        addressLabel: 'Address',
+        address: 'Tashkent, Chilonzor district, 7th block, house 23',
+        phoneLabel: 'Phone',
+        phone: '+998 (90) 123-45-67',
+        emailLabel: 'Email',
+        email: 'EXEMPLE@GMAIL.uz',
+        namePh: 'Your name',
+        phonePh: 'Your phone number',
+        msgPh: 'Your message',
+        submit: 'Send',
+        mapTitle: 'Map: Chilonzor',
+    },
+};
+
+const MAP_EMBED_SRC =
+    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2995.4550483293133!2d69.38018192407844!3d41.3424619713056!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38aef4209cb7d693%3A0xde7be566ff52359e!2sRespublikanskiy%20Nauchnyy%20Tsentr%20Neyrokhirurgii%2C%20Khumayun%20Street%2040%2C%20100201%2C%20Tashkent%2C%20O%CA%BBzbekiston!5e0!3m2!1suz!2s!4v1760420027173!5m2!1suz!2s';
 
 const Contact = () => {
+    const [data, setData] = useState([]);
+    const { language } = Languages();
+    const t = I18N[language] ?? I18N.uz;
+
+    const getData = async () => {
+        try {
+            const res = await ApiResult.getContact();
+            setData(res);
+        } catch (error) {
+            console.error('Error fetching contact data:', error);
+        }
+    };
+    useEffect(() => {
+        getData();
+    }, []);
+
+    // Telefon va emailni klikka moslashtirish
+    const mailHref = `mailto:${t.email}`;
+
     return (
         <section
             id="contact"
+            aria-labelledby="contact-title"
             className="py-16 bg-gradient-to-b from-white to-slate-50 dark:from-slate-900 dark:to-slate-900"
         >
             <div className="w-full md:max-w-3xl lg:max-w-5xl xl:max-w-[1150px] 2xl:max-w-[1400px] mx-auto px-4">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4 text-slate-900 dark:text-slate-100 text-center">
-                    Bog‘lanish
+                <h2
+                    id="contact-title"
+                    className="text-3xl md:text-4xl font-bold mb-4 text-slate-900 dark:text-slate-100 text-center"
+                >
+                    {t.heading}
                 </h2>
                 <p className="text-slate-600 dark:text-slate-300 max-w-2xl text-center mx-auto mb-10">
-                    Quyidagi forma orqali biz bilan bog‘lanishingiz yoki
-                    joylashuvimizni xaritada ko‘rishingiz mumkin.
+                    {data[language]?.about}
                 </p>
 
                 <div className="grid md:grid-cols-2 gap-10">
@@ -20,83 +96,47 @@ const Contact = () => {
                     <div className="space-y-6">
                         <div>
                             <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-2">
-                                Manzil
+                                {t.addressLabel}
                             </h3>
                             <p className="text-slate-700 dark:text-slate-300">
-                                Toshkent shahri, Chilonzor tumani, 7-mavze,
-                                23-uy
-                            </p>
-                        </div>
-                        <div>
-                            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-2">
-                                Telefon
-                            </h3>
-                            <p className="text-slate-700 dark:text-slate-300">
-                                +998 (90) 123-45-67
-                            </p>
-                        </div>
-                        <div>
-                            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-2">
-                                Email
-                            </h3>
-                            <p className="text-slate-700 dark:text-slate-300">
-                                EXEMPLE@GMAIL.uz
+                                {data[language]?.address}
                             </p>
                         </div>
 
-                        <form className="space-y-4">
-                            <input
-                                type="text"
-                                placeholder="Ismingiz"
-                                className="w-full px-4 py-2 rounded-xl
-                                    border border-slate-200 dark:border-slate-700
-                                    bg-white dark:bg-slate-800/80
-                                    text-slate-800 dark:text-slate-100
-                                    placeholder-slate-400 dark:placeholder-slate-500
-                                    focus:outline-none focus:ring-2 focus:ring-blue-500/60"
-                            />
-                            <input
-                                type="tel"
-                                placeholder="Telefon raqamingiz"
-                                className="w-full px-4 py-2 rounded-xl
-                                    border border-slate-200 dark:border-slate-700
-                                    bg-white dark:bg-slate-800/80
-                                    text-slate-800 dark:text-slate-100
-                                    placeholder-slate-400 dark:placeholder-slate-500
-                                    focus:outline-none focus:ring-2 focus:ring-blue-500/60"
-                            />
-                            <textarea
-                                rows={4}
-                                placeholder="Xabaringiz"
-                                className="w-full px-4 py-2 rounded-xl
-                                    border border-slate-200 dark:border-slate-700
-                                    bg-white dark:bg-slate-800/80
-                                    text-slate-800 dark:text-slate-100
-                                    placeholder-slate-400 dark:placeholder-slate-500
-                                    focus:outline-none focus:ring-2 focus:ring-blue-500/60"
-                            />
-                            <button
-                                type="submit"
-                                className="px-6 py-2 rounded-xl text-white cursor-pointer
-                                    bg-[#2464AE] hover:bg-[#1f59a0]
-                                    dark:bg-blue-600 dark:hover:bg-blue-500
-                                    transition
-                                    focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60"
+                        <div>
+                            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-2">
+                                {t.phoneLabel}
+                            </h3>
+                            <a
+                                href={data?.clinic_phone}
+                                className="text-slate-700 dark:text-slate-300 hover:underline"
                             >
-                                Yuborish
-                            </button>
-                        </form>
+                                {data?.clinic_phone}
+                            </a>
+                        </div>
+
+                        <div>
+                            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-2">
+                                {t.emailLabel}
+                            </h3>
+                            <a
+                                href={mailHref}
+                                className="text-slate-700 dark:text-slate-300 hover:underline break-all"
+                            >
+                                {data?.clinic_email}
+                            </a>
+                        </div>
                     </div>
 
                     {/* Google Map */}
                     <div className="rounded-2xl overflow-hidden shadow-md ring-1 ring-slate-200 dark:ring-slate-700 h-[400px] w-full bg-white dark:bg-slate-800">
                         <iframe
-                            title="Google Map"
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2994.3799797849843!2d69.2034401!3d41.2757437!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38aef4e8557f26ef%3A0xa3fc5cf75e14e16a!2sChilonzor!5e0!3m2!1sen!2s!4v1697708626939!5m2!1sen!2s"
+                            title={t.mapTitle}
+                            src={MAP_EMBED_SRC}
                             width="100%"
                             height="100%"
                             style={{ border: 0 }}
-                            allowFullScreen=""
+                            allowFullScreen
                             loading="lazy"
                             referrerPolicy="no-referrer-when-downgrade"
                         />

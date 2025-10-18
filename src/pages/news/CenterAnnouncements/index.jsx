@@ -1,118 +1,144 @@
-// src/pages/news/Yangiliklar.jsx
-import React, { useState } from 'react';
-import NewsCard from '@/components/NewsCard';
+import React, { useEffect, useMemo, useState } from 'react';
 import Pagination from '@/components/Pagination';
-import idPark from '@/assets/fons/astro.png';
+import ApiResult from '@/services/news';
+import { Languages } from '@/context/LanguageContext';
+import NewsCard from '@/components/NewsCard';
+import NewsModal from '@/components/NewsModal';
 
-const NewsCenter = () => {
-    const PAGE_SIZE = 6;
+const PAGE_SIZE = 6;
+
+const formatDate = (iso) => {
+    if (!iso) return '';
+    const d = new Date(iso);
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const yyyy = d.getFullYear();
+    return `${dd}.${mm}.${yyyy}`;
+};
+
+export default function NewsCenter() {
+    const { language } = Languages(); // 'uz' | 'ru' | 'en'
+    const lang = (language || 'uz').toLowerCase();
+
+    const [raw, setRaw] = useState([]);
     const [page, setPage] = useState(1);
+    const [modal, setModal] = useState({ open: false, item: null });
 
-    const newsData = [
-        {
-            id: 1,
-            title: 'Markazda yangi ilmiy-amaliy konferensiya o‘tkazildi, IU asjdjas oaosdk asodko saoko , sodjkaosdk okoa dsl',
-            description:
-                'Neyroxirurgiya markazida xalqaro miqyosdagi ilmiy-amaliy konferensiya o‘tkazildi. Unda ko‘plab xorijiy va mahalliy mutaxassislar ishtirok etdi. Asdhjs ashjdjko as ijiojio',
-            image: idPark,
-            date: '25.09.2025',
+    const UI = {
+        uz: {
+            title: 'Yangiliklar',
+            desc: 'Markazimizda o‘tkazilgan eng so‘nggi tadbir va yangiliklar bilan tanishing.',
+            empty: 'Hozircha yangiliklar yo‘q.',
         },
-        {
-            id: 2,
-            title: 'Talabalar uchun ochiq seminar tashkil etildi',
-            description:
-                'Seminar davomida talabalarga neyroxirurgiya sohasidagi yangi texnologiyalar va amaliy mashg‘ulotlar namoyish qilindi.',
-            image: '',
-            date: '20.09.2025',
+        ru: {
+            title: 'Новости',
+            desc: 'Познакомьтесь с последними событиями и новостями нашего центра.',
+            empty: 'Пока нет новостей.',
         },
-        {
-            id: 3,
-            title: 'Markazda zamonaviy diagnostika uskunalari joriy etildi',
-            description:
-                'Yangi asbob-uskunalar yordamida bemorlarni tez va aniq diagnostika qilish imkoniyati yaratildi.',
-            image: '',
-            date: '10.09.2025',
+        en: {
+            title: 'News',
+            desc: 'Explore the latest events and announcements from our center.',
+            empty: 'No news yet.',
         },
-        // Demo uchun 10 ta yangilik qo‘shib qo‘yish mumkin
-        {
-            id: 4,
-            title: 'Yangi laboratoriya ochildi',
-            description:
-                'Markazda zamonaviy neyrofiziologik laboratoriya ishga tushirildi.',
-            image: '',
-            date: '05.09.2025',
-        },
-        {
-            id: 5,
-            title: 'Ochiq eshiklar kuni',
-            description:
-                'Markazda bemorlar va ularning yaqinlari uchun maxsus tanishtiruv kuni o‘tkazildi.',
-            image: '',
-            date: '01.09.2025',
-        },
-        {
-            id: 6,
-            title: 'Xalqaro hamkorlik memorandumi imzolandi',
-            description:
-                'Rossiya va Germaniya neyroxirurgiya markazlari bilan hamkorlik memorandumi imzolandi.',
-            image: '',
-            date: '25.08.2025',
-        },
-        {
-            id: 7,
-            title: 'Onlayn konsultatsiyalar yo‘lga qo‘yildi',
-            description:
-                'Endi bemorlar masofadan turib shifokor bilan maslahatlashishi mumkin.',
-            image: '',
-            date: '20.08.2025',
-        },
-    ];
+    };
+    const L = UI[lang] || UI.uz;
 
-    // Pagination hisoblash
-    const totalPages = Math.max(1, Math.ceil(newsData.length / PAGE_SIZE));
+    const getData = async () => {
+        try {
+            const res = await ApiResult.getAnnouncements(); // { count, results: [...] }
+            setRaw(res?.results);
+        } catch {
+            setRaw([]);
+        }
+    };
+
+    useEffect(() => {
+        getData();
+    }, []);
+
+    // API -> eski NewsCard prop'lariga mos normalize
+    const data = useMemo(() => {
+        return (raw || []).map((n) => {
+            const title =
+                n?.titles?.[lang] ||
+                n?.title ||
+                n?.titles?.uz ||
+                n?.titles?.en ||
+                n?.titles?.ru ||
+                '';
+            const description =
+                n?.descriptions?.[lang] ||
+                n?.description ||
+                n?.descriptions?.uz ||
+                n?.descriptions?.en ||
+                n?.descriptions?.ru ||
+                '';
+            const image =
+                n?.media?.find((m) => m.media_type === 'image')?.file ||
+                n?.media?.[0]?.file ||
+                '';
+            const date = formatDate(n?.posted_at || n?.created_at || '');
+            return { id: n.id, title, description, image, date, _raw: n };
+        });
+    }, [raw, lang]);
+
+    // Pagination
+    const totalItems = data.length;
+    const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
     const start = (page - 1) * PAGE_SIZE;
-    const end = Math.min(start + PAGE_SIZE, newsData.length);
-    const currentNews = newsData.slice(start, end);
+    const end = Math.min(start + PAGE_SIZE, totalItems);
+    const currentNews = data.slice(start, end);
+
+    const openModal = (item) => setModal({ open: true, item: item._raw });
+    const closeModal = () => setModal({ open: false, item: null });
 
     return (
         <section className="py-16 bg-white dark:bg-slate-900">
             <div className="w-full md:max-w-3xl lg:max-w-5xl xl:max-w-[1150px] 2xl:max-w-[1400px] mx-auto px-4">
-                {/* Title & Description */}
+                {/* Title & Description (eski ko'rinish) */}
                 <div className="mb-10 text-center">
                     <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white">
-                        Yangiliklar
+                        {L.title}
                     </h1>
                     <p className="mt-2 text-slate-600 dark:text-slate-300">
-                        Markazimizda o‘tkazilgan eng so‘nggi tadbir va
-                        yangiliklar bilan tanishing.
+                        {L.desc}
                     </p>
                 </div>
 
-                {/* Cards grid */}
+                {/* Cards grid (eski: sm:2, lg:3) */}
                 {currentNews.length ? (
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {currentNews.map((item) => (
-                            <NewsCard key={item.id} news={item} />
+                            <NewsCard
+                                key={item.id}
+                                data={item}
+                                onOpen={() => openModal(item)}
+                            />
                         ))}
                     </div>
                 ) : (
                     <div className="rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 p-10 text-center text-slate-500 dark:text-slate-400">
-                        Hozircha yangiliklar yo‘q.
+                        {L.empty}
                     </div>
                 )}
 
-                {/* Pagination */}
+                {/* Pagination (eski) */}
                 <Pagination
                     page={page}
                     setPage={setPage}
                     totalPages={totalPages}
-                    totalItems={newsData.length}
+                    totalItems={totalItems}
                     start={start}
                     end={end}
                 />
             </div>
+
+            {/* Modal (batafsil) */}
+            <NewsModal
+                open={modal.open}
+                data={modal.item}
+                onClose={closeModal}
+            />
         </section>
     );
-};
-
-export default NewsCenter;
+}

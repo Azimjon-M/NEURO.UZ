@@ -1,9 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 const DepSpinalNeurosurgery = () => {
-  return (
-    <div>DepSpinalNeurosurgery</div>
-  )
-}
+    return <div>DepSpinalNeurosurgery</div>;
+};
 
-export default DepSpinalNeurosurgery
+export default DepSpinalNeurosurgery;

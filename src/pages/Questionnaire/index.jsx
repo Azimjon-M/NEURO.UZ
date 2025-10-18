@@ -1,38 +1,302 @@
 // src/pages/SurveyForm.jsx
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { FaStar } from 'react-icons/fa';
+import { Languages } from '@/context/LanguageContext';
 
-// ⭐ Yulduzli baholash
-const StarRating = ({ name, value, setFieldValue }) => (
-    <div className="flex gap-1 mt-2">
-        {[...Array(10)].map((_, i) => {
-            const rating = i + 1;
-            return (
-                <FaStar
-                    key={rating}
-                    onClick={() => setFieldValue(name, rating)}
-                    className={`cursor-pointer w-6 h-6 ${
-                        value >= rating ? 'text-yellow-400' : 'text-gray-300'
-                    }`}
-                />
-            );
-        })}
-    </div>
-);
+/* ---------------------- Tailwind helpers ---------------------- */
+const brand = '#2464AE';
+const containerCls =
+    'mx-auto w-full md:max-w-3xl lg:max-w-5xl xl:max-w-[1150px] 2xl:max-w-[1400px] px-4';
 
-// 📌 Yup validatsiya (endilikda faqat required bo‘lgan qismlar)
-const validationSchema = Yup.object({
-    fullName: Yup.string().required('To‘liq ism majburiy'),
-    phone: Yup.string()
-        .matches(/^\+998[0-9]{9}$/, 'Telefon raqam noto‘g‘ri')
-        .required('Telefon raqamingiz majburiy'),
-    ward: Yup.string().required('Bo‘lim/palata majburiy'),
-    q3DoctorName: Yup.string().required('Shifokor ismi majburiy'),
-});
+const inputCls =
+    'w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white/70 dark:bg-slate-800/70 ' +
+    'px-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 ' +
+    'focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-transparent ' +
+    'focus:ring-[#2464AE] transition';
 
-const SurveyForm = () => {
+const areaCls = inputCls + ' min-h-[88px]';
+
+/* ---------------------- I18N ---------------------- */
+const T = {
+    uz: {
+        siteTitle: 'Respublika Ixtisoslashtirilgan Neyroxirurgiya Markazi',
+        siteSub: 'Tibbiy xizmat sifatini oshirish maqsadida anonim so‘rovnoma',
+        bannerTitle: 'Hurmatli fuqaro!',
+        bannerSub:
+            'Iltimos, quyidagi savollarga javob bering. * bilan belgilangan maydonlar majburiy.',
+        bannerNote: 'Ma’lumotlaringiz maxfiy saqlanadi.',
+        formTitle: 'Shaxsiy ma’lumotlaringiz',
+        fullName: 'To‘liq ism',
+        phone: 'Telefon raqam',
+        phonePH: '+998901234567',
+        ward: 'Bo‘lim/palata',
+        birthDate: 'Tug‘ilgan sana',
+        gender: 'Jins (ixtiyoriy)',
+        choose: 'Tanlang',
+        male: 'Erkak',
+        female: 'Ayol',
+
+        s1: '1. Bo‘lim sharoitidan qoniqdingizmi?',
+        s2: '2. Tibbiyot xodimlari munosabati',
+        s2_doctor: 'Shifokor:',
+        s2_nurse: 'Hamshira:',
+        s2_sanitary: 'Sanitar:',
+        s3: '3. Sizni davolagan shifokor',
+        fio: 'Ism-sharifi',
+        s3_politeness: 'Muomala',
+        s4: '4. Davolash sifati',
+        s5: '5. Hamshira xizmati',
+        s6: '6. Sanitariya holati',
+        s7: '7. Ovqatlanish sifati',
+        s8: '8. Laboratoriya xizmati',
+        s9: '9. Diagnostika sifati',
+        s10: '10. Umumiy qoniqish',
+        s11: '11. Takliflaringiz',
+        s12: '12. Umumiy fikr-mulohazangiz',
+
+        reasonPH: 'Sababi...',
+        offerPH: 'Taklifingiz...',
+        thoughtPH: 'Fikringiz...',
+        submit: 'Yuborish',
+
+        starAria: 'Yulduzli baho',
+        starUnit: 'baho',
+        valueOutOf: (v) => `${v}/10`,
+
+        errors: {
+            fullName: 'To‘liq ism majburiy',
+            phone: 'Telefon raqamingiz majburiy',
+            ward: 'Bo‘lim/palata majburiy',
+            fio: 'Shifokor ismi majburiy',
+            phonePattern: 'Raqam formati: +998XXXXXXXXX',
+        },
+    },
+    ru: {
+        siteTitle: 'Республиканский специализированный центр нейрохирургии',
+        siteSub: 'Анонимный опрос для повышения качества медицинских услуг',
+        bannerTitle: 'Уважаемый гражданин!',
+        bannerSub:
+            'Пожалуйста, ответьте на вопросы ниже. Поля, отмеченные *, обязательны.',
+        bannerNote: 'Ваши данные будут храниться конфиденциально.',
+        formTitle: 'Ваши персональные данные',
+        fullName: 'Ф.И.О.',
+        phone: 'Номер телефона',
+        phonePH: '+998901234567',
+        ward: 'Отделение/палата',
+        birthDate: 'Дата рождения',
+        gender: 'Пол (необязательно)',
+        choose: 'Выберите',
+        male: 'Мужчина',
+        female: 'Женщина',
+
+        s1: '1. Удовлетворены ли условиями отделения?',
+        s2: '2. Отношение медперсонала',
+        s2_doctor: 'Врач:',
+        s2_nurse: 'Медсестра:',
+        s2_sanitary: 'Санитар:',
+        s3: '3. Лечащий врач',
+        fio: 'Ф.И.О.',
+        s3_politeness: 'Общение',
+        s4: '4. Качество лечения',
+        s5: '5. Работа медсестры',
+        s6: '6. Санитарное состояние',
+        s7: '7. Качество питания',
+        s8: '8. Лабораторная служба',
+        s9: '9. Качество диагностики',
+        s10: '10. Общая удовлетворенность',
+        s11: '11. Ваши предложения',
+        s12: '12. Ваше общее мнение',
+
+        reasonPH: 'Причина...',
+        offerPH: 'Ваше предложение...',
+        thoughtPH: 'Ваше мнение...',
+        submit: 'Отправить',
+
+        starAria: 'Оценка звездами',
+        starUnit: 'оценка',
+        valueOutOf: (v) => `${v}/10`,
+
+        errors: {
+            fullName: 'Ф.И.О. обязательно',
+            phone: 'Номер телефона обязателен',
+            ward: 'Отделение/палата обязательно',
+            fio: 'Имя врача обязательно',
+            phonePattern: 'Формат: +998XXXXXXXXX',
+        },
+    },
+    en: {
+        siteTitle: 'Republican Specialized Neurosurgery Center',
+        siteSub: 'Anonymous survey to improve the quality of care',
+        bannerTitle: 'Dear patient!',
+        bannerSub:
+            'Please answer the questions below. Fields marked with * are required.',
+        bannerNote: 'Your information will be kept confidential.',
+        formTitle: 'Your personal information',
+        fullName: 'Full name',
+        phone: 'Phone number',
+        phonePH: '+998901234567',
+        ward: 'Department/ward',
+        birthDate: 'Date of birth',
+        gender: 'Gender (optional)',
+        choose: 'Select',
+        male: 'Male',
+        female: 'Female',
+
+        s1: '1. Are you satisfied with the ward conditions?',
+        s2: '2. Attitude of medical staff',
+        s2_doctor: 'Doctor:',
+        s2_nurse: 'Nurse:',
+        s2_sanitary: 'Orderly:',
+        s3: '3. Your attending physician',
+        fio: 'Full name',
+        s3_politeness: 'Communication',
+        s4: '4. Quality of treatment',
+        s5: '5. Nursing service',
+        s6: '6. Sanitary conditions',
+        s7: '7. Food quality',
+        s8: '8. Laboratory service',
+        s9: '9. Quality of diagnostics',
+        s10: '10. Overall satisfaction',
+        s11: '11. Your suggestions',
+        s12: '12. Overall feedback',
+
+        reasonPH: 'Reason...',
+        offerPH: 'Your suggestion...',
+        thoughtPH: 'Your feedback...',
+        submit: 'Submit',
+
+        starAria: 'Star rating',
+        starUnit: 'rating',
+        valueOutOf: (v) => `${v}/10`,
+
+        errors: {
+            fullName: 'Full name is required',
+            phone: 'Phone number is required',
+            ward: 'Department/ward is required',
+            fio: 'Physician name is required',
+            phonePattern: 'Format must be: +998XXXXXXXXX',
+        },
+    },
+};
+
+/* ---------------------- Accessible Star Rating ---------------------- */
+const StarRating = ({
+    name,
+    value = 0,
+    setFieldValue,
+    max = 10,
+    ariaLabel,
+    unitText = 'rating',
+    valueText = (v) => `${v}/10`,
+}) => {
+    const [hover, setHover] = useState(0);
+    const active = hover || value;
+
+    const stars = useMemo(
+        () => Array.from({ length: max }, (_, i) => i + 1),
+        [max]
+    );
+
+    const onKeyDown = (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            setFieldValue(name, Math.min((value || 0) + 1, max));
+        }
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            setFieldValue(name, Math.max((value || 0) - 1, 0));
+        }
+        if (e.key === 'Home') {
+            e.preventDefault();
+            setFieldValue(name, 0);
+        }
+        if (e.key === 'End') {
+            e.preventDefault();
+            setFieldValue(name, max);
+        }
+    };
+
+    return (
+        <div className="flex items-center gap-2 select-none">
+            <div
+                className="flex gap-1 mt-1"
+                role="slider"
+                aria-label={ariaLabel}
+                aria-valuemin={0}
+                aria-valuemax={max}
+                aria-valuenow={value}
+                tabIndex={0}
+                onKeyDown={onKeyDown}
+            >
+                {stars.map((rating) => (
+                    <FaStar
+                        key={rating}
+                        onMouseEnter={() => setHover(rating)}
+                        onMouseLeave={() => setHover(0)}
+                        onClick={() => setFieldValue(name, rating)}
+                        className={`cursor-pointer h-6 w-6 transition-transform ${
+                            active >= rating
+                                ? 'text-yellow-400'
+                                : 'text-slate-300 dark:text-slate-600'
+                        } hover:scale-110`}
+                        aria-label={`${rating} ${unitText}`}
+                    />
+                ))}
+            </div>
+            <span className="ml-1 text-sm text-slate-600 dark:text-slate-300">
+                {valueText(value)}
+            </span>
+        </div>
+    );
+};
+
+/* ---------------------- Component ---------------------- */
+export default function SurveyForm() {
+    const { language } = Languages(); // 'uz' | 'ru' | 'en'
+    const t = T[language] ?? T.uz;
+
+    /* ---------------------- Yup validation (i18n) ---------------------- */
+    const validationSchema = useMemo(
+        () =>
+            Yup.object({
+                fullName: Yup.string().required(t.errors.fullName),
+                phone: Yup.string()
+                    .required(t.errors.phone)
+                    .matches(/^\+998[0-9]{9}$/, t.errors.phonePattern),
+                ward: Yup.string().required(t.errors.ward),
+                davolaganShifokorFIO: Yup.string().required(t.errors.fio),
+            }),
+        [t]
+    );
+
+    /* ---------------------- Input error helper ---------------------- */
+    const InputError = ({ formik, name }) =>
+        formik.touched[name] && formik.errors[name] ? (
+            <div className="mt-1 text-sm text-red-500">
+                {formik.errors[name]}
+            </div>
+        ) : null;
+
+    /* ---------------------- Section wrapper ---------------------- */
+    const Card = ({ title, children, subtitle }) => (
+        <section className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 shadow-sm p-4 sm:p-6">
+            <div className="mb-3">
+                <h2 className="text-base sm:text-lg font-semibold text-slate-800 dark:text-slate-100">
+                    {title}
+                </h2>
+                {subtitle ? (
+                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                        {subtitle}
+                    </p>
+                ) : null}
+            </div>
+            {children}
+        </section>
+    );
+
+    /* ---------------------- Formik ---------------------- */
     const formik = useFormik({
         initialValues: {
             fullName: '',
@@ -40,402 +304,460 @@ const SurveyForm = () => {
             ward: '',
             birthDate: '',
             gender: '',
-            q1Rate: 0,
-            q1Comment: '',
-            q2Doctor: 0,
-            q2Nurse: 0,
-            q2Sanitar: 0,
-            q2Comment: '',
-            q3DoctorName: '',
-            q3Rate: 0,
-            q3Comment: '',
-            q4Rate: 0,
-            q4Comment: '',
-            q5Rate: 0,
-            q5Comment: '',
-            q6Rate: 0,
-            q6Comment: '',
-            q7Rate: 0,
-            q7Comment: '',
-            q8Rate: 0,
-            q8Comment: '',
-            q9Rate: 0,
-            q9Comment: '',
-            q10: '',
-            q11: '',
-            q12: '',
+
+            // 1. Bo‘lim sharoiti
+            bolimSharoitRate: 0,
+            bolimSharoitIzoh: '',
+
+            // 2. Tibbiyot xodimlari munosabati
+            shifokorMunosabatRate: 0,
+            hamshiraMunosabatRate: 0,
+            sanitarMunosabatRate: 0,
+            tibbiyotXodimlariIzoh: '',
+
+            // 3. Sizni davolagan shifokor
+            davolaganShifokorFIO: '',
+            shifokorMuomalaRate: 0,
+            shifokorMuomalaIzoh: '',
+
+            // 4–9 bo‘limlar
+            davolashSifatiRate: 0,
+            davolashSifatiIzoh: '',
+            hamshiraXizmatiRate: 0,
+            hamshiraXizmatiIzoh: '',
+            sanitariyaHolatiRate: 0,
+            sanitariyaHolatiIzoh: '',
+            ovqatlanishSifatiRate: 0,
+            ovqatlanishSifatiIzoh: '',
+            laboratoriyaXizmatiRate: 0,
+            laboratoriyaXizmatiIzoh: '',
+            diagnostikaSifatiRate: 0,
+            diagnostikaSifatiIzoh: '',
+
+            // 10–12 ochiq javoblar
+            umumiyQoniqishIzoh: '',
+            takliflar: '',
+            umumiyFikr: '',
         },
         validationSchema,
         onSubmit: (values) => {
             console.log('Form yuborildi:', values);
-            alert('So‘rovnoma yuborildi ✅');
+            alert(
+                language === 'ru'
+                    ? 'Опрос отправлен ✅'
+                    : language === 'en'
+                    ? 'Survey submitted ✅'
+                    : 'So‘rovnoma yuborildi ✅'
+            );
         },
+        enableReinitialize: true, // til o‘zgarsa yup xabarlari darhol yangilansin
     });
 
-    const InputError = ({ name }) =>
-        formik.touched[name] && formik.errors[name] ? (
-            <div className="text-red-500 text-sm mt-1">
-                {formik.errors[name]}
-            </div>
-        ) : null;
-
     return (
-        <form
-            onSubmit={formik.handleSubmit}
-            className="max-w-6xl mx-auto bg-white dark:bg-slate-900 rounded-xl shadow p-8 space-y-10"
-        >
-            {/* Header */}
-            <div className="text-center">
-                <h1 className="text-2xl md:text-3xl font-bold text-[#2464AE]">
-                    Respublika Ixtisoslashtirilgan Neyroxirurgiya Markazi
-                </h1>
-                <p className="mt-2 text-slate-600 dark:text-slate-300">
-                    Hurmatli fuqaro! Sizdan tibbiy xizmat sifatini oshirish
-                    maqsadida anonim so‘rovnomani to‘ldirishingizni so‘raymiz.
-                </p>
-            </div>
-
-            {/* Shaxsiy ma'lumotlar */}
-            <div>
-                <h2 className="text-lg font-semibold text-[#2464AE] mb-4">
-                    Shaxsiy ma’lumotlaringiz
-                </h2>
-                <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                        <label
-                            htmlFor="fullName"
-                            className="block text-sm font-medium mb-1"
-                        >
-                            To‘liq ism <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            id="fullName"
-                            type="text"
-                            name="fullName"
-                            className="input"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.fullName}
-                        />
-                        <InputError name="fullName" />
-                    </div>
-                    <div>
-                        <label
-                            htmlFor="phone"
-                            className="block text-sm font-medium mb-1"
-                        >
-                            Telefon raqam{' '}
-                            <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            id="phone"
-                            type="tel"
-                            name="phone"
-                            className="input"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.phone}
-                        />
-                        <InputError name="phone" />
-                    </div>
-                    <div>
-                        <label
-                            htmlFor="ward"
-                            className="block text-sm font-medium mb-1"
-                        >
-                            Bo‘lim/palata{' '}
-                            <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            id="ward"
-                            type="text"
-                            name="ward"
-                            className="input"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.ward}
-                        />
-                        <InputError name="ward" />
-                    </div>
-                    <div>
-                        <label
-                            htmlFor="birthDate"
-                            className="block text-sm font-medium mb-1"
-                        >
-                            Tug‘ilgan sana
-                        </label>
-                        <input
-                            id="birthDate"
-                            type="date"
-                            name="birthDate"
-                            className="input"
-                            onChange={formik.handleChange}
-                            value={formik.values.birthDate}
-                        />
-                    </div>
-                    <div>
-                        <label
-                            htmlFor="gender"
-                            className="block text-sm font-medium mb-1"
-                        >
-                            Jins (ixtiyoriy)
-                        </label>
-                        <select
-                            id="gender"
-                            name="gender"
-                            className="input"
-                            onChange={formik.handleChange}
-                            value={formik.values.gender}
-                        >
-                            <option value="">Tanlang</option>
-                            <option value="male">Erkak</option>
-                            <option value="female">Ayol</option>
-                        </select>
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
+            {/* Header / Title */}
+            <header className="sticky top-0 z-10 border-b border-slate-200 dark:border-slate-800 backdrop-blur bg-white/70 dark:bg-slate-900/70">
+                <div
+                    className={
+                        containerCls +
+                        ' py-3 flex items-center justify-between gap-3'
+                    }
+                >
+                    <div className="text-sm sm:text-base">
+                        <h1 className="font-bold text-[#2464AE]">
+                            {t.siteTitle}
+                        </h1>
+                        <p className="hidden sm:block text-slate-600 dark:text-slate-300">
+                            {t.siteSub}
+                        </p>
                     </div>
                 </div>
-            </div>
+            </header>
 
-            <hr />
+            {/* Main form */}
+            <main className={containerCls + ' py-6 sm:py-10'}>
+                <form
+                    onSubmit={formik.handleSubmit}
+                    className="space-y-6 sm:space-y-8"
+                >
+                    {/* Kirish banner */}
+                    <Card title={t.bannerTitle} subtitle={t.bannerSub}>
+                        <p className="text-sm text-slate-600 dark:text-slate-300">
+                            {t.bannerNote}
+                        </p>
+                    </Card>
 
-            {/* Savollar grid */}
-            <div className="flex gap-4">
-                <div>
-                    {/* Q1 */}
-                    <div>
-                        <h2 className="q-title">
-                            1. Bo‘lim sharoitidan qoniqdingizmi?
-                        </h2>
-                        <StarRating
-                            name="q1Rate"
-                            value={formik.values.q1Rate}
-                            setFieldValue={formik.setFieldValue}
-                        />
-                        <textarea
-                            name="q1Comment"
-                            placeholder="Sababi..."
-                            className="input mt-2"
-                            rows={2}
-                            onChange={formik.handleChange}
-                            value={formik.values.q1Comment}
-                        />
-                    </div>
-                    {/* Q2 */}
-                    <div>
-                        <h2 className="q-title">
-                            2. Shifokor, hamshira va sanitarlar munosabati
-                        </h2>
-                        <p className="mt-2 text-sm">Shifokor:</p>
-                        <StarRating
-                            name="q2Doctor"
-                            value={formik.values.q2Doctor}
-                            setFieldValue={formik.setFieldValue}
-                        />
-                        <p className="mt-2 text-sm">Hamshira:</p>
-                        <StarRating
-                            name="q2Nurse"
-                            value={formik.values.q2Nurse}
-                            setFieldValue={formik.setFieldValue}
-                        />
-                        <p className="mt-2 text-sm">Sanitar:</p>
-                        <StarRating
-                            name="q2Sanitar"
-                            value={formik.values.q2Sanitar}
-                            setFieldValue={formik.setFieldValue}
-                        />
-                        <textarea
-                            name="q2Comment"
-                            placeholder="Sababi..."
-                            className="input mt-2"
-                            rows={2}
-                            onChange={formik.handleChange}
-                            value={formik.values.q2Comment}
-                        />
-                    </div>
-                    {/* Q3 */}
-                    <div>
-                        <h2 className="q-title">
-                            3. Sizni davolagan shifokor ismi-sharifi{' '}
-                            <span className="text-red-500">*</span>
-                        </h2>
-                        <input
-                            type="text"
-                            name="q3DoctorName"
-                            className="input"
-                            onChange={formik.handleChange}
-                            value={formik.values.q3DoctorName}
-                        />
-                        <InputError name="q3DoctorName" />
-                        <h3 className="mt-2">Shifokorning muomalasi</h3>
-                        <StarRating
-                            name="q3Rate"
-                            value={formik.values.q3Rate}
-                            setFieldValue={formik.setFieldValue}
-                        />
-                        <textarea
-                            name="q3Comment"
-                            placeholder="Sababi..."
-                            className="input mt-2"
-                            rows={2}
-                            onChange={formik.handleChange}
-                            value={formik.values.q3Comment}
-                        />
-                    </div>
-                    {/* Q4 */}
-                    <div>
-                        <h2 className="q-title">4. Davolash sifati</h2>
-                        <StarRating
-                            name="q4Rate"
-                            value={formik.values.q4Rate}
-                            setFieldValue={formik.setFieldValue}
-                        />
-                        <textarea
-                            name="q4Comment"
-                            placeholder="Sababi..."
-                            className="input mt-2"
-                            rows={2}
-                            onChange={formik.handleChange}
-                            value={formik.values.q4Comment}
-                        />
-                    </div>
-                    {/* Q5 */}
-                    <div>
-                        <h2 className="q-title">5. Hamshira xizmati</h2>
-                        <StarRating
-                            name="q5Rate"
-                            value={formik.values.q5Rate}
-                            setFieldValue={formik.setFieldValue}
-                        />
-                        <textarea
-                            name="q5Comment"
-                            placeholder="Sababi..."
-                            className="input mt-2"
-                            rows={2}
-                            onChange={formik.handleChange}
-                            value={formik.values.q5Comment}
-                        />
-                    </div>
-                </div>
-                <div>
-                    {/* Q6 */}
-                    <div>
-                        <h2 className="q-title">6. Sanitariya holati</h2>
-                        <StarRating
-                            name="q6Rate"
-                            value={formik.values.q6Rate}
-                            setFieldValue={formik.setFieldValue}
-                        />
-                        <textarea
-                            name="q6Comment"
-                            placeholder="Sababi..."
-                            className="input mt-2"
-                            rows={2}
-                            onChange={formik.handleChange}
-                            value={formik.values.q6Comment}
-                        />
-                    </div>
-                    {/* Q7 */}
-                    <div>
-                        <h2 className="q-title">7. Ovqatlanish sifati</h2>
-                        <StarRating
-                            name="q7Rate"
-                            value={formik.values.q7Rate}
-                            setFieldValue={formik.setFieldValue}
-                        />
-                        <textarea
-                            name="q7Comment"
-                            placeholder="Sababi..."
-                            className="input mt-2"
-                            rows={2}
-                            onChange={formik.handleChange}
-                            value={formik.values.q7Comment}
-                        />
-                    </div>
-                    {/* Q8 */}
-                    <div>
-                        <h2 className="q-title">8. Laboratoriya xizmati</h2>
-                        <StarRating
-                            name="q8Rate"
-                            value={formik.values.q8Rate}
-                            setFieldValue={formik.setFieldValue}
-                        />
-                        <textarea
-                            name="q8Comment"
-                            placeholder="Sababi..."
-                            className="input mt-2"
-                            rows={2}
-                            onChange={formik.handleChange}
-                            value={formik.values.q8Comment}
-                        />
-                    </div>
-                    {/* Q9 */}
-                    <div>
-                        <h2 className="q-title">9. Diagnostika sifati</h2>
-                        <StarRating
-                            name="q9Rate"
-                            value={formik.values.q9Rate}
-                            setFieldValue={formik.setFieldValue}
-                        />
-                        <textarea
-                            name="q9Comment"
-                            placeholder="Sababi..."
-                            className="input mt-2"
-                            rows={2}
-                            onChange={formik.handleChange}
-                            value={formik.values.q9Comment}
-                        />
-                    </div>
-                    {/* Q10 */}
-                    <div>
-                        <h2 className="q-title">
-                            10. Siz qay darajada qoniqdingiz?
-                        </h2>
-                        <textarea
-                            name="q10"
-                            placeholder="Sababi..."
-                            className="input"
-                            rows={3}
-                            onChange={formik.handleChange}
-                            value={formik.values.q10}
-                        />
-                    </div>
-                    {/* Q11 */}
-                    <div>
-                        <h2 className="q-title">11. Takliflaringiz</h2>
-                        <textarea
-                            name="q11"
-                            placeholder="Sababi..."
-                            className="input"
-                            rows={3}
-                            onChange={formik.handleChange}
-                            value={formik.values.q11}
-                        />
-                    </div>
-                    {/* Q12 */}
-                    <div>
-                        <h2 className="q-title">
-                            12. Umumiy fikr-mulohazangiz
-                        </h2>
-                        <textarea
-                            name="q12"
-                            placeholder="Sababi..."
-                            className="input"
-                            rows={3}
-                            onChange={formik.handleChange}
-                            value={formik.values.q12}
-                        />
-                    </div>
-                </div>
-            </div>
+                    {/* Shaxsiy ma'lumotlar */}
+                    <Card title={t.formTitle}>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label
+                                    htmlFor="fullName"
+                                    className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1"
+                                >
+                                    {t.fullName}{' '}
+                                    <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    id="fullName"
+                                    type="text"
+                                    name="fullName"
+                                    className={inputCls}
+                                    autoComplete="name"
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    value={formik.values.fullName}
+                                />
+                                <InputError formik={formik} name="fullName" />
+                            </div>
 
-            {/* Submit */}
-            <button
-                type="submit"
-                className="w-full px-6 py-3 bg-[#2464AE] hover:bg-[#1f59a0] text-white font-semibold rounded-lg shadow"
-            >
-                Yuborish
-            </button>
-        </form>
+                            <div>
+                                <label
+                                    htmlFor="phone"
+                                    className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1"
+                                >
+                                    {t.phone}{' '}
+                                    <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    id="phone"
+                                    type="tel"
+                                    name="phone"
+                                    inputMode="tel"
+                                    placeholder={t.phonePH}
+                                    pattern="^\+998[0-9]{9}$"
+                                    className={inputCls}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    value={formik.values.phone}
+                                />
+                                <InputError formik={formik} name="phone" />
+                            </div>
+
+                            <div>
+                                <label
+                                    htmlFor="ward"
+                                    className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1"
+                                >
+                                    {t.ward}{' '}
+                                    <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    id="ward"
+                                    type="text"
+                                    name="ward"
+                                    className={inputCls}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    value={formik.values.ward}
+                                />
+                                <InputError formik={formik} name="ward" />
+                            </div>
+
+                            <div>
+                                <label
+                                    htmlFor="birthDate"
+                                    className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1"
+                                >
+                                    {t.birthDate}
+                                </label>
+                                <input
+                                    id="birthDate"
+                                    type="date"
+                                    name="birthDate"
+                                    className={inputCls}
+                                    onChange={formik.handleChange}
+                                    value={formik.values.birthDate}
+                                />
+                            </div>
+
+                            <div className="sm:col-span-2">
+                                <label
+                                    htmlFor="gender"
+                                    className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1"
+                                >
+                                    {t.gender}
+                                </label>
+                                <select
+                                    id="gender"
+                                    name="gender"
+                                    className={inputCls}
+                                    onChange={formik.handleChange}
+                                    value={formik.values.gender}
+                                >
+                                    <option value="">{t.choose}</option>
+                                    <option value="male">{t.male}</option>
+                                    <option value="female">{t.female}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </Card>
+
+                    {/* Savollar */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <Card title={t.s1}>
+                            <StarRating
+                                name="bolimSharoitRate"
+                                value={formik.values.bolimSharoitRate}
+                                setFieldValue={formik.setFieldValue}
+                                ariaLabel={t.starAria}
+                                unitText={t.starUnit}
+                                valueText={t.valueOutOf}
+                            />
+                            <textarea
+                                name="bolimSharoitIzoh"
+                                placeholder={t.reasonPH}
+                                className={areaCls + ' mt-3'}
+                                rows={2}
+                                onChange={formik.handleChange}
+                                value={formik.values.bolimSharoitIzoh}
+                            />
+                        </Card>
+
+                        <Card title={t.s2}>
+                            <p className="text-sm text-slate-600 dark:text-slate-300">
+                                {t.s2_doctor}
+                            </p>
+                            <StarRating
+                                name="shifokorMunosabatRate"
+                                value={formik.values.shifokorMunosabatRate}
+                                setFieldValue={formik.setFieldValue}
+                                ariaLabel={t.starAria}
+                                unitText={t.starUnit}
+                                valueText={t.valueOutOf}
+                            />
+                            <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">
+                                {t.s2_nurse}
+                            </p>
+                            <StarRating
+                                name="hamshiraMunosabatRate"
+                                value={formik.values.hamshiraMunosabatRate}
+                                setFieldValue={formik.setFieldValue}
+                                ariaLabel={t.starAria}
+                                unitText={t.starUnit}
+                                valueText={t.valueOutOf}
+                            />
+                            <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">
+                                {t.s2_sanitary}
+                            </p>
+                            <StarRating
+                                name="sanitarMunosabatRate"
+                                value={formik.values.sanitarMunosabatRate}
+                                setFieldValue={formik.setFieldValue}
+                                ariaLabel={t.starAria}
+                                unitText={t.starUnit}
+                                valueText={t.valueOutOf}
+                            />
+                            <textarea
+                                name="tibbiyotXodimlariIzoh"
+                                placeholder={t.reasonPH}
+                                className={areaCls + ' mt-3'}
+                                rows={2}
+                                onChange={formik.handleChange}
+                                value={formik.values.tibbiyotXodimlariIzoh}
+                            />
+                        </Card>
+
+                        <Card title={t.s3}>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
+                                {t.fio} <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                name="davolaganShifokorFIO"
+                                className={inputCls}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.davolaganShifokorFIO}
+                            />
+                            <InputError
+                                formik={formik}
+                                name="davolaganShifokorFIO"
+                            />
+
+                            <h3 className="mt-4 text-sm font-medium text-slate-700 dark:text-slate-200">
+                                {t.s3_politeness}
+                            </h3>
+                            <StarRating
+                                name="shifokorMuomalaRate"
+                                value={formik.values.shifokorMuomalaRate}
+                                setFieldValue={formik.setFieldValue}
+                                ariaLabel={t.starAria}
+                                unitText={t.starUnit}
+                                valueText={t.valueOutOf}
+                            />
+                            <textarea
+                                name="shifokorMuomalaIzoh"
+                                placeholder={t.reasonPH}
+                                className={areaCls + ' mt-3'}
+                                rows={2}
+                                onChange={formik.handleChange}
+                                value={formik.values.shifokorMuomalaIzoh}
+                            />
+                        </Card>
+
+                        <Card title={t.s4}>
+                            <StarRating
+                                name="davolashSifatiRate"
+                                value={formik.values.davolashSifatiRate}
+                                setFieldValue={formik.setFieldValue}
+                                ariaLabel={t.starAria}
+                                unitText={t.starUnit}
+                                valueText={t.valueOutOf}
+                            />
+                            <textarea
+                                name="davolashSifatiIzoh"
+                                placeholder={t.reasonPH}
+                                className={areaCls + ' mt-3'}
+                                rows={2}
+                                onChange={formik.handleChange}
+                                value={formik.values.davolashSifatiIzoh}
+                            />
+                        </Card>
+
+                        <Card title={t.s5}>
+                            <StarRating
+                                name="hamshiraXizmatiRate"
+                                value={formik.values.hamshiraXizmatiRate}
+                                setFieldValue={formik.setFieldValue}
+                                ariaLabel={t.starAria}
+                                unitText={t.starUnit}
+                                valueText={t.valueOutOf}
+                            />
+                            <textarea
+                                name="hamshiraXizmatiIzoh"
+                                placeholder={t.reasonPH}
+                                className={areaCls + ' mt-3'}
+                                rows={2}
+                                onChange={formik.handleChange}
+                                value={formik.values.hamshiraXizmatiIzoh}
+                            />
+                        </Card>
+
+                        <Card title={t.s6}>
+                            <StarRating
+                                name="sanitariyaHolatiRate"
+                                value={formik.values.sanitariyaHolatiRate}
+                                setFieldValue={formik.setFieldValue}
+                                ariaLabel={t.starAria}
+                                unitText={t.starUnit}
+                                valueText={t.valueOutOf}
+                            />
+                            <textarea
+                                name="sanitariyaHolatiIzoh"
+                                placeholder={t.reasonPH}
+                                className={areaCls + ' mt-3'}
+                                rows={2}
+                                onChange={formik.handleChange}
+                                value={formik.values.sanitariyaHolatiIzoh}
+                            />
+                        </Card>
+
+                        <Card title={t.s7}>
+                            <StarRating
+                                name="ovqatlanishSifatiRate"
+                                value={formik.values.ovqatlanishSifatiRate}
+                                setFieldValue={formik.setFieldValue}
+                                ariaLabel={t.starAria}
+                                unitText={t.starUnit}
+                                valueText={t.valueOutOf}
+                            />
+                            <textarea
+                                name="ovqatlanishSifatiIzoh"
+                                placeholder={t.reasonPH}
+                                className={areaCls + ' mt-3'}
+                                rows={2}
+                                onChange={formik.handleChange}
+                                value={formik.values.ovqatlanishSifatiIzoh}
+                            />
+                        </Card>
+
+                        <Card title={t.s8}>
+                            <StarRating
+                                name="laboratoriyaXizmatiRate"
+                                value={formik.values.laboratoriyaXizmatiRate}
+                                setFieldValue={formik.setFieldValue}
+                                ariaLabel={t.starAria}
+                                unitText={t.starUnit}
+                                valueText={t.valueOutOf}
+                            />
+                            <textarea
+                                name="laboratoriyaXizmatiIzoh"
+                                placeholder={t.reasonPH}
+                                className={areaCls + ' mt-3'}
+                                rows={2}
+                                onChange={formik.handleChange}
+                                value={formik.values.laboratoriyaXizmatiIzoh}
+                            />
+                        </Card>
+
+                        <Card title={t.s9}>
+                            <StarRating
+                                name="diagnostikaSifatiRate"
+                                value={formik.values.diagnostikaSifatiRate}
+                                setFieldValue={formik.setFieldValue}
+                                ariaLabel={t.starAria}
+                                unitText={t.starUnit}
+                                valueText={t.valueOutOf}
+                            />
+                            <textarea
+                                name="diagnostikaSifatiIzoh"
+                                placeholder={t.reasonPH}
+                                className={areaCls + ' mt-3'}
+                                rows={2}
+                                onChange={formik.handleChange}
+                                value={formik.values.diagnostikaSifatiIzoh}
+                            />
+                        </Card>
+
+                        <Card title={t.s10}>
+                            <textarea
+                                name="umumiyQoniqishIzoh"
+                                placeholder={t.reasonPH}
+                                className={areaCls}
+                                rows={3}
+                                onChange={formik.handleChange}
+                                value={formik.values.umumiyQoniqishIzoh}
+                            />
+                        </Card>
+
+                        <Card title={t.s11}>
+                            <textarea
+                                name="takliflar"
+                                placeholder={t.offerPH}
+                                className={areaCls}
+                                rows={3}
+                                onChange={formik.handleChange}
+                                value={formik.values.takliflar}
+                            />
+                        </Card>
+
+                        <Card title={t.s12}>
+                            <textarea
+                                name="umumiyFikr"
+                                placeholder={t.thoughtPH}
+                                className={areaCls}
+                                rows={3}
+                                onChange={formik.handleChange}
+                                value={formik.values.umumiyFikr}
+                            />
+                        </Card>
+                    </div>
+
+                    {/* Submit bar */}
+                    <div className="sticky bottom-3 z-10">
+                        <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur p-3 shadow-lg">
+                            <button
+                                type="submit"
+                                className="w-full rounded-lg px-6 py-3 font-semibold text-white shadow hover:opacity-95 active:opacity-90"
+                                style={{ backgroundColor: brand }}
+                            >
+                                {t.submit}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </main>
+        </div>
     );
-};
-
-export default SurveyForm;
+}
