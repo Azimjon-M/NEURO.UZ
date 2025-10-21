@@ -29,6 +29,7 @@ import PatPostDischarge from '@/pages/patients/PostDischarge';
 import PatReports from '@/pages/patients/Reports';
 import PatFAQ from '@/pages/patients/FAQ';
 import PatDrugs from '@/pages/patients/Drugs';
+import KarupsyagaQarshi from '@/pages/KarupsyagaQarshi';
 
 import EduEvents from '@/pages/education/UpcomingEvents';
 import EduResidency from '@/pages/education/Residency';
@@ -50,7 +51,7 @@ import GalOperations from '@/pages/gallery/Operations';
 import GalCongress3 from '@/pages/gallery/Congress3';
 import GalCentralAsiaCongress from '@/pages/gallery/CentralAsiaCongress';
 
-import Contact from '@/pages/Contact';
+import SpinalNeurosurgery from '@/pages/patients/SpinalNeurosurgery';
 
 import Search from '@/pages/Search';
 
@@ -231,6 +232,13 @@ const routes = [
                 element: <PatVascular />,
             },
             {
+                id: '5.99',
+                titleID: 'pat_spinal_neurosurgery',
+                title: 'Spinal neurosurgery',
+                path: '/patients/spinal-neurosurgery',
+                element: <SpinalNeurosurgery />,
+            },
+            {
                 id: '5.6',
                 titleID: 'pat_functional',
                 title: 'Funktsional neyroxirurgiya',
@@ -240,10 +248,11 @@ const routes = [
             {
                 id: '5.7',
                 titleID: 'pat_postdischarge',
-                title: "Bo'shatilgandan keyin",
+                title: "Bo'shatishdan keyin",
                 path: '/patients/boshatilgandan-keyin',
                 element: <PatPostDischarge />,
             },
+            // Hisobot
             {
                 id: '5.8',
                 titleID: 'pat_reports',
@@ -264,6 +273,13 @@ const routes = [
                 title: 'Dori-darmon',
                 path: '/patients/dori-darmon',
                 element: <PatDrugs />,
+            },
+            {
+                id: '5.11',
+                titleID: 'anti_korrupsya',
+                title: 'Korruptsiyaga kurash',
+                path: '/anti-korrupsya',
+                element: <KarupsyagaQarshi />,
             },
         ],
     },

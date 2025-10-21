@@ -36,8 +36,9 @@
         "pat_skullbase": "Bosh suyagi asosidagi neyroxirurgiya",
         "pat_paid": "Pullik xizmatlar",
         "pat_vascular": "Qon tomir neyroxirurgiyasi",
+        "pat_spinal_neurosurgery": "Orqa miya neyroxirurgiyasi",
         "pat_functional": "Funktsional neyroxirurgiya",
-        "pat_postdischarge": "Bo‘shatilgandan keyin",
+        "pat_postdischarge": "Bo‘shatishdan keyin",
         "pat_reports": "Hisobot",
         "pat_faq": "Ko‘p so‘ralgan savollar",
         "pat_drugs": "Dori-darmon",
@@ -63,6 +64,7 @@
         "gal_ca_congress": "Markaziy Osiyo xalqaro kongressi va 7-jahon mini-invaziv neyroxirurglar kongressi",
         "pageTitle": "Bolalar Neyroxirurgiyasi",
         "pageSubtitle": "Kontent tipografiyasi bir xil va ixcham — boshqa accordionlarga ham klonlash oson.",
+        "anti_korrupsya": "Korruptsiyaga kurash",
         "lipo": {
             "title": "Lipomiyelomeningocele",
             "h2": "Lipomiyelomeningocele",
@@ -98,7 +100,7 @@
             "treatP2": "Operatsiyadan so‘ng mutaxassislar kuzatuvi davom etadi. Qayta fiksatsiya xavfi mavjud, shuning uchun neyromonitoring ostida maksimal samarali defiksatsiya qilinadi.",
             "contactH3": "Biz bilan bog‘laning",
             "contactP1": "Agar farzandingizga maslahat yoki davolash kerak bo‘lsa, qo‘ng‘iroq qiling:",
-            "phoneBtn": "📞 +998 99 074 96 30",
+            "phoneBtn": "+998 99 074 96 30",
             "contactP2": "Yoki sayt orqali ariza qoldiring — batafsil ma’lumot va qabulga yozish uchun siz bilan bog‘lanamiz."
         },
         "cranio": {
@@ -161,7 +163,7 @@
             ],
             "contactH3": "Biz bilan bog‘laning",
             "contactLead": "Maslahat yoki davolash kerak bo‘lsa, qo‘ng‘iroq qiling:",
-            "phoneBtn": "📞 +998 99 074 96 30",
+            "phoneBtn": "+998 99 074 96 30",
             "contactP2": "Yoki onlayn ariza qoldiring — bog‘lanamiz va qabulga yozib qo‘yamiz."
         },
         "hydro": {
@@ -209,7 +211,7 @@
             ],
             "contactH3": "Biz bilan bog‘laning",
             "contactLead": "Maslahat yoki davolash kerak bo‘lsa, qo‘ng‘iroq qiling:",
-            "phoneBtn": "📞 +998 99 074 96 30",
+            "phoneBtn": "+998 99 074 96 30",
             "contactP2": "Yoki sayt orqali ariza qoldiring — tez orada bog‘lanamiz."
         },
         "ceph": {
@@ -248,7 +250,7 @@
             "causeNote": "Sabab ivish pasayishi bo‘lsa, avval asosiy kasallik davolanadi.",
             "contactH3": "Biz bilan bog‘laning",
             "contactLead": "Maslahat yoki davolash zarur bo‘lsa, qo‘ng‘iroq qiling:",
-            "phoneBtn": "📞 +998 99 074 96 30",
+            "phoneBtn": "+998 99 074 96 30",
             "contactP2": "Yoki sayt orqali ariza qoldiring — bog‘lanamiz."
         }
     },
@@ -289,6 +291,7 @@
         "pat_skullbase": "Нейрохирургия основания черепа",
         "pat_paid": "Платные услуги",
         "pat_vascular": "Сосудистая нейрохирургия",
+        "pat_spinal_neurosurgery": "Спинальная нейрохирургия",
         "pat_functional": "Функциональная нейрохирургия",
         "pat_postdischarge": "После выписки",
         "pat_reports": "Отчёт",
@@ -316,6 +319,7 @@
         "gal_ca_congress": "Международный конгресс нейрохирургов ЦА и 7-й мировой конгресс мини-инвазивной нейрохирургии",
         "pageTitle": "Детская нейрохирургия",
         "pageSubtitle": "Единая и компактная типографика — удобно тиражировать на другие аккордеоны.",
+        "anti_korrupsya": "Борьба к коррупции",
         "lipo": {
             "title": "Липомиеломенингоцеле",
             "h2": "Липомиеломенингоцеле",
@@ -351,7 +355,7 @@
             "treatP2": "После операции — наблюдение. Возможен рететеринг; стремимся к максимально эффективной дефиксации под нейромониторингом.",
             "contactH3": "Свяжитесь с нами",
             "contactP1": "Если вашему ребёнку нужна консультация или лечение, позвоните:",
-            "phoneBtn": "📞 +998 99 074 96 30",
+            "phoneBtn": "+998 99 074 96 30",
             "contactP2": "Либо оставьте заявку на сайте — мы свяжемся и запишем на приём."
         },
         "cranio": {
@@ -414,7 +418,7 @@
             ],
             "contactH3": "Свяжитесь с нами",
             "contactLead": "Для консультации или лечения позвоните:",
-            "phoneBtn": "📞 +998 99 074 96 30",
+            "phoneBtn": "+998 99 074 96 30",
             "contactP2": "Либо оставьте заявку — мы свяжемся."
         },
         "hydro": {
@@ -462,7 +466,7 @@
             ],
             "contactH3": "Связь",
             "contactLead": "Позвоните для консультации:",
-            "phoneBtn": "📞 +998 99 074 96 30",
+            "phoneBtn": "+998 99 074 96 30",
             "contactP2": "Либо оставьте заявку на сайте."
         },
         "ceph": {
@@ -498,7 +502,7 @@
             "causeNote": "Если снижена коагуляция — лечить основное заболевание.",
             "contactH3": "Свяжитесь с нами",
             "contactLead": "Для консультации позвоните:",
-            "phoneBtn": "📞 +998 99 074 96 30",
+            "phoneBtn": "+998 99 074 96 30",
             "contactP2": "Или оставьте заявку на сайте."
         }
     },
@@ -539,8 +543,9 @@
         "pat_skullbase": "Skull Base Neurosurgery",
         "pat_paid": "Paid Services",
         "pat_vascular": "Vascular Neurosurgery",
+        "pat_spinal_neurosurgery": "Spinal neurosurgery",
         "pat_functional": "Functional Neurosurgery",
-        "pat_postdischarge": "After Discharge",
+        "pat_postdischarge": "After discharge",
         "pat_reports": "Reports",
         "pat_faq": "FAQ",
         "pat_drugs": "Medications",
@@ -566,6 +571,7 @@
         "gal_ca_congress": "Central Asia International Congress & 7th World Congress of Minimally Invasive Neurosurgery",
         "pageTitle": "Pediatric Neurosurgery",
         "pageSubtitle": "Consistent, compact typography — easy to reuse across accordions.",
+        "anti_korrupsya": "Struggle to corruption",
         "lipo": {
             "title": "Lipomyelomeningocele",
             "h2": "Lipomyelomeningocele",
@@ -601,7 +607,7 @@
             "treatP2": "Postoperative follow-up is required. Retethering is possible; we aim for maximal effective detethering with neuromonitoring.",
             "contactH3": "Contact us",
             "contactP1": "If your child needs consultation or treatment, call:",
-            "phoneBtn": "📞 +998 99 074 96 30",
+            "phoneBtn": "+998 99 074 96 30",
             "contactP2": "Or leave a request online — we will contact you and schedule."
         },
         "cranio": {
@@ -664,7 +670,7 @@
             ],
             "contactH3": "Contact us",
             "contactLead": "For consultation or treatment, call:",
-            "phoneBtn": "📞 +998 99 074 96 30",
+            "phoneBtn": "+998 99 074 96 30",
             "contactP2": "Or leave a request online."
         },
         "hydro": {
@@ -708,7 +714,7 @@
             ],
             "contactH3": "Contact",
             "contactLead": "Call for consultation:",
-            "phoneBtn": "📞 +998 99 074 96 30",
+            "phoneBtn": "+998 99 074 96 30",
             "contactP2": "Or leave a request online."
         },
         "ceph": {
@@ -744,7 +750,7 @@
             "causeNote": "If due to coagulopathy — treat the underlying cause.",
             "contactH3": "Contact us",
             "contactLead": "Call if consultation is needed:",
-            "phoneBtn": "📞 +998 99 074 96 30",
+            "phoneBtn": "+998 99 074 96 30",
             "contactP2": "Or leave a request online."
         }
     }

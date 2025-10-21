@@ -224,7 +224,7 @@ const BolalarNeuroxirurgiyasi = () => {
                                 href="tel:+998990749630"
                                 className="inline-flex items-center gap-2 rounded-lg border border-sky-600/30 bg-sky-600/10 px-2.5 py-1.5 font-semibold text-sky-700 dark:text-sky-300"
                             >
-                                {t.cranio.phoneBtn || '📞 +998 99 074 96 30'}
+                                {t.cranio.phoneBtn || '+998 99 074 96 30'}
                             </a>
                         </P>
                         <P>{t.cranio.contactP2}</P>

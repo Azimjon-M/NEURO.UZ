@@ -123,14 +123,16 @@ export default function NewsCenter() {
                 )}
 
                 {/* Pagination (eski) */}
-                <Pagination
-                    page={page}
-                    setPage={setPage}
-                    totalPages={totalPages}
-                    totalItems={totalItems}
-                    start={start}
-                    end={end}
-                />
+                {currentNews.length > 0 && (
+                    <Pagination
+                        page={page}
+                        setPage={setPage}
+                        totalPages={totalPages}
+                        totalItems={totalItems}
+                        start={start}
+                        end={end}
+                    />
+                )}
             </div>
 
             {/* Modal (batafsil) */}

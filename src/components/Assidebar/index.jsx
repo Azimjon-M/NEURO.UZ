@@ -143,11 +143,11 @@ export default function Assidebar({ isOpen, toggleMenu, setIsSearch }) {
                         <button
                             type="submit"
                             className="
-                                                    px-5 py-2 rounded-r-xl font-semibold
-                                                    bg-[#2464AE] hover:bg-[#1f59a0] text-white
-                                                    border border-l-0 border-slate-200 dark:border-slate-700
-                                                    transition-colors
-                                                "
+                                px-5 py-2 rounded-r-xl font-semibold
+                                bg-[#2464AE] hover:bg-[#1f59a0] text-white
+                                border border-l-0 border-slate-200 dark:border-slate-700
+                                transition-colors
+                            "
                             style={{
                                 WebkitTapHighlightColor: 'transparent',
                             }}
