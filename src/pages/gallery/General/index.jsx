@@ -18,7 +18,6 @@ export default function GalGeneral() {
     const PAGE_SIZE = 6;
     const [page, setPage] = useState(1);
     const [allItems, setAllItems] = useState([]); // API dan kelgan to‘liq ro‘yxat
-    const [loading, setLoading] = useState(false);
 
     const topRef = useRef(null);
 
@@ -78,7 +77,6 @@ export default function GalGeneral() {
 
     // Ma’lumotni olish (faqat bir marta yoki til o‘zgarsa)
     const getData = async () => {
-        setLoading(true);
         try {
             const res = await ApiResult.getGalery1();
             // DRF bo‘lsa: {count, results, ...}; oddiy massiv bo‘lsa: []
@@ -101,7 +99,6 @@ export default function GalGeneral() {
             setAllItems([]);
             setPage(1);
         } finally {
-            setLoading(false);
             // Sahifa boshiga ohista scroll
             if (topRef.current) {
                 setTimeout(
@@ -130,25 +127,13 @@ export default function GalGeneral() {
     return (
         <section
             ref={topRef}
-            className="py-12 md:py-16 bg-gradient-to-b from-white to-slate-50 dark:from-slate-900 dark:to-slate-900"
+            className="py-12 md:py-16 bg-white  dark:bg-[#1D232A]"
         >
             <div className="w-full md:max-w-3xl lg:max-w-5xl xl:max-w-[1150px] 2xl:max-w-[1400px] mx-auto px-4">
                 <h2 className="text-3xl md:text-4xl font-bold text-center mb-10 text-slate-900 dark:text-slate-100">
                     {L.pageTitle}
                 </h2>
-
-                {/* Yuqori ko‘rsatkich (dizaynga tegmadi) */}
-                <div className="mb-4 text-sm text-slate-600 dark:text-slate-300">
-                    {totalItems > 0
-                        ? `${startIndex + 1}–${endIndex} / ${totalItems}`
-                        : L.empty}
-                </div>
-
-                {loading ? (
-                    <div className="w-full h-[220px] grid place-items-center text-slate-500 dark:text-slate-300">
-                        <span className="animate-pulse">Yuklanmoqda...</span>
-                    </div>
-                ) : slicedItems?.length ? (
+                {slicedItems?.length ? (
                     <>
                         {/* ——— KARTALAR GRID’I (dizayn o‘zgarmagan) ——— */}
                         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-8">

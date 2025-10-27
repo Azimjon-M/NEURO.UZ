@@ -56,21 +56,17 @@ export default function Fikirlar() {
     const t = I18N[language] ?? I18N.uz;
 
     const [data, setData] = useState(null); // null | []
-    const [loading, setLoading] = useState(true);
     const [failed, setFailed] = useState(false);
 
     const getData = async () => {
         try {
-            setLoading(true);
             setFailed(false);
             const res = await ApiResult.getComents(); // { count, next, previous, results: [...] }
             setData(res?.results ?? []);
         } catch {
             setFailed(true);
             setData([]);
-        } finally {
-            setLoading(false);
-        }
+        } 
     };
 
     useEffect(() => {
@@ -94,37 +90,7 @@ export default function Fikirlar() {
                     {t.sub}
                 </p>
 
-                {/* Loading skeleton */}
-                {loading && (
-                    <div
-                        className="grid gap-6 sm:grid-cols-2 md:grid-cols-3"
-                        role="status"
-                        aria-live="polite"
-                    >
-                        {[...Array(3)].map((_, i) => (
-                            <div
-                                key={i}
-                                className="rounded-2xl p-6 bg-white/90 dark:bg-slate-800/70 backdrop-blur ring-1 ring-slate-200/70 dark:ring-slate-700/60 animate-pulse"
-                            >
-                                <div className="flex items-center gap-4 mb-4">
-                                    <div className="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-700" />
-                                    <div className="flex-1">
-                                        <div className="h-3 w-32 bg-slate-200 dark:bg-slate-700 rounded mb-2" />
-                                        <div className="h-3 w-24 bg-slate-200 dark:bg-slate-700 rounded" />
-                                    </div>
-                                </div>
-                                <div className="space-y-2">
-                                    <div className="h-3 w-full bg-slate-200 dark:bg-slate-700 rounded" />
-                                    <div className="h-3 w-5/6 bg-slate-200 dark:bg-slate-700 rounded" />
-                                    <div className="h-3 w-3/4 bg-slate-200 dark:bg-slate-700 rounded" />
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
-
-                {/* Data loaded */}
-                {!loading && data?.length > 0 && (
+                {data?.length > 0 && (
                     <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
                         {data.map((item) => {
                             const author = pickLocalized(
@@ -175,7 +141,7 @@ export default function Fikirlar() {
                 )}
 
                 {/* Empty / Failed */}
-                {!loading && (!data || data.length === 0) && (
+                {(!data || data.length === 0) && (
                     <div className="w-full h-[200px] grid place-items-center text-slate-600 dark:text-slate-300">
                         <div className="text-center">
                             <p className="mb-3">

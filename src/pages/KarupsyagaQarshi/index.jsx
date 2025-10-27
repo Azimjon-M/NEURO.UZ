@@ -4,6 +4,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Languages } from '@/context/LanguageContext';
 
+import ApiResult from '@/services/sorovnoma';
 /* ================= I18N ================= */
 const UI_T = {
     uz: {
@@ -258,40 +259,42 @@ export default function KarupsyagaQarshi() {
 
     const formik = useFormik({
         initialValues: {
-            // 1
             q1_12oy_yordam: '',
-            // 2
             q2_shaffoflik: '',
-            // 3
             q3_bepul_pullik_info: '',
-            // 4
             q4_sorov_turi: '',
             q4_misol: '',
             q4_kim: '',
-            // 5
             q5_sabablari: [],
             q5_boshqa_izoh: '',
-            // 6
             q6_teng_munosabat: '',
-            // 7
             q7_kontaktlar_biladimi: '',
-            // 8
             q8_anonim_xabar: '',
-            // 9
             q9_baho_1_5: '',
-            // 10
             q10_choralar: [],
             q10_boshqa_izoh: '',
         },
         validationSchema,
         onSubmit: async (values, { setSubmitting, resetForm }) => {
             try {
-                // TODO: API jo'natish
-                console.log(values);
+                await ApiResult.postAntiSorovnoma(values);
+                alert(
+                    language === 'ru'
+                        ? 'Опрос отправлен ✅'
+                        : language === 'en'
+                        ? 'Survey submitted ✅'
+                        : 'So‘rovnoma yuborildi ✅'
+                );
                 resetForm();
             } catch (e) {
                 console.error(e);
-                alert(t.error_generic);
+                alert(
+                    language === 'ru'
+                        ? 'Опрос не отправлен ❌'
+                        : language === 'en'
+                        ? 'Survey not sent ❌'
+                        : 'So‘rovnoma yuborilmadi ❌'
+                );
             } finally {
                 setSubmitting(false);
             }

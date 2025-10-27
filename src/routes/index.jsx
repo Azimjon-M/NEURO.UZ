@@ -16,6 +16,7 @@ import DeptRadiology from '@/pages/departments/Radiology';
 import DeptRegional from '@/pages/departments/Regional';
 import DeptVascular from '@/pages/departments/Vascular';
 import DeptPeripheralNerve from '@/pages/departments/PeripheralNerve';
+import DeptGetById from '@/pages/departments/depGetById';
 
 import Questionnaire from '@/pages/Questionnaire';
 
@@ -45,11 +46,13 @@ import NewsUz from '@/pages/news/Uzbekistan';
 import NewsIntl from '@/pages/news/International';
 import NewsMedicalTourism from '@/pages/news/MedicalTourism';
 import NewsEcoStaff from '@/pages/news/EcoStaff';
+import NewGetById from '@/pages/news/NewGetById';
 
 import GalGeneral from '@/pages/gallery/General';
 import GalOperations from '@/pages/gallery/Operations';
 import GalCongress3 from '@/pages/gallery/Congress3';
 import GalCentralAsiaCongress from '@/pages/gallery/CentralAsiaCongress';
+import GalGetById from '@/pages/gallery/GalGetById';
 
 import SpinalNeurosurgery from '@/pages/patients/SpinalNeurosurgery';
 
@@ -456,16 +459,33 @@ const routes = [
         role: null,
         hidden: true,
     },
-    // 9) Aloqa (leaf)
-    // {
-    //     id: 9,
-    //     titleID: "nav.contact",
-    //     title: "Aloqa",
-    //     path: "/contact",
-    //     element: <Contact />,
-    //     role: null,
-    //     hidden: false,
-    // },
+    {
+        id: 11,
+        titleID: '',
+        title: "Bo'limlar qidiruvi",
+        path: '/departments/:id/',
+        element: <DeptGetById />,
+        role: null,
+        hidden: true,
+    },
+    {
+        id: 12,
+        titleID: '',
+        title: 'Yangilik qidiruvi',
+        path: '/news/:id/',
+        element: <NewGetById />,
+        role: null,
+        hidden: true,
+    },
+    {
+        id: 13,
+        titleID: '',
+        title: 'Galareya qidiruvi',
+        path: '/gallery/:id/',
+        element: <GalGetById />,
+        role: null,
+        hidden: true,
+    },
 ];
 
 export default routes;

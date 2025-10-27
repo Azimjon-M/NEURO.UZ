@@ -74,12 +74,11 @@ export default function DeptLeaders() {
                 departmentName: pickField(it?.department, lang, 'name'),
                 _raw: it, // Modal uchun
             }));
-
             setData(mapped);
         } catch (error) {
             console.error('Error fetching leaders data:', error);
             setData([]);
-        }
+        } 
     }, [lang]);
 
     useEffect(() => {

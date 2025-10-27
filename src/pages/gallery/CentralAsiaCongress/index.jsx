@@ -68,12 +68,11 @@ export default function GalCentralAsiaCongress() {
         );
 
     return (
-        <section className="py-12 md:py-16 bg-gradient-to-b from-white to-slate-50 dark:from-slate-900 dark:to-slate-900">
+        <section className="py-12 md:py-16 bg-white  dark:bg-[#1D232A]">
             <div className="w-full md:max-w-3xl lg:max-w-5xl xl:max-w-[1150px] 2xl:max-w-[1400px] mx-auto px-4">
                 <h2 className="text-3xl md:text-4xl font-bold text-center mb-10 text-slate-900 dark:text-slate-100">
                     {L.pageTitle}
                 </h2>
-
                 {data?.length ? (
                     // >>> KARTALAR GRID'I: 1 / 2 (>=lg) / 3 (>=2xl)
                     <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-8">

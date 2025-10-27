@@ -52,19 +52,6 @@ function toViewItems(raw) {
     });
 }
 
-/* 5) Skeleton (loading) */
-function StatSkeleton() {
-    return (
-        <div className="rounded-2xl p-6 bg-white/90 dark:bg-slate-800/70 backdrop-blur shadow-sm ring-1 ring-slate-200/70 dark:ring-slate-700/60">
-            <div className="animate-pulse">
-                <div className="mx-auto mb-3 h-8 w-8 rounded-md bg-slate-200 dark:bg-slate-700" />
-                <div className="mx-auto h-6 w-20 rounded bg-slate-200 dark:bg-slate-700" />
-                <div className="mx-auto mt-2 h-4 w-28 rounded bg-slate-200 dark:bg-slate-700" />
-            </div>
-        </div>
-    );
-}
-
 /* 6) Bitta karta (animatsiya bilan) */
 function StatCard({ item, lang, duration = 4 }) {
     const { ref, inView } = useInView({
@@ -123,7 +110,6 @@ export default function Statistics() {
     const lang = (language || 'uz').toLowerCase();
 
     const [viewItems, setViewItems] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
     const getData = async () => {
@@ -142,8 +128,6 @@ export default function Statistics() {
             console.error('[Statistics] metrics xatosi:', err);
             setError("Ma'lumotlarni yuklab bo'lmadi.");
             setViewItems([]);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -178,13 +162,7 @@ export default function Statistics() {
                     </div>
                 )}
 
-                {loading ? (
-                    <div className={`${gridCls} text-center`}>
-                        {Array.from({ length: 6 }).map((_, i) => (
-                            <StatSkeleton key={i} />
-                        ))}
-                    </div>
-                ) : viewItems.length > 0 ? (
+                {viewItems.length > 0 ? (
                     <div className={`${gridCls} text-center`}>
                         {viewItems.map((item, idx) => (
                             <StatCard

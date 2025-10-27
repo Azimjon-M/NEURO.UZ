@@ -1,11 +1,51 @@
-import React, { useState, useEffect, useRef } from 'react';
+// src/components/SearchBar.jsx
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useFormik } from 'formik';
 import { AiOutlineSearch, AiOutlineClose } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
+import { Languages } from '@/context/LanguageContext';
+
+/* ================= I18N (UI matnlari) ================= */
+const UI_T = {
+    uz: {
+        placeholder: 'Qidirish...',
+        searchBtn: 'Qidirish',
+        recentTitle: 'So‘nggi izlanganlar',
+        clearAll: 'Hammasini tozalash',
+        empty: 'Hali izlanmagan.',
+        searchThis: "Ushbu so'rovni qidirish",
+        remove: 'O‘chirish',
+    },
+    ru: {
+        placeholder: 'Поиск...',
+        searchBtn: 'Искать',
+        recentTitle: 'Недавние запросы',
+        clearAll: 'Очистить всё',
+        empty: 'Пока нет запросов.',
+        searchThis: 'Найти по этому запросу',
+        remove: 'Удалить',
+    },
+    en: {
+        placeholder: 'Search...',
+        searchBtn: 'Search',
+        recentTitle: 'Recent searches',
+        clearAll: 'Clear all',
+        empty: 'No searches yet.',
+        searchThis: 'Search this query',
+        remove: 'Remove',
+    },
+};
+
+// "un" → "en"
+const normalizeLang = (l) => (l === 'un' ? 'en' : (l || 'uz').toLowerCase());
 
 export default function SearchBar({ isSearch, setIsSearch }) {
+    const { language } = Languages();
+    const lang = normalizeLang(language);
+    const t = useMemo(() => UI_T[lang] ?? UI_T.uz, [lang]);
+
     const rootRef = useRef(null);
-    const inputRef = useRef(null); // 🔹 fokus uchun
+    const inputRef = useRef(null); // fokus uchun
     const navigate = useNavigate();
 
     // --- localStorage: so'nggi izlanganlar ---
@@ -97,10 +137,10 @@ export default function SearchBar({ isSearch, setIsSearch }) {
         const onKey = (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
                 // matn kiritilayotgan joylarda ishlamasin
-                const t = e.target;
-                const tag = t?.tagName;
+                const tEl = e.target;
+                const tag = tEl?.tagName;
                 const typing =
-                    t?.isContentEditable ||
+                    tEl?.isContentEditable ||
                     tag === 'INPUT' ||
                     tag === 'TEXTAREA' ||
                     tag === 'SELECT';
@@ -151,7 +191,7 @@ export default function SearchBar({ isSearch, setIsSearch }) {
                                     if (e.key === 'Escape') setIsSearch(false);
                                 }}
                                 type="text"
-                                placeholder="Qidirish..."
+                                placeholder={t.placeholder}
                                 className="w-full bg-transparent outline-none py-2 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500"
                                 style={{
                                     WebkitTapHighlightColor: 'transparent',
@@ -162,6 +202,7 @@ export default function SearchBar({ isSearch, setIsSearch }) {
                         <button
                             type="submit"
                             className="
+                                cursor-pointer
                                 px-5 py-2 rounded-r-xl font-semibold
                                 bg-[#2464AE] hover:bg-[#1f59a0] text-white
                                 border border-l-0 border-slate-200 dark:border-slate-700
@@ -169,7 +210,7 @@ export default function SearchBar({ isSearch, setIsSearch }) {
                             "
                             style={{ WebkitTapHighlightColor: 'transparent' }}
                         >
-                            Qidirish
+                            {t.searchBtn}
                         </button>
                     </div>
                 </form>
@@ -178,7 +219,7 @@ export default function SearchBar({ isSearch, setIsSearch }) {
                 <div className="mt-2 rounded-2xl bg-white/95 dark:bg-slate-900/95 backdrop-blur ring-1 ring-slate-200 dark:ring-slate-700 shadow-xl p-3">
                     <div className="flex items-center justify-between mb-2">
                         <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-                            So‘nggi izlanganlar
+                            {t.recentTitle}
                         </span>
                         {recents.length > 0 && (
                             <button
@@ -186,14 +227,14 @@ export default function SearchBar({ isSearch, setIsSearch }) {
                                 onClick={clearAllRecents}
                                 className="cursor-pointer text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
                             >
-                                Hammasini tozalash
+                                {t.clearAll}
                             </button>
                         )}
                     </div>
 
                     {recents.length === 0 ? (
                         <p className="text-xs text-slate-500 dark:text-slate-400">
-                            Hali izlanmagan.
+                            {t.empty}
                         </p>
                     ) : (
                         <ul className="flex flex-wrap gap-2">
@@ -207,7 +248,7 @@ export default function SearchBar({ isSearch, setIsSearch }) {
                                                 formik.handleSubmit();
                                             }}
                                             className="text-sm hover:underline cursor-pointer hover:text-[blue]"
-                                            title="Ushbu so'rovni qidirish"
+                                            title={t.searchThis}
                                             style={{
                                                 WebkitTapHighlightColor:
                                                     'transparent',
@@ -219,8 +260,8 @@ export default function SearchBar({ isSearch, setIsSearch }) {
                                             type="button"
                                             onClick={() => removeRecent(r.id)}
                                             className="cursor-pointer inline-flex items-center justify-center w-5 h-5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400"
-                                            title="O‘chirish"
-                                            aria-label="O‘chirish"
+                                            title={t.remove}
+                                            aria-label={t.remove}
                                             style={{
                                                 WebkitTapHighlightColor:
                                                     'transparent',

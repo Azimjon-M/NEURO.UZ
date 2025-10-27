@@ -171,6 +171,7 @@ export default function AboutCenter() {
     useEffect(() => {
         (async () => {
             try {
+                setLoading(true);
                 const res = await ApiResult.getMetrics();
                 const arr = Array.isArray(res) ? res : res?.data || [];
                 const sorted = [...arr].sort(

@@ -18,7 +18,6 @@ export default function GalOperations() {
     const PAGE_SIZE = 6;
     const [page, setPage] = useState(1);
     const [allItems, setAllItems] = useState([]); // API'dan kelgan to‘liq ro‘yxat
-    const [loading, setLoading] = useState(false);
 
     const topRef = useRef(null);
 
@@ -78,7 +77,6 @@ export default function GalOperations() {
 
     // Ma’lumotni olish (bir marta)
     const getData = async () => {
-        setLoading(true);
         try {
             const res = await ApiResult.getGalery2();
             // DRF bo‘lsa {count, results,...}; bo‘lmasa oddiy massiv
@@ -102,7 +100,6 @@ export default function GalOperations() {
             setAllItems([]);
             setPage(1);
         } finally {
-            setLoading(false);
             if (topRef.current) {
                 setTimeout(
                     () =>
@@ -124,18 +121,14 @@ export default function GalOperations() {
     return (
         <section
             ref={topRef}
-            className="py-12 md:py-16 bg-gradient-to-b from-white to-slate-50 dark:from-slate-900 dark:to-slate-900"
+            className="py-12 md:py-16 bg-white  dark:bg-[#1D232A]"
         >
             <div className="w-full md:max-w-3xl lg:max-w-5xl xl:max-w-[1150px] 2xl:max-w-[1400px] mx-auto px-4">
                 <h2 className="text-3xl md:text-4xl font-bold text-center mb-10 text-slate-900 dark:text-slate-100">
                     {L.pageTitle}
                 </h2>
 
-                {loading ? (
-                    <div className="w-full h-[220px] grid place-items-center text-slate-500 dark:text-slate-300">
-                        <span className="animate-pulse">Yuklanmoqda...</span>
-                    </div>
-                ) : slicedItems?.length ? (
+                {slicedItems?.length ? (
                     <>
                         {/* >>> KARTALAR GRID'I: 1 / 2 (>=lg) / 3 (>=2xl) — dizayn o‘zgarmadi */}
                         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-8">
@@ -156,20 +149,20 @@ export default function GalOperations() {
                                                 <>
                                                     <button
                                                         className={`prev-${item.id} cursor-pointer absolute left-3 top-1/2 -translate-y-1/2 z-10
-                              inline-flex items-center justify-center p-2 md:p-3
-                              bg-white/85 dark:bg-slate-900/70 backdrop-blur
-                              ring-1 ring-slate-200 dark:ring-slate-700
-                              hover:bg-white dark:hover:bg-slate-900 transition`}
+                                                            inline-flex items-center justify-center p-2 md:p-3
+                                                            bg-white/85 dark:bg-slate-900/70 backdrop-blur
+                                                            ring-1 ring-slate-200 dark:ring-slate-700
+                                                            hover:bg-white dark:hover:bg-slate-900 transition`}
                                                         aria-label="Previous"
                                                     >
                                                         <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-slate-700 dark:text-slate-200" />
                                                     </button>
                                                     <button
                                                         className={`next-${item.id} cursor-pointer absolute right-3 top-1/2 -translate-y-1/2 z-10
-                              inline-flex items-center justify-center p-2 md:p-3
-                              bg-white/85 dark:bg-slate-900/70 backdrop-blur
-                              ring-1 ring-slate-200 dark:ring-slate-700
-                              hover:bg-white dark:hover:bg-slate-900 transition`}
+                                                            inline-flex items-center justify-center p-2 md:p-3
+                                                            bg-white/85 dark:bg-slate-900/70 backdrop-blur
+                                                            ring-1 ring-slate-200 dark:ring-slate-700
+                                                            hover:bg-white dark:hover:bg-slate-900 transition`}
                                                         aria-label="Next"
                                                     >
                                                         <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-slate-700 dark:text-slate-200" />

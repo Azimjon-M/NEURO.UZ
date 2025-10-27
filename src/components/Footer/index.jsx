@@ -26,12 +26,12 @@ const I18N = {
         pages: [
             'Asosiy',
             'Markaz haqida',
-            'Bo‘limlar',
-            'Xizmatlar',
-            'Bemorlar',
-            'Fan va ta’lim',
-            'Yangiliklar',
-            'Aloqa',
+            'Rahbarlar',
+            'Markaz yangiliklari',
+            'Xalqaro yangiliklar',
+            'Umumiy rasimlar',
+            "So'rovnoma",
+            'Karupsyaga qarshi kurash',
         ],
         contactHeading: 'Aloqa',
         address: 'Toshkent shahri, (manzilni kiriting)',
@@ -60,12 +60,12 @@ const I18N = {
         pages: [
             'Главная',
             'О центре',
-            'Отделения',
-            'Услуги',
-            'Пациентам',
-            'Наука и образование',
-            'Новости',
-            'Контакты',
+            'Руководители',
+            'Новости центра',
+            'Международные новости',
+            'Фотогалерея',
+            'Опрос',
+            'Противодействие коррупции',
         ],
         contactHeading: 'Связь',
         address: 'Город Ташкент, (укажите адрес)',
@@ -93,13 +93,13 @@ const I18N = {
         pagesHeading: 'Pages',
         pages: [
             'Home',
-            'About',
-            'Departments',
-            'Services',
-            'Patients',
-            'Science & Education',
-            'News',
-            'Contact',
+            'About the Center',
+            'Leaders',
+            'Center News',
+            'International News',
+            'Photo Gallery',
+            'Survey',
+            'Anti-corruption',
         ],
         contactHeading: 'Contact',
         address: 'Tashkent city (add address)',
@@ -126,12 +126,12 @@ const I18N = {
 const PAGES = [
     '/',
     '/about',
-    '/departments',
-    '/services',
-    '/patients',
-    '/education',
-    '/news',
-    '/contact',
+    '/departments/rahbarlar',
+    '/news/markaz-elonlari',
+    '/news/intl',
+    '/gallery/umumiy-rasmlar',
+    '/sorovnoma',
+    '/anti-korrupsya',
 ];
 
 const Footer = () => {
@@ -149,7 +149,7 @@ const Footer = () => {
             setData(res);
         } catch (error) {
             console.error('Error fetching contact data:', error);
-        }
+        } 
     };
 
     useEffect(() => {

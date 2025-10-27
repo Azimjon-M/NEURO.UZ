@@ -4,6 +4,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { FaStar } from 'react-icons/fa';
 import { Languages } from '@/context/LanguageContext';
+import ApiResult from '@/services/sorovnoma';
 
 /* ---------------------- Tailwind helpers ---------------------- */
 const brand = '#2464AE';
@@ -188,6 +189,7 @@ const StarRating = ({
     setFieldValue,
     max = 10,
     ariaLabel,
+    ariaLabelledBy,
     unitText = 'rating',
     valueText = (v) => `${v}/10`,
 }) => {
@@ -224,6 +226,7 @@ const StarRating = ({
                 className="flex gap-1 mt-1"
                 role="slider"
                 aria-label={ariaLabel}
+                aria-labelledby={ariaLabelledBy}
                 aria-valuemin={0}
                 aria-valuemax={max}
                 aria-valuenow={value}
@@ -252,10 +255,35 @@ const StarRating = ({
     );
 };
 
+/* ---------------------- Tashqariga ko‘chirilgan yordamchi komponentlar ---------------------- */
+const Card = ({ title, children, subtitle, titleId }) => (
+    <section className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 shadow-sm p-4 sm:p-6">
+        <div className="mb-3">
+            <h2
+                id={titleId}
+                className="text-base sm:text-lg font-semibold text-slate-800 dark:text-slate-100"
+            >
+                {title}
+            </h2>
+            {subtitle ? (
+                <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                    {subtitle}
+                </p>
+            ) : null}
+        </div>
+        {children}
+    </section>
+);
+
+const InputError = ({ formik, name }) =>
+    formik.touched[name] && formik.errors[name] ? (
+        <div className="mt-1 text-sm text-red-500">{formik.errors[name]}</div>
+    ) : null;
+
 /* ---------------------- Component ---------------------- */
 export default function SurveyForm() {
     const { language } = Languages(); // 'uz' | 'ru' | 'en'
-    const t = T[language] ?? T.uz;
+    const t = useMemo(() => T[language] ?? T.uz, [language]);
 
     /* ---------------------- Yup validation (i18n) ---------------------- */
     const validationSchema = useMemo(
@@ -269,31 +297,6 @@ export default function SurveyForm() {
                 davolaganShifokorFIO: Yup.string().required(t.errors.fio),
             }),
         [t]
-    );
-
-    /* ---------------------- Input error helper ---------------------- */
-    const InputError = ({ formik, name }) =>
-        formik.touched[name] && formik.errors[name] ? (
-            <div className="mt-1 text-sm text-red-500">
-                {formik.errors[name]}
-            </div>
-        ) : null;
-
-    /* ---------------------- Section wrapper ---------------------- */
-    const Card = ({ title, children, subtitle }) => (
-        <section className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 shadow-sm p-4 sm:p-6">
-            <div className="mb-3">
-                <h2 className="text-base sm:text-lg font-semibold text-slate-800 dark:text-slate-100">
-                    {title}
-                </h2>
-                {subtitle ? (
-                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-                        {subtitle}
-                    </p>
-                ) : null}
-            </div>
-            {children}
-        </section>
     );
 
     /* ---------------------- Formik ---------------------- */
@@ -340,17 +343,29 @@ export default function SurveyForm() {
             umumiyFikr: '',
         },
         validationSchema,
-        onSubmit: (values) => {
-            console.log('Form yuborildi:', values);
-            alert(
-                language === 'ru'
-                    ? 'Опрос отправлен ✅'
-                    : language === 'en'
-                    ? 'Survey submitted ✅'
-                    : 'So‘rovnoma yuborildi ✅'
-            );
+        onSubmit: async (values, { resetForm }) => {
+            try {
+                await ApiResult.postSorovnoma(values);
+                alert(
+                    language === 'ru'
+                        ? 'Опрос отправлен ✅'
+                        : language === 'en'
+                        ? 'Survey submitted ✅'
+                        : 'So‘rovnoma yuborildi ✅'
+                );
+                resetForm();
+            } catch (e) {
+                alert(
+                    language === 'ru'
+                        ? 'Опрос не отправлен ❌'
+                        : language === 'en'
+                        ? 'Survey not sent ❌'
+                        : 'So‘rovnoma yuborilmadi ❌'
+                );
+                console.error(e);
+            }
         },
-        enableReinitialize: true, // til o‘zgarsa yup xabarlari darhol yangilansin
+        // enableReinitialize: true, // kerak bo'lmasa yoq
     });
 
     return (
@@ -379,16 +394,21 @@ export default function SurveyForm() {
                 <form
                     onSubmit={formik.handleSubmit}
                     className="space-y-6 sm:space-y-8"
+                    noValidate
                 >
                     {/* Kirish banner */}
-                    <Card title={t.bannerTitle} subtitle={t.bannerSub}>
+                    <Card
+                        title={t.bannerTitle}
+                        subtitle={t.bannerSub}
+                        titleId="bannerTitle"
+                    >
                         <p className="text-sm text-slate-600 dark:text-slate-300">
                             {t.bannerNote}
                         </p>
                     </Card>
 
                     {/* Shaxsiy ma'lumotlar */}
-                    <Card title={t.formTitle}>
+                    <Card title={t.formTitle} titleId="personalInfo">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label
@@ -495,16 +515,24 @@ export default function SurveyForm() {
 
                     {/* Savollar */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <Card title={t.s1}>
+                        <Card title={t.s1} titleId="s1Title">
                             <StarRating
                                 name="bolimSharoitRate"
                                 value={formik.values.bolimSharoitRate}
                                 setFieldValue={formik.setFieldValue}
                                 ariaLabel={t.starAria}
+                                ariaLabelledBy="s1Title"
                                 unitText={t.starUnit}
                                 valueText={t.valueOutOf}
                             />
+                            <label
+                                htmlFor="bolimSharoitIzoh"
+                                className="sr-only"
+                            >
+                                {t.s1}
+                            </label>
                             <textarea
+                                id="bolimSharoitIzoh"
                                 name="bolimSharoitIzoh"
                                 placeholder={t.reasonPH}
                                 className={areaCls + ' mt-3'}
@@ -514,7 +542,7 @@ export default function SurveyForm() {
                             />
                         </Card>
 
-                        <Card title={t.s2}>
+                        <Card title={t.s2} titleId="s2Title">
                             <p className="text-sm text-slate-600 dark:text-slate-300">
                                 {t.s2_doctor}
                             </p>
@@ -523,6 +551,7 @@ export default function SurveyForm() {
                                 value={formik.values.shifokorMunosabatRate}
                                 setFieldValue={formik.setFieldValue}
                                 ariaLabel={t.starAria}
+                                ariaLabelledBy="s2Title"
                                 unitText={t.starUnit}
                                 valueText={t.valueOutOf}
                             />
@@ -534,6 +563,7 @@ export default function SurveyForm() {
                                 value={formik.values.hamshiraMunosabatRate}
                                 setFieldValue={formik.setFieldValue}
                                 ariaLabel={t.starAria}
+                                ariaLabelledBy="s2Title"
                                 unitText={t.starUnit}
                                 valueText={t.valueOutOf}
                             />
@@ -545,10 +575,18 @@ export default function SurveyForm() {
                                 value={formik.values.sanitarMunosabatRate}
                                 setFieldValue={formik.setFieldValue}
                                 ariaLabel={t.starAria}
+                                ariaLabelledBy="s2Title"
                                 unitText={t.starUnit}
                                 valueText={t.valueOutOf}
                             />
+                            <label
+                                htmlFor="tibbiyotXodimlariIzoh"
+                                className="sr-only"
+                            >
+                                {t.s2}
+                            </label>
                             <textarea
+                                id="tibbiyotXodimlariIzoh"
                                 name="tibbiyotXodimlariIzoh"
                                 placeholder={t.reasonPH}
                                 className={areaCls + ' mt-3'}
@@ -558,11 +596,15 @@ export default function SurveyForm() {
                             />
                         </Card>
 
-                        <Card title={t.s3}>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
+                        <Card title={t.s3} titleId="s3Title">
+                            <label
+                                htmlFor="davolaganShifokorFIO"
+                                className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1"
+                            >
                                 {t.fio} <span className="text-red-500">*</span>
                             </label>
                             <input
+                                id="davolaganShifokorFIO"
                                 type="text"
                                 name="davolaganShifokorFIO"
                                 className={inputCls}
@@ -575,7 +617,10 @@ export default function SurveyForm() {
                                 name="davolaganShifokorFIO"
                             />
 
-                            <h3 className="mt-4 text-sm font-medium text-slate-700 dark:text-slate-200">
+                            <h3
+                                id="s3Politeness"
+                                className="mt-4 text-sm font-medium text-slate-700 dark:text-slate-200"
+                            >
                                 {t.s3_politeness}
                             </h3>
                             <StarRating
@@ -583,10 +628,18 @@ export default function SurveyForm() {
                                 value={formik.values.shifokorMuomalaRate}
                                 setFieldValue={formik.setFieldValue}
                                 ariaLabel={t.starAria}
+                                ariaLabelledBy="s3Politeness"
                                 unitText={t.starUnit}
                                 valueText={t.valueOutOf}
                             />
+                            <label
+                                htmlFor="shifokorMuomalaIzoh"
+                                className="sr-only"
+                            >
+                                {t.s3_politeness}
+                            </label>
                             <textarea
+                                id="shifokorMuomalaIzoh"
                                 name="shifokorMuomalaIzoh"
                                 placeholder={t.reasonPH}
                                 className={areaCls + ' mt-3'}
@@ -596,16 +649,24 @@ export default function SurveyForm() {
                             />
                         </Card>
 
-                        <Card title={t.s4}>
+                        <Card title={t.s4} titleId="s4Title">
                             <StarRating
                                 name="davolashSifatiRate"
                                 value={formik.values.davolashSifatiRate}
                                 setFieldValue={formik.setFieldValue}
                                 ariaLabel={t.starAria}
+                                ariaLabelledBy="s4Title"
                                 unitText={t.starUnit}
                                 valueText={t.valueOutOf}
                             />
+                            <label
+                                htmlFor="davolashSifatiIzoh"
+                                className="sr-only"
+                            >
+                                {t.s4}
+                            </label>
                             <textarea
+                                id="davolashSifatiIzoh"
                                 name="davolashSifatiIzoh"
                                 placeholder={t.reasonPH}
                                 className={areaCls + ' mt-3'}
@@ -615,16 +676,24 @@ export default function SurveyForm() {
                             />
                         </Card>
 
-                        <Card title={t.s5}>
+                        <Card title={t.s5} titleId="s5Title">
                             <StarRating
                                 name="hamshiraXizmatiRate"
                                 value={formik.values.hamshiraXizmatiRate}
                                 setFieldValue={formik.setFieldValue}
                                 ariaLabel={t.starAria}
+                                ariaLabelledBy="s5Title"
                                 unitText={t.starUnit}
                                 valueText={t.valueOutOf}
                             />
+                            <label
+                                htmlFor="hamshiraXizmatiIzoh"
+                                className="sr-only"
+                            >
+                                {t.s5}
+                            </label>
                             <textarea
+                                id="hamshiraXizmatiIzoh"
                                 name="hamshiraXizmatiIzoh"
                                 placeholder={t.reasonPH}
                                 className={areaCls + ' mt-3'}
@@ -634,16 +703,24 @@ export default function SurveyForm() {
                             />
                         </Card>
 
-                        <Card title={t.s6}>
+                        <Card title={t.s6} titleId="s6Title">
                             <StarRating
                                 name="sanitariyaHolatiRate"
                                 value={formik.values.sanitariyaHolatiRate}
                                 setFieldValue={formik.setFieldValue}
                                 ariaLabel={t.starAria}
+                                ariaLabelledBy="s6Title"
                                 unitText={t.starUnit}
                                 valueText={t.valueOutOf}
                             />
+                            <label
+                                htmlFor="sanitariyaHolatiIzoh"
+                                className="sr-only"
+                            >
+                                {t.s6}
+                            </label>
                             <textarea
+                                id="sanitariyaHolatiIzoh"
                                 name="sanitariyaHolatiIzoh"
                                 placeholder={t.reasonPH}
                                 className={areaCls + ' mt-3'}
@@ -653,16 +730,24 @@ export default function SurveyForm() {
                             />
                         </Card>
 
-                        <Card title={t.s7}>
+                        <Card title={t.s7} titleId="s7Title">
                             <StarRating
                                 name="ovqatlanishSifatiRate"
                                 value={formik.values.ovqatlanishSifatiRate}
                                 setFieldValue={formik.setFieldValue}
                                 ariaLabel={t.starAria}
+                                ariaLabelledBy="s7Title"
                                 unitText={t.starUnit}
                                 valueText={t.valueOutOf}
                             />
+                            <label
+                                htmlFor="ovqatlanishSifatiIzoh"
+                                className="sr-only"
+                            >
+                                {t.s7}
+                            </label>
                             <textarea
+                                id="ovqatlanishSifatiIzoh"
                                 name="ovqatlanishSifatiIzoh"
                                 placeholder={t.reasonPH}
                                 className={areaCls + ' mt-3'}
@@ -672,16 +757,24 @@ export default function SurveyForm() {
                             />
                         </Card>
 
-                        <Card title={t.s8}>
+                        <Card title={t.s8} titleId="s8Title">
                             <StarRating
                                 name="laboratoriyaXizmatiRate"
                                 value={formik.values.laboratoriyaXizmatiRate}
                                 setFieldValue={formik.setFieldValue}
                                 ariaLabel={t.starAria}
+                                ariaLabelledBy="s8Title"
                                 unitText={t.starUnit}
                                 valueText={t.valueOutOf}
                             />
+                            <label
+                                htmlFor="laboratoriyaXizmatiIzoh"
+                                className="sr-only"
+                            >
+                                {t.s8}
+                            </label>
                             <textarea
+                                id="laboratoriyaXizmatiIzoh"
                                 name="laboratoriyaXizmatiIzoh"
                                 placeholder={t.reasonPH}
                                 className={areaCls + ' mt-3'}
@@ -691,16 +784,24 @@ export default function SurveyForm() {
                             />
                         </Card>
 
-                        <Card title={t.s9}>
+                        <Card title={t.s9} titleId="s9Title">
                             <StarRating
                                 name="diagnostikaSifatiRate"
                                 value={formik.values.diagnostikaSifatiRate}
                                 setFieldValue={formik.setFieldValue}
                                 ariaLabel={t.starAria}
+                                ariaLabelledBy="s9Title"
                                 unitText={t.starUnit}
                                 valueText={t.valueOutOf}
                             />
+                            <label
+                                htmlFor="diagnostikaSifatiIzoh"
+                                className="sr-only"
+                            >
+                                {t.s9}
+                            </label>
                             <textarea
+                                id="diagnostikaSifatiIzoh"
                                 name="diagnostikaSifatiIzoh"
                                 placeholder={t.reasonPH}
                                 className={areaCls + ' mt-3'}
@@ -710,8 +811,15 @@ export default function SurveyForm() {
                             />
                         </Card>
 
-                        <Card title={t.s10}>
+                        <Card title={t.s10} titleId="s10Title">
+                            <label
+                                htmlFor="umumiyQoniqishIzoh"
+                                className="sr-only"
+                            >
+                                {t.s10}
+                            </label>
                             <textarea
+                                id="umumiyQoniqishIzoh"
                                 name="umumiyQoniqishIzoh"
                                 placeholder={t.reasonPH}
                                 className={areaCls}
@@ -721,8 +829,12 @@ export default function SurveyForm() {
                             />
                         </Card>
 
-                        <Card title={t.s11}>
+                        <Card title={t.s11} titleId="s11Title">
+                            <label htmlFor="takliflar" className="sr-only">
+                                {t.s11}
+                            </label>
                             <textarea
+                                id="takliflar"
                                 name="takliflar"
                                 placeholder={t.offerPH}
                                 className={areaCls}
@@ -732,8 +844,12 @@ export default function SurveyForm() {
                             />
                         </Card>
 
-                        <Card title={t.s12}>
+                        <Card title={t.s12} titleId="s12Title">
+                            <label htmlFor="umumiyFikr" className="sr-only">
+                                {t.s12}
+                            </label>
                             <textarea
+                                id="umumiyFikr"
                                 name="umumiyFikr"
                                 placeholder={t.thoughtPH}
                                 className={areaCls}
