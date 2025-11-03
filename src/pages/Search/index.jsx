@@ -173,11 +173,11 @@ export default function Search() {
 
             const title = fullName || t.fallbackSpecTitle;
             const desc = [position, depName].filter(Boolean).join(' • ');
-            const url = `/specialists/${item.id}/`;
+            const url = `/departments/${item.id}/`;
 
             return {
-                id: `spec-${item.id}`,
-                type: 'specialist',
+                id: `dep-${item.id}`,
+                type: 'departments',
                 title,
                 desc,
                 url,
