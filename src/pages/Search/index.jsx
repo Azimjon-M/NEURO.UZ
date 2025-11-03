@@ -110,18 +110,6 @@ export default function Search() {
             ? `${t.pageTitle} — "${qFromURL}"`
             : t.pageTitle;
     }, [t.pageTitle, qFromURL]);
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const query = q.trim();
-        setParams((prev) => {
-            const next = new URLSearchParams(prev);
-            if (query) next.set('q', query);
-            else next.delete('q');
-            // ❌ URLga lang yozmaymiz
-            return next;
-        });
-    };
     // lang-ga mos qiymat o‘quvchi
     const pickLang = useCallback(
         (obj, key, fallbackKeys = []) => {
@@ -319,6 +307,21 @@ export default function Search() {
         mapGallery,
     ]);
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setDataSpecialists([]);
+        setDataNews([]);
+        setDataGallery([]);
+        const query = q.trim();
+        setParams((prev) => {
+            const next = new URLSearchParams(prev);
+            if (query) next.set('q', query);
+            else next.delete('q');
+            // ❌ URLga lang yozmaymiz
+            return next;
+        });
+    };
+
     return (
         <div className="w-full mx-auto md:max-w-3xl lg:max-w-5xl xl:max-w-[1150px] 2xl:max-w-[1400px] px-4 py-10">
             {/* Header: Title + searched query */}
@@ -367,28 +370,97 @@ export default function Search() {
 
             {/* Natijalar */}
             <div className="max-w-3xl mx-auto mt-6">
+                {/* LOADING — yumshoq ko‘k fonda, yengil soya */}
                 {loading && (
-                    <div className="flex items-center gap-3 text-slate-600 dark:text-slate-300">
-                        <span className="inline-block h-5 w-5 rounded-full border-2 border-slate-300 border-t-transparent animate-spin" />
+                    <div
+                        className="flex items-center gap-3 p-3 rounded-lg
+                          bg-sky-50 text-sky-900 border border-sky-200
+                          dark:bg-sky-900/20 dark:text-sky-100 dark:border-sky-700/50
+                            shadow-sm ring-1 ring-sky-200/60"
+                    >
+                        <span className="loading loading-spinner loading-sm" />
                         <span>{t.loading}</span>
                     </div>
                 )}
 
+                {/* ERROR — ochroq qizil, tiniq ko‘rinish */}
                 {!loading && err && (
-                    <div className="text-red-600 dark:text-red-400">
-                        {t.errorPrefix} {err}
+                    <div
+                        role="alert"
+                        className="flex items-start gap-3 p-3 rounded-lg
+                            bg-rose-50 text-rose-900 border border-rose-200
+                            dark:bg-rose-900/25 dark:text-rose-100 dark:border-rose-700/50
+                            shadow-sm ring-1 ring-rose-200/60"
+                    >
+                        {/* x-circle */}
+                        <svg
+                            className="h-5 w-5 mt-0.5 shrink-0"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            aria-hidden="true"
+                        >
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M15 9l-6 6M9 9l6 6" />
+                        </svg>
+                        <span>
+                            <span className="font-semibold">
+                                {t.errorPrefix}
+                            </span>{' '}
+                            {err}
+                        </span>
                     </div>
                 )}
 
+                {/* NO RESULTS — och amber, to‘g‘ri WARNING ikonkasi (uchburchak + undov) */}
                 {!loading && !err && qFromURL && normalized.length === 0 && (
-                    <div className="text-slate-600 dark:text-slate-300">
-                        {t.noResults}
+                    <div
+                        role="status"
+                        className="flex items-start gap-3 p-3 rounded-lg
+                                bg-amber-100 text-amber-900 border border-amber-200
+                                dark:bg-amber-900/25 dark:text-amber-100 dark:border-amber-700/50
+                                shadow-sm ring-1 ring-amber-200/60"
+                    >
+                        {/* exclamation-triangle */}
+                        <svg
+                            className="h-5 w-5 mt-0.5 shrink-0"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            aria-hidden="true"
+                        >
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                            <path d="M12 9v5" />
+                            <path d="M12 17h.01" />
+                        </svg>
+                        <span>{t.noResults}</span>
                     </div>
                 )}
 
+                {/* TIP — neytral, eng yengil to‘q bo‘lmagan fon */}
                 {!loading && !err && !qFromURL && (
-                    <div className="text-slate-500 dark:text-slate-400 text-sm">
-                        {t.tip}
+                    <div
+                        className="flex items-start gap-3 p-3 rounded-lg
+                            bg-slate-50 text-slate-800 border border-slate-200
+                            dark:bg-slate-800/40 dark:text-slate-100 dark:border-slate-700/50
+                            shadow-sm ring-1 ring-slate-200/60"
+                    >
+                        {/* info-circle */}
+                        <svg
+                            className="h-5 w-5 mt-0.5 shrink-0"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            aria-hidden="true"
+                        >
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 8h.01" />
+                            <path d="M11 12h1v4h1" />
+                        </svg>
+                        <span className="text-sm">{t.tip}</span>
                     </div>
                 )}
 
